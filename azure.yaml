@@ -2,3 +2,8 @@
 
 name: message-distribution
 
+services:
+  testdata:
+    project: src/test-data
+    language: csharp
+    host: containerapp

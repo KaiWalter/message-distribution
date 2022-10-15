@@ -11,6 +11,9 @@
     },
     "principalId": {
         "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "testdataImageName": {
+      "value": "${SERVICE_TESTDATA_IMAGE_NAME}"
     }
   }
 }

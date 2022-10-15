@@ -22,6 +22,8 @@ var tags = {
   'azd-env-name': name
 }
 
+param testdataImageName string = ''
+
 module resources './resources.bicep' = {
   name: 'resources-${resourceToken}'
   scope: resourceGroup
@@ -30,6 +32,7 @@ module resources './resources.bicep' = {
     location: location
     principalId: principalId
     resourceToken: resourceToken
+    testdataImageName:testdataImageName
     tags: tags
   }
 }

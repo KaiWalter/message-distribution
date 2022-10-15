@@ -2,6 +2,7 @@ param name string
 param location string
 param principalId string = ''
 param resourceToken string
+param testdataImageName string = ''
 param tags object
 
 module containerAppsResources './containerapps.bicep' = {
@@ -38,6 +39,15 @@ module serviceBusResources './servicebus.bicep' = {
   }
 }
 
+module storageResources 'storage.bicep' = {
+  name: 'st-resources'
+  params: {
+    location: location
+    tags: tags
+    resourceToken: resourceToken
+  }
+}
+
 module appInsightsResources './appinsights.bicep' = {
   name: 'appinsights-resources'
   params: {
@@ -56,7 +66,23 @@ module logAnalyticsResources './loganalytics.bicep' = {
   }
 }
 
+module testdataResources './testdata.bicep' = {
+  name: 'testdata-resources'
+  params: {
+    name: name
+    location: location
+    imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
 output SERVICEBUS_ENDPONT string = serviceBusResources.outputs.SERVICEBUS_ENDPOINT
+output STORAGE_BLOB_ENDPOINT string = storageResources.outputs.STORAGE_BLOB_ENDPOINT
 output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsightsResources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output AZURE_CONTAINER_REGISTRY_NAME string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_NAME
