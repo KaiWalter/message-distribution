@@ -1,9 +1,7 @@
 param resourceToken string
 param location string
 param skuName string = 'Standard'
-param topicName string = 'orders'
 param tags object
-
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   name: 'sb-${resourceToken}'
@@ -14,21 +12,23 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
     tier: skuName
   }
 
-  resource topic 'topics' = {
-    name: topicName
+  resource queueOrderIngress 'queues' = {
+    name: 'order-ingress'
     properties: {
-      supportOrdering: true
     }
-  
-    resource subscription 'subscriptions' = {
-      name: topicName
-      properties: {
-        deadLetteringOnFilterEvaluationExceptions: true
-        deadLetteringOnMessageExpiration: true
-        maxDeliveryCount: 10
-      }
+  }
+
+  resource queueOrderStandard 'queues' = {
+    name: 'order-standard'
+    properties: {
+    }
+  }
+
+  resource queueOrderExpress 'queues' = {
+    name: 'order-express'
+    properties: {
     }
   }
 }
 
-output SERVICEBUS_CONNECTION string = '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString};EntityPath=orders'
+output SERVICEBUS_CONNECTION string = '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'

@@ -14,26 +14,6 @@ using System.Threading.Tasks;
 
 namespace test_data
 {
-    public class Order
-    {
-        public int OrderId { get; set; }
-        public string Description { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public Delivery Delivery { get; set; }
-    }
-
-    public class GenerationRequest
-    {
-        public int? Count { get; set; }
-    }
-
-    public enum Delivery
-    {
-        Standard,
-        Express
-    }
-
     public static class Generate
     {
         [FunctionName("Generate")]

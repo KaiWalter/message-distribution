@@ -2,8 +2,10 @@ param name string
 param location string
 param principalId string = ''
 param resourceToken string
-param testdataImageName string = ''
 param tags object
+
+param testdataImageName string = ''
+param funcDistImageName string = ''
 
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
@@ -72,6 +74,21 @@ module testdataResources './testdata.bicep' = {
     name: name
     location: location
     imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module funcDistResources './funcdist.bicep' = {
+  name: 'funcdist-resources'
+  params: {
+    name: name
+    location: location
+    imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
   }
   dependsOn: [
     containerAppsResources

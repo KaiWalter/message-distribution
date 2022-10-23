@@ -7,3 +7,8 @@ services:
     project: src/test-data
     language: csharp
     host: containerapp
+
+  funcdist:
+    project: src/func-distributor
+    language: csharp
+    host: containerapp

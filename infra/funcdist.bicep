@@ -38,11 +38,11 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
-  name: 'test-data-${resourceToken}'
+resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
+  name: 'func-distributor-${resourceToken}'
   location: location
   tags: union(tags, {
-      'azd-service-name': 'testdata'
+      'azd-service-name': 'funcdist'
     })
   identity: {
     type: 'SystemAssigned'
@@ -55,7 +55,7 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
         external: true
         targetPort: 80
         transport: 'auto'
-      }
+      }      
       secrets: [
         {
           name: 'registry-password'
@@ -66,7 +66,7 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
           value: 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${listKeys(stg.id, stg.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         }
         {
-          name: 'servicebus-connection'
+          name:'servicebus-connection'
           value: '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'
         }
       ]
@@ -82,7 +82,7 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
       containers: [
         {
           image: imageName
-          name: 'testdatasvc'
+          name: 'func-distributor'
           env: [
             {
               name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -104,16 +104,16 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
           probes: [
             {
               type: 'Liveness'
-              httpGet: {
+              httpGet:{
                 port: 80
-                path: 'api/health'
+                path:'api/health'
               }
             }
             {
               type: 'Readiness'
-              httpGet: {
+              httpGet:{
                 port: 80
-                path: 'api/health'
+                path:'api/health'
               }
             }
           ]
@@ -132,7 +132,7 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
   properties: {
     accessPolicies: [
       {
-        objectId: testdata.identity.principalId
+        objectId: funcdist.identity.principalId
         permissions: {
           secrets: [
             'get'
@@ -144,5 +144,3 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
     ]
   }
 }
-
-output TESTDATA_URI string = 'https://${testdata.properties.configuration.ingress.fqdn}'

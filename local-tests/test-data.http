@@ -4,3 +4,8 @@ POST http://localhost:7071/api/Generate
 {
     "Count":20
 }
+
+###
+POST http://localhost:7071/api/PushIngress
+
+{}
