@@ -34,7 +34,7 @@ resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
   name: 'st${resourceToken}'
 }
 
-resource testdata 'Microsoft.App/containerApps@2022-03-01' = {
+resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
   name: 'test-data-${resourceToken}'
   location: location
   tags: union(tags, {
@@ -86,7 +86,7 @@ resource testdata 'Microsoft.App/containerApps@2022-03-01' = {
             }
             {
               name: 'STORAGE_CONNECTION'
-              secretRef: 'storage-connection '
+              secretRef: 'storage-connection'
             }
           ]
           probes: [

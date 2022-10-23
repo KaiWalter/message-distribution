@@ -31,4 +31,4 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   }
 }
 
-output SERVICEBUS_ENDPOINT string = serviceBusNamespace.properties.serviceBusEndpoint
+output SERVICEBUS_CONNECTION string = '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString};EntityPath=orders'

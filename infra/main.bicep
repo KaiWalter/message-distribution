@@ -32,11 +32,12 @@ module resources './resources.bicep' = {
     location: location
     principalId: principalId
     resourceToken: resourceToken
-    testdataImageName:testdataImageName
+    testdataImageName: testdataImageName
     tags: tags
   }
 }
 
-output SERVICEBUS_ENDPOINT string = resources.outputs.SERVICEBUS_ENDPONT
+output SERVICEBUS_CONNECTION string = resources.outputs.SERVICEBUS_CONNECTION
+output STORAGE_BLOB_CONNECTION string = resources.outputs.STORAGE_BLOB_CONNECTION
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_REGISTRY_NAME
