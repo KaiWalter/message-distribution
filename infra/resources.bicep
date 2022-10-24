@@ -6,6 +6,8 @@ param tags object
 
 param testdataImageName string = ''
 param funcDistImageName string = ''
+param funcRecvExpImageName string = ''
+param funcRecvStdImageName string = ''
 
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
@@ -89,6 +91,36 @@ module funcDistResources './funcdist.bicep' = {
     name: name
     location: location
     imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module funcRecvExpResources './funcrecvexp.bicep' = {
+  name: 'funcrecvexp-resources'
+  params: {
+    name: name
+    location: location
+    imageName: funcRecvExpImageName != '' ? funcRecvExpImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module funcRecvStdResources './funcrecvstd.bicep' = {
+  name: 'funcrecvstd-resources'
+  params: {
+    name: name
+    location: location
+    imageName: funcRecvStdImageName != '' ? funcRecvStdImageName : 'nginx:latest'
   }
   dependsOn: [
     containerAppsResources

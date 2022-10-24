@@ -55,7 +55,7 @@ resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
         external: true
         targetPort: 80
         transport: 'auto'
-      }      
+      }
       secrets: [
         {
           name: 'registry-password'
@@ -66,7 +66,7 @@ resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
           value: 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${listKeys(stg.id, stg.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         }
         {
-          name:'servicebus-connection'
+          name: 'servicebus-connection'
           value: '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'
         }
       ]
@@ -93,6 +93,10 @@ resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
               value: keyVault.properties.vaultUri
             }
             {
+              name: 'AzureWebJobsStorage'
+              secretRef: 'storage-connection'
+            }
+            {
               name: 'STORAGE_CONNECTION'
               secretRef: 'storage-connection'
             }
@@ -100,20 +104,28 @@ resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
               name: 'SERVICEBUS_CONNECTION'
               secretRef: 'servicebus-connection'
             }
+            {
+              name: 'WEBSITE_SITE_NAME'
+              value: 'func-distributor'
+            }
+            {
+              name: 'AzureFunctionsWebHost__hostId'
+              value: guid(subscription().subscriptionId, resourceGroup().name)
+            }
           ]
           probes: [
             {
               type: 'Liveness'
-              httpGet:{
+              httpGet: {
                 port: 80
-                path:'api/health'
+                path: 'api/health'
               }
             }
             {
               type: 'Readiness'
-              httpGet:{
+              httpGet: {
                 port: 80
-                path:'api/health'
+                path: 'api/health'
               }
             }
           ]
@@ -123,6 +135,29 @@ resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
           }
         }
       ]
+      scale: {
+        minReplicas: 0
+        maxReplicas: 10
+        rules: [
+          {
+            name: 'queue-rule'
+            custom: {
+              type: 'azure-servicebus'
+              metadata: {
+                queueName: 'order-ingress'
+                messageCount: '100'
+              }
+              auth: [
+                {
+                  secretRef: 'servicebus-connection'
+                  triggerParameter: 'connection'
+                }
+              ]
+            }
+
+          }
+        ]
+      }
     }
   }
 }

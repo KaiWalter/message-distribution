@@ -38,11 +38,11 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
-  name: 'test-data-${resourceToken}'
+resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
+  name: 'func-recvexp-${resourceToken}'
   location: location
   tags: union(tags, {
-      'azd-service-name': 'testdata'
+      'azd-service-name': 'funcrecvexp'
     })
   identity: {
     type: 'SystemAssigned'
@@ -82,7 +82,7 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
       containers: [
         {
           image: imageName
-          name: 'testdatasvc'
+          name: 'func-recvexp'
           env: [
             {
               name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -106,7 +106,7 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
             }
             {
               name: 'WEBSITE_SITE_NAME'
-              value: 'test-data'
+              value: 'func-recvexp'
             }
             {
               name: 'AzureFunctionsWebHost__hostId'
@@ -135,6 +135,28 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
           }
         }
       ]
+      scale: {
+        minReplicas: 0
+        maxReplicas: 10
+        rules: [
+          {
+            name: 'queue-rule'
+            custom: {
+              type: 'azure-servicebus'
+              metadata: {
+                queueName: 'order-express'
+                messageCount: '100'
+              }
+              auth: [
+                {
+                  secretRef: 'servicebus-connection'
+                  triggerParameter: 'connection'
+                }
+              ]
+            }
+          }
+        ]
+      }
     }
   }
 }
@@ -144,7 +166,7 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
   properties: {
     accessPolicies: [
       {
-        objectId: testdata.identity.principalId
+        objectId: funcrecvexp.identity.principalId
         permissions: {
           secrets: [
             'get'
@@ -156,5 +178,3 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
     ]
   }
 }
-
-output TESTDATA_URI string = 'https://${testdata.properties.configuration.ingress.fqdn}'

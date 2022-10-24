@@ -1,9 +1,9 @@
-using System;
-using System.Text;
-using System.Text.Json;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Text;
+using System.Text.Json;
 
 namespace func_distributor
 {

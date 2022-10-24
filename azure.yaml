@@ -12,3 +12,13 @@ services:
     project: src/func-distributor
     language: csharp
     host: containerapp
+
+  funcrecvexp:
+    project: src/func-recvexp
+    language: csharp
+    host: containerapp
+
+  funcrecvstd:
+    project: src/func-recvstd
+    language: csharp
+    host: containerapp

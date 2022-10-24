@@ -11,3 +11,5 @@ JSON_STRING=$( jq -n \
 
 echo $JSON_STRING > src/test-data/local.settings.json
 echo $JSON_STRING > src/func-distributor/local.settings.json
+echo $JSON_STRING > src/func-recvexp/local.settings.json
+echo $JSON_STRING > src/func-recvstd/local.settings.json
