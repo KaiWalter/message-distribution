@@ -144,7 +144,7 @@ resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                queueName: 'order-express'
+                queueName: 'order-express-func'
                 messageCount: '100'
               }
               auth: [

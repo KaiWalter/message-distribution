@@ -22,3 +22,8 @@ services:
     project: src/func-recvstd
     language: csharp
     host: containerapp
+
+  daprdist:
+    project: src/dapr-distributor
+    language: csharp
+    host: containerapp

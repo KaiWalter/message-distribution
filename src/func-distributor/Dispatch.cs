@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
 using System.Text.Json;
+using Models;
 
 namespace func_distributor
 {
@@ -11,9 +12,9 @@ namespace func_distributor
     {
         [FunctionName("Dispatch")]
         public void Run(
-            [ServiceBusTrigger("order-ingress", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            [ServiceBus("order-express", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputExpressMessages,
-            [ServiceBus("order-standard", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputStandardMessages,
+            [ServiceBusTrigger("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBus("order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputExpressMessages,
+            [ServiceBus("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputStandardMessages,
             ILogger log)
         {
             if (ingressMessage == null)

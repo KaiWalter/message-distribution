@@ -144,7 +144,7 @@ resource funcdist 'Microsoft.App/containerApps@2022-03-01' = {
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                queueName: 'order-ingress'
+                queueName: 'order-ingress-func'
                 messageCount: '100'
               }
               auth: [

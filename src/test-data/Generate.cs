@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Models;
 
 namespace test_data
 {
@@ -27,19 +28,27 @@ namespace test_data
             int count = generationRequest.Count ?? 10;
 
             int orderIds = 1000000;
+            int orderItemIds = 0;
 
-            var orders = new List<Order>();
+            var fakeOrderItems = new Faker<OrderItem>()
+                    .RuleFor(oi => oi.OrderItemId, _ => orderItemIds++)
+                    .RuleFor(oi => oi.SKU, f => f.Random.Replace("####-####-####"))
+                    .RuleFor(oi => oi.Quantity, f => f.Random.Number(1, 10));
 
-            for (int i = 0; i < count; i++)
-            {
-                orders.Add(new Faker<Order>()
-                    .RuleFor(o => o.OrderId, f => orderIds++)
+            var fakeOrders = new Faker<Order>()
+                    .RuleFor(o => o.OrderId, _ => orderIds++)
                     .RuleFor(o => o.Description, f => f.Random.AlphaNumeric(40))
                     .RuleFor(o => o.FirstName, f => f.Name.FirstName())
                     .RuleFor(o => o.LastName, f => f.Name.LastName())
                     .RuleFor(o => o.Delivery, f => f.PickRandom<Delivery>())
-                );
-            }
+                    .RuleFor(o => o.Items, f =>
+                    {
+                        orderItemIds = 1;
+                        var items = fakeOrderItems.GenerateBetween(1, 10);
+                        return items;
+                    });
+
+            var orders = fakeOrders.Generate(count);
 
             JsonSerializerOptions options = new JsonSerializerOptions
             {

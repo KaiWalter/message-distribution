@@ -8,6 +8,9 @@ param testdataImageName string = ''
 param funcDistImageName string = ''
 param funcRecvExpImageName string = ''
 param funcRecvStdImageName string = ''
+param daprDistImageName string = ''
+param daprRecvExpImageName string = ''
+param daprRecvStdImageName string = ''
 
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
@@ -129,6 +132,23 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
     serviceBusResources
   ]
 }
+
+// module daprDistResources './daprdist.bicep' = {
+//   name: 'daprdist-resources'
+//   params: {
+//     envName: name
+//     appName: 'dapr-distributor'
+//     queueNameForScaling: 'order-ingress-dapr'
+//     location: location
+//     imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
+//   }
+//   dependsOn: [
+//     containerAppsResources
+//     appInsightsResources
+//     keyVaultResources
+//     serviceBusResources
+//   ]
+// }
 
 output SERVICEBUS_CONNECTION string = serviceBusResources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = storageResources.outputs.STORAGE_BLOB_CONNECTION

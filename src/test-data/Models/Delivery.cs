@@ -1,4 +1,4 @@
-namespace test_data
+namespace Models
 {
     public enum Delivery
     {

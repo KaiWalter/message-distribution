@@ -2,4 +2,4 @@
 
 source <(azd env get-values)
 
-curl -X POST -d '{}' "$TESTDATA_URI/api/PushIngress"
+curl -v -X POST -d '{}' "$TESTDATA_URI/api/PushIngress$1"
