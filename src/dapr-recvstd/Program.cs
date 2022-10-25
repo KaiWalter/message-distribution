@@ -11,11 +11,9 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-ingress-dapr", async ([FromBody] Order order) =>
+app.MapPost("/order-standard-dapr", async ([FromBody] Order order) =>
 {
     Console.WriteLine(order.OrderId);
-    var daprClient = new DaprClientBuilder().Build();
-    await daprClient.InvokeBindingAsync("order-express-dapr", "create", order);
     return Results.Ok(order.OrderId);
 });
 

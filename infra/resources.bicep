@@ -133,22 +133,56 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
   ]
 }
 
-// module daprDistResources './daprdist.bicep' = {
-//   name: 'daprdist-resources'
-//   params: {
-//     envName: name
-//     appName: 'dapr-distributor'
-//     queueNameForScaling: 'order-ingress-dapr'
-//     location: location
-//     imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
-//   }
-//   dependsOn: [
-//     containerAppsResources
-//     appInsightsResources
-//     keyVaultResources
-//     serviceBusResources
-//   ]
-// }
+module daprDistResources './daprdist.bicep' = {
+  name: 'daprdist-resources'
+  params: {
+    envName: name
+    appName: 'dapr-distributor'
+    queueNameForScaling: 'order-ingress-dapr'
+    location: location
+    imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module daprRecvExpResources './daprrecvexp.bicep' = {
+  name: 'daprrecvexp-resources'
+  params: {
+    envName: name
+    appName: 'dapr-recvexp'
+    queueNameForScaling: 'order-express-dapr'
+    location: location
+    imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module daprRecvStdResources './daprrecvstd.bicep' = {
+  name: 'daprrecvstd-resources'
+  params: {
+    envName: name
+    appName: 'dapr-recvstd'
+    queueNameForScaling: 'order-standard-dapr'
+    location: location
+    imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
 
 output SERVICEBUS_CONNECTION string = serviceBusResources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = storageResources.outputs.STORAGE_BLOB_CONNECTION

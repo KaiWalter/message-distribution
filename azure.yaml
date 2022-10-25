@@ -27,3 +27,13 @@ services:
     project: src/dapr-distributor
     language: csharp
     host: containerapp
+
+  daprrecvexp:
+    project: src/dapr-recvexp
+    language: csharp
+    host: containerapp
+
+  daprrecvstd:
+    project: src/dapr-recvstd
+    language: csharp
+    host: containerapp
