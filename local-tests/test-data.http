@@ -2,7 +2,7 @@
 POST http://localhost:7071/api/Generate
 
 {
-    "Count":10
+    "Count":1
 }
 
 ###

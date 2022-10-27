@@ -12,10 +12,9 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-express-dapr", async ([FromBody] Order order) =>
+app.MapPost("/order-express-dapr", ([FromBody] Order order) =>
 {
-    Console.WriteLine(order.OrderId);
-    return Results.Ok(order.OrderId);
+    return Results.Ok();
 });
 
 await app.RunAsync();

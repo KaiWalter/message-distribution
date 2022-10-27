@@ -17,12 +17,11 @@ namespace funcdistributor
             [ServiceBus("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputStandardMessages,
             ILogger log)
         {
-            if (ingressMessage == null)
-            {
-                throw new ArgumentNullException(nameof(ingressMessage));
-            }
+            ArgumentNullException.ThrowIfNull(ingressMessage,nameof(ingressMessage));
 
             var order = JsonSerializer.Deserialize<Order>(ingressMessage);
+
+            ArgumentNullException.ThrowIfNull(order,nameof(ingressMessage));
 
             var outputMessage = new Message
             {

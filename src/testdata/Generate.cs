@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+using Models;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Models;
 
 namespace testdata
 {
@@ -24,6 +24,8 @@ namespace testdata
             ILogger log)
         {
             var generationRequest = await JsonSerializer.DeserializeAsync<GenerationRequest>(req.Body);
+
+            ArgumentNullException.ThrowIfNull(generationRequest,nameof(generationRequest));
 
             int count = generationRequest.Count ?? 10;
 

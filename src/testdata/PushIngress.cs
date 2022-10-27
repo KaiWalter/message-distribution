@@ -31,6 +31,8 @@ namespace testdata
             };
             var orderList = JsonSerializer.Deserialize<List<Order>>(ordersTestData, options);
 
+            ArgumentNullException.ThrowIfNull(orderList,nameof(ordersTestData));
+
             DateTime scheduleTime = DetermineScheduleTime(orderList.Count);
 
             foreach (var order in orderList)
@@ -62,6 +64,8 @@ namespace testdata
             };
             var orderList = JsonSerializer.Deserialize<List<Order>>(ordersTestData, options);
 
+            ArgumentNullException.ThrowIfNull(orderList,nameof(ordersTestData));
+
             DateTime scheduleTime = DetermineScheduleTime(orderList.Count);
 
             foreach (var order in orderList)
@@ -83,7 +87,7 @@ namespace testdata
             int scheduleDuration = 60;
             if (orderListCount >= 2000)
             {
-                scheduleDuration += (orderListCount / 2000) * 60;
+                scheduleDuration = orderListCount * 60 / 2000;
             }
 
             var scheduleTime = DateTime.UtcNow.AddSeconds(scheduleDuration);

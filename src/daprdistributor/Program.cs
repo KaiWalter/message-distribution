@@ -4,6 +4,8 @@ using Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().Build());
+
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
@@ -12,10 +14,11 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-ingress-dapr", async ([FromBody] Order order) =>
+app.MapPost("/order-ingress-dapr", async (
+    [FromBody] Order order,
+    [FromServices] DaprClient daprClient
+    ) =>
 {
-    var daprClient = new DaprClientBuilder().Build();
-
     switch (order.Delivery)
     {
         case Delivery.Express:
@@ -26,7 +29,9 @@ app.MapPost("/order-ingress-dapr", async ([FromBody] Order order) =>
             break;
     }
 
-    return Results.Ok(order.OrderId);
+    Console.WriteLine(order.OrderId);
+
+    return Results.Ok();
 });
 
 await app.RunAsync();

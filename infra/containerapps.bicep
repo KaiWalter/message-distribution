@@ -55,7 +55,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '8'
+          value: '16'
         }
       ]
       scopes: [
@@ -90,7 +90,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '8'
+          value: '16'
         }
       ]
       scopes: [
@@ -126,7 +126,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '8'
+          value: '16'
         }
       ]
       scopes: [

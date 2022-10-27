@@ -26,16 +26,31 @@ compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindi
 requests
 | where cloud_RoleInstance startswith "kw-pubsubdapr"
 | where name startswith "POST /order"
-| where timestamp > todatetime('2022-10-27T13:03:00.00Z')
+| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
 | summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
 | render columnchart
 
 requests
 | where cloud_RoleInstance startswith "kw-pubsubdapr"
 | where name startswith "POST /order"
-| where timestamp > todatetime('2022-10-27T13:03:00.00Z')
-| summarize count(),min(timestamp),max(timestamp)
+| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
+| summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+
+requests
+| where cloud_RoleName startswith "dapr"
+| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
+| where name startswith "bindings/order"
+| summarize count() by cloud_RoleName, bin(timestamp, 15s)
+| render columnchart
+
+requests
+| where cloud_RoleName startswith "dapr"
+| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
+| where name startswith "bindings/order"
+| summarize count(),sum(duration),min(timestamp),max(timestamp)
+| extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+
 
 requests
 | where cloud_RoleName startswith "func"
@@ -48,7 +63,7 @@ requests
 | where cloud_RoleName startswith "func"
 | where name != "Health"
 | where timestamp > todatetime('2022-10-27T13:19:00.00Z')
-| summarize count(),min(timestamp),max(timestamp)
+| summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
 ```
 
@@ -86,5 +101,25 @@ requests
       }
     ]
   }
+}
+```
+
+
+### sample order
+
+```
+{
+    "OrderId": 1009041,
+    "Description": "ote16qzk4a7s8zcs708b6nmaokc8vijlduue2fde",
+    "FirstName": "Newton",
+    "LastName": "Treutel",
+    "Delivery": 0,
+    "Items": [
+        {
+            "OrderItemId": 1,
+            "SKU": "5480-9625-7727",
+            "Quantity": 10
+        }
+    ]
 }
 ```
