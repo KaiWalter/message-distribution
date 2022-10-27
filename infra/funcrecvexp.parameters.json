@@ -1,15 +1,21 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "name": {
-        "value": "${AZURE_ENV_NAME}"
-      },
-      "location": {
-        "value": "${AZURE_LOCATION}"
-      },
-      "imageName": {
-        "value": "${SERVICE_FUNCRECVEXP_IMAGE_NAME}"
-      }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "envName": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "appName": {
+      "value": "funcrecvexp"
+    },
+    "queueNameForScaling": {
+      "value": "order-express-func"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "imageName": {
+      "value": "${SERVICE_FUNCRECVEXP_IMAGE_NAME}"
     }
   }
+}

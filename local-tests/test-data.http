@@ -6,6 +6,6 @@ POST http://localhost:7071/api/Generate
 }
 
 ###
-POST http://localhost:7071/api/PushIngress
+POST http://localhost:7071/api/PushIngressDapr
 
 {}

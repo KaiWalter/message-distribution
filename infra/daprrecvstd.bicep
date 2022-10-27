@@ -46,7 +46,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
 }
 
 resource capp 'Microsoft.App/containerApps@2022-03-01' = {
-  name: '${appName}-${resourceToken}'
+  name: '${envName}${appName}'
   location: location
   tags: union(tags, {
       'azd-service-name': appName
@@ -76,6 +76,10 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
           name: 'servicebus-connection'
           value: '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'
         }
+        {
+          name: 'appinsights-connection'
+          value: appInsights.properties.ConnectionString
+        }
       ]
       registries: [
         {
@@ -96,7 +100,16 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         {
           image: imageName
           name: appName
-          env: []
+          env: [
+            {
+              name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+              secretRef: 'appinsights-connection'
+            }
+            {
+              name: 'WEBSITE_SITE_NAME'
+              value: appName
+            }
+          ]
           probes: [
             {
               type: 'Liveness'
@@ -120,7 +133,7 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         }
       ]
       scale: {
-        minReplicas: 0
+        minReplicas: 1
         maxReplicas: 10
         rules: [
           {

@@ -1,7 +1,12 @@
 @minLength(1)
 @maxLength(64)
-@description('Name of the the environment which is used to generate a short unqiue hash used in all resources.')
-param name string
+@description('Name of the environment (which is used to generate a short unqiue hash used in all resources).')
+param envName string
+
+@minLength(1)
+@maxLength(64)
+@description('Name of the container app.')
+param appName string
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -9,9 +14,9 @@ param location string
 
 param imageName string
 
-var resourceToken = toLower(uniqueString(subscription().id, name, location))
+var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
-  'azd-env-name': name
+  'azd-env-name': envName
 }
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
@@ -38,8 +43,8 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
-  name: 'test-data-${resourceToken}'
+resource capp 'Microsoft.App/containerApps@2022-03-01' = {
+  name: '${envName}${appName}'
   location: location
   tags: union(tags, {
       'azd-service-name': 'testdata'
@@ -106,7 +111,7 @@ resource testdata 'Microsoft.App/containerApps@2022-06-01-preview' = {
             }
             {
               name: 'WEBSITE_SITE_NAME'
-              value: 'test-data'
+              value: appName
             }
             {
               name: 'AzureFunctionsWebHost__hostId'
@@ -144,7 +149,7 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
   properties: {
     accessPolicies: [
       {
-        objectId: testdata.identity.principalId
+        objectId: capp.identity.principalId
         permissions: {
           secrets: [
             'get'
@@ -157,4 +162,4 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
   }
 }
 
-output TESTDATA_URI string = 'https://${testdata.properties.configuration.ingress.fqdn}'
+output TESTDATA_URI string = 'https://${capp.properties.configuration.ingress.fqdn}'

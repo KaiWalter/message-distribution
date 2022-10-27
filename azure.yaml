@@ -4,36 +4,36 @@ name: message-distribution
 
 services:
   testdata:
-    project: src/test-data
+    project: src/testdata
     language: csharp
     host: containerapp
 
-  funcdist:
-    project: src/func-distributor
+  funcdistributor:
+    project: src/funcdistributor
     language: csharp
     host: containerapp
 
   funcrecvexp:
-    project: src/func-recvexp
+    project: src/funcrecvexp
     language: csharp
     host: containerapp
 
   funcrecvstd:
-    project: src/func-recvstd
+    project: src/funcrecvstd
     language: csharp
     host: containerapp
 
-  daprdist:
-    project: src/dapr-distributor
+  daprdistributor:
+    project: src/daprdistributor
     language: csharp
     host: containerapp
 
   daprrecvexp:
-    project: src/dapr-recvexp
+    project: src/daprrecvexp
     language: csharp
     host: containerapp
 
   daprrecvstd:
-    project: src/dapr-recvstd
+    project: src/daprrecvstd
     language: csharp
     host: containerapp

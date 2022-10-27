@@ -39,5 +39,6 @@ module resources './resources.bicep' = {
 
 output SERVICEBUS_CONNECTION string = resources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = resources.outputs.STORAGE_BLOB_CONNECTION
+output APPINSIGHTS_CONNECTION_STRING string = resources.outputs.APPINSIGHTS_CONNECTION_STRING
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_REGISTRY_NAME

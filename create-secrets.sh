@@ -9,4 +9,4 @@ JSON_STRING=$( jq -n \
                   --arg stc "$STORAGE_BLOB_CONNECTION" \
                   '{STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc}' )
 
-echo $JSON_STRING > src/dapr-distributor/secrets.json
+echo $JSON_STRING > src/daprdistributor/secrets.json

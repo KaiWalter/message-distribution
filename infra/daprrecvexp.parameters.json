@@ -6,7 +6,7 @@
         "value": "${AZURE_ENV_NAME}"
       },
       "appName": {
-        "value": "dapr-recvexp"
+        "value": "daprrecvexp"
       },
       "queueNameForScaling": {
         "value": "order-express-dapr"

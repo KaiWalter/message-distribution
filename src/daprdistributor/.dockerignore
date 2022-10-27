@@ -1,0 +1,3 @@
+appsettings.Development.json
+secrets.json
+*.sh

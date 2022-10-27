@@ -23,6 +23,7 @@ module containerAppsResources './containerapps.bicep' = {
   dependsOn: [
     serviceBusResources
     logAnalyticsResources
+    appInsightsResources
   ]
 }
 
@@ -76,7 +77,8 @@ module logAnalyticsResources './loganalytics.bicep' = {
 module testdataResources './testdata.bicep' = {
   name: 'testdata-resources'
   params: {
-    name: name
+    envName: name
+    appName: 'testdata'
     location: location
     imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
   }
@@ -88,10 +90,12 @@ module testdataResources './testdata.bicep' = {
   ]
 }
 
-module funcDistResources './funcdist.bicep' = {
+module funcDistResources './funcdistributor.bicep' = {
   name: 'funcdist-resources'
   params: {
-    name: name
+    envName: name
+    appName: 'funcdistributor'
+    queueNameForScaling: 'order-ingress-func'
     location: location
     imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
   }
@@ -106,7 +110,9 @@ module funcDistResources './funcdist.bicep' = {
 module funcRecvExpResources './funcrecvexp.bicep' = {
   name: 'funcrecvexp-resources'
   params: {
-    name: name
+    envName: name
+    appName: 'funcrecvexp'
+    queueNameForScaling: 'order-express-func'
     location: location
     imageName: funcRecvExpImageName != '' ? funcRecvExpImageName : 'nginx:latest'
   }
@@ -121,7 +127,9 @@ module funcRecvExpResources './funcrecvexp.bicep' = {
 module funcRecvStdResources './funcrecvstd.bicep' = {
   name: 'funcrecvstd-resources'
   params: {
-    name: name
+    envName: name
+    appName: 'funcrecvstd'
+    queueNameForScaling: 'order-standard-func'
     location: location
     imageName: funcRecvStdImageName != '' ? funcRecvStdImageName : 'nginx:latest'
   }
@@ -133,11 +141,11 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
   ]
 }
 
-module daprDistResources './daprdist.bicep' = {
+module daprDistResources './daprdistributor.bicep' = {
   name: 'daprdist-resources'
   params: {
     envName: name
-    appName: 'dapr-distributor'
+    appName: 'daprdistributor'
     queueNameForScaling: 'order-ingress-dapr'
     location: location
     imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
@@ -154,7 +162,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   name: 'daprrecvexp-resources'
   params: {
     envName: name
-    appName: 'dapr-recvexp'
+    appName: 'daprrecvexp'
     queueNameForScaling: 'order-express-dapr'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
@@ -171,7 +179,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   name: 'daprrecvstd-resources'
   params: {
     envName: name
-    appName: 'dapr-recvstd'
+    appName: 'daprrecvstd'
     queueNameForScaling: 'order-standard-dapr'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
@@ -187,5 +195,6 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
 output SERVICEBUS_CONNECTION string = serviceBusResources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = storageResources.outputs.STORAGE_BLOB_CONNECTION
 output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsightsResources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY
+output APPINSIGHTS_CONNECTION_STRING string = appInsightsResources.outputs.APPINSIGHTS_CONNECTION_STRING
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output AZURE_CONTAINER_REGISTRY_NAME string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_NAME

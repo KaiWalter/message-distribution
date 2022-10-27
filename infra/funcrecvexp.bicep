@@ -1,7 +1,14 @@
 @minLength(1)
 @maxLength(64)
-@description('Name of the the environment which is used to generate a short unqiue hash used in all resources.')
-param name string
+@description('Name of the environment (which is used to generate a short unqiue hash used in all resources).')
+param envName string
+
+@minLength(1)
+@maxLength(64)
+@description('Name of the container app.')
+param appName string
+
+param queueNameForScaling string
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -9,9 +16,9 @@ param location string
 
 param imageName string
 
-var resourceToken = toLower(uniqueString(subscription().id, name, location))
+var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
-  'azd-env-name': name
+  'azd-env-name': envName
 }
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
@@ -38,8 +45,8 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
-  name: 'func-recvexp-${resourceToken}'
+resource capp 'Microsoft.App/containerApps@2022-03-01' = {
+  name: '${envName}${appName}'
   location: location
   tags: union(tags, {
       'azd-service-name': 'funcrecvexp'
@@ -82,7 +89,7 @@ resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
       containers: [
         {
           image: imageName
-          name: 'func-recvexp'
+          name: 'funcrecvexp'
           env: [
             {
               name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -106,8 +113,9 @@ resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
             }
             {
               name: 'WEBSITE_SITE_NAME'
-              value: 'func-recvexp'
+              value: appName
             }
+
             {
               name: 'AzureFunctionsWebHost__hostId'
               value: guid(subscription().subscriptionId, resourceGroup().name)
@@ -136,7 +144,7 @@ resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
         }
       ]
       scale: {
-        minReplicas: 0
+        minReplicas: 1
         maxReplicas: 10
         rules: [
           {
@@ -144,7 +152,7 @@ resource funcrecvexp 'Microsoft.App/containerApps@2022-03-01' = {
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                queueName: 'order-express-func'
+                queueName: queueNameForScaling
                 messageCount: '100'
               }
               auth: [
@@ -166,7 +174,7 @@ resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-1
   properties: {
     accessPolicies: [
       {
-        objectId: funcrecvexp.identity.principalId
+        objectId: capp.identity.principalId
         permissions: {
           secrets: [
             'get'
