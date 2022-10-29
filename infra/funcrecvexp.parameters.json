@@ -8,7 +8,7 @@
     "appName": {
       "value": "funcrecvexp"
     },
-    "queueNameForScaling": {
+    "entityNameForScaling": {
       "value": "order-express-func"
     },
     "location": {

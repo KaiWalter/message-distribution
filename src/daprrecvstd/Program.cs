@@ -1,9 +1,7 @@
-﻿using Dapr.Client;
-using Microsoft.AspNetCore.Mvc;
+﻿using Dapr;
 using Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddApplicationInsightsTelemetry();
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
@@ -12,7 +10,7 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-standard-dapr", ([FromBody] Order order) =>
+app.MapPost("/order-standard-dapr", [Topic("order-pubsub", "order-standard-dapr")] (Order order) =>
 {
     return Results.Ok();
 });

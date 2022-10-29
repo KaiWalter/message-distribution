@@ -60,6 +60,7 @@ module appInsightsResources './appinsights.bicep' = {
   name: 'appinsights-resources'
   params: {
     location: location
+    loganalytics_workspace_id: logAnalyticsResources.outputs.LOGANALYTICS_WORKSPACE_ID
     tags: tags
     resourceToken: resourceToken
   }
@@ -95,7 +96,7 @@ module funcDistResources './funcdistributor.bicep' = {
   params: {
     envName: name
     appName: 'funcdistributor'
-    queueNameForScaling: 'order-ingress-func'
+    entityNameForScaling: 'order-ingress-func'
     location: location
     imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
   }
@@ -112,7 +113,7 @@ module funcRecvExpResources './funcrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'funcrecvexp'
-    queueNameForScaling: 'order-express-func'
+    entityNameForScaling: 'order-express-func'
     location: location
     imageName: funcRecvExpImageName != '' ? funcRecvExpImageName : 'nginx:latest'
   }
@@ -129,7 +130,7 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'funcrecvstd'
-    queueNameForScaling: 'order-standard-func'
+    entityNameForScaling: 'order-standard-func'
     location: location
     imageName: funcRecvStdImageName != '' ? funcRecvStdImageName : 'nginx:latest'
   }
@@ -146,7 +147,7 @@ module daprDistResources './daprdistributor.bicep' = {
   params: {
     envName: name
     appName: 'daprdistributor'
-    queueNameForScaling: 'order-ingress-dapr'
+    entityNameForScaling: 'order-ingress-dapr'
     location: location
     imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
   }
@@ -163,7 +164,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvexp'
-    queueNameForScaling: 'order-express-dapr'
+    entityNameForScaling: 'order-express-dapr'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
   }
@@ -180,7 +181,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvstd'
-    queueNameForScaling: 'order-standard-dapr'
+    entityNameForScaling: 'order-standard-dapr'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
   }

@@ -8,7 +8,7 @@
       "appName": {
         "value": "daprdistributor"
       },
-      "queueNameForScaling": {
+      "entityNameForScaling": {
         "value": "order-ingress-dapr"
       },
       "location": {

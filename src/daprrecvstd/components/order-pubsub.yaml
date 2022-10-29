@@ -1,16 +1,14 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: order-standard-dapr
+  name: order-pubsub
 spec:
-  type: bindings.azure.servicebusqueues
+  type: pubsub.azure.servicebus
   version: v1
   metadata:
     - name: connectionString
       secretKeyRef:
         name: SERVICEBUS_CONNECTION
         key:  SERVICEBUS_CONNECTION
-    - name: queueName
-      value: order-standard-dapr
 auth:
   secretStore: secretfile

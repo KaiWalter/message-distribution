@@ -1,5 +1,6 @@
 param resourceToken string
 param location string
+param loganalytics_workspace_id string
 param tags object
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
@@ -9,6 +10,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   kind: 'web'
   properties: {
     Application_Type: 'web'
+    WorkspaceResourceId: loganalytics_workspace_id
   }
 }
 

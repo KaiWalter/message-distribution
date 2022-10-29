@@ -8,7 +8,7 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
-param queueNameForScaling string
+param entityNameForScaling string
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -141,7 +141,7 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                queueName: queueNameForScaling
+                queueName: entityNameForScaling
                 messageCount: '100'
               }
               auth: [

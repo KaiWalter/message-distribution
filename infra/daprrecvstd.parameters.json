@@ -8,7 +8,7 @@
       "appName": {
         "value": "daprrecvstd"
       },
-      "queueNameForScaling": {
+      "entityNameForScaling": {
         "value": "order-standard-dapr"
       },
       "location": {

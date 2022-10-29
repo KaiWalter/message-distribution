@@ -1,11 +1,63 @@
+###
 
 POST http://localhost:7071/api/Generate
 
 {
-    "Count":1
+    "Count":10
 }
 
 ###
 POST http://localhost:7071/api/PushIngressDapr
 
 {}
+
+###
+POST http://localhost:5000/order-ingress-dapr
+Content-Type: application/json
+
+{
+    "OrderId": 1009041,
+    "OrderGuid": "{{$guid}}",
+    "Description": "ote16qzk4a7s8zcs708b6nmaokc8vijlduue2fde",
+    "FirstName": "Newton",
+    "LastName": "Treutel",
+    "Delivery": 0,
+    "Items": [
+        {
+            "OrderItemId": 1,
+            "SKU": "5480-9625-7727",
+            "Quantity": 10
+        }
+    ]
+}
+
+###
+
+@CURRENT_GUID={{$guid}}
+
+POST http://localhost:3500/v1.0/bindings/order-ingress-dapr
+
+{
+    "operation": "create",
+    "data": {
+        "orderId": 1009041,
+        "orderGuid": "{{CURRENT_GUID}}",
+        "description": "ote16qzk4a7s8zcs708b6nmaokc8vijlduue2fde",
+        "firstName": "Newton",
+        "lastName": "Treutel",
+        "delivery": 1,
+        "items": [
+            {
+            "orderItemId": 1,
+            "sku": "5480-9625-7727",
+            "quantity": 10
+            }
+        ]
+    },
+    "metadata":{
+        "id":"{{CURRENT_GUID}}",
+        "correlationID":"{{CURRENT_GUID}}"
+    }    
+}
+
+

@@ -26,7 +26,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
       }
     }
-    // daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
+    daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
   }
 
   resource comOrderIngress 'daprComponents' = {
@@ -64,10 +64,10 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
     }
   }
 
-  resource comOrderExpress 'daprComponents' = {
-    name: 'order-express-dapr'
+  resource comOrderPubSub 'daprComponents' = {
+    name: 'order-pubsub'
     properties: {
-      componentType: 'bindings.azure.servicebusqueues'
+      componentType: 'pubsub.azure.servicebus'
       version: 'v1'
       secrets: [
         {
@@ -79,10 +79,6 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         {
           name: 'connectionString'
           secretRef: 'sb-root-connectionstring'
-        }
-        {
-          name: 'queueName'
-          value: 'order-express-dapr'
         }
         {
           name: 'maxActiveMessages'
@@ -96,46 +92,85 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
       scopes: [
         'daprdistributor'
         'daprrecvexp'
-      ]
-    }
-  }
-
-  resource comOrderStandard 'daprComponents' = {
-    name: 'order-standard-dapr'
-    properties: {
-      componentType: 'bindings.azure.servicebusqueues'
-      version: 'v1'
-      secrets: [
-        {
-          name: 'sb-root-connectionstring'
-          value: '${listKeys('${sb.id}/AuthorizationRules/RootManageSharedAccessKey', sb.apiVersion).primaryConnectionString};EntityPath=orders'
-        }
-      ]
-      metadata: [
-        {
-          name: 'connectionString'
-          secretRef: 'sb-root-connectionstring'
-        }
-        {
-          name: 'queueName'
-          value: 'order-standard-dapr'
-        }
-        {
-          name: 'maxActiveMessages'
-          value: '1000'
-        }
-        {
-          name:' maxConcurrentHandlers'
-          value: '16'
-        }
-      ]
-      scopes: [
-        'daprdistributor'
         'daprrecvstd'
       ]
     }
   }
+
+//   resource comOrderExpress 'daprComponents' = {
+//     name: 'order-express-dapr'
+//     properties: {
+//       componentType: 'bindings.azure.servicebusqueues'
+//       version: 'v1'
+//       secrets: [
+//         {
+//           name: 'sb-root-connectionstring'
+//           value: '${listKeys('${sb.id}/AuthorizationRules/RootManageSharedAccessKey', sb.apiVersion).primaryConnectionString};EntityPath=orders'
+//         }
+//       ]
+//       metadata: [
+//         {
+//           name: 'connectionString'
+//           secretRef: 'sb-root-connectionstring'
+//         }
+//         {
+//           name: 'queueName'
+//           value: 'order-express-dapr'
+//         }
+//         {
+//           name: 'maxActiveMessages'
+//           value: '1000'
+//         }
+//         {
+//           name:' maxConcurrentHandlers'
+//           value: '16'
+//         }
+//       ]
+//       scopes: [
+//         'daprdistributor'
+//         'daprrecvexp'
+//       ]
+//     }
+//   }
+
+//   resource comOrderStandard 'daprComponents' = {
+//     name: 'order-standard-dapr'
+//     properties: {
+//       componentType: 'bindings.azure.servicebusqueues'
+//       version: 'v1'
+//       secrets: [
+//         {
+//           name: 'sb-root-connectionstring'
+//           value: '${listKeys('${sb.id}/AuthorizationRules/RootManageSharedAccessKey', sb.apiVersion).primaryConnectionString};EntityPath=orders'
+//         }
+//       ]
+//       metadata: [
+//         {
+//           name: 'connectionString'
+//           secretRef: 'sb-root-connectionstring'
+//         }
+//         {
+//           name: 'queueName'
+//           value: 'order-standard-dapr'
+//         }
+//         {
+//           name: 'maxActiveMessages'
+//           value: '1000'
+//         }
+//         {
+//           name:' maxConcurrentHandlers'
+//           value: '16'
+//         }
+//       ]
+//       scopes: [
+//         'daprdistributor'
+//         'daprrecvstd'
+//       ]
+//     }
+//   }
 }
+
+
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = {
   name: 'contreg${resourceToken}'

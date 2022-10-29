@@ -20,51 +20,52 @@ azd up
 
 compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-csharp> vs <https://docs.dapr.io/reference/components-reference/supported-bindings/servicebusqueues/>
 
-### check telemetry
+### telemetry results
+
+#### Dapr
+
 
 ```
 requests
-| where cloud_RoleInstance startswith "kw-pubsubdapr"
-| where name startswith "POST /order"
-| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
-| summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
-| render columnchart
-
-requests
-| where cloud_RoleInstance startswith "kw-pubsubdapr"
-| where name startswith "POST /order"
-| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
-| summarize count(),sum(duration),min(timestamp),max(timestamp)
-| extend datetime_diff('millisecond', max_timestamp, min_timestamp)
-
-requests
-| where cloud_RoleName startswith "dapr"
-| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
-| where name startswith "bindings/order"
+| where name startswith "pubsub/order" or name startswith "bindings/order"
+| where timestamp > todatetime('2022-10-29T10:31:11.0515593Z')
 | summarize count() by cloud_RoleName, bin(timestamp, 15s)
 | render columnchart
 
 requests
-| where cloud_RoleName startswith "dapr"
-| where timestamp > todatetime('2022-10-27T18:54:00.00Z')
-| where name startswith "bindings/order"
+| where name startswith "pubsub/order" or name startswith "bindings/order"
+| where timestamp > todatetime('2022-10-29T10:31:11.0515593Z')
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+```
+
+```
+"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
+20000,"211611.27200000006","10/29/2022, 10:33:42.183 AM","10/29/2022, 10:35:59.885 AM",137702
+```
+
+#### Functions
 
 
+```
 requests
 | where cloud_RoleName startswith "func"
 | where name != "Health"
-| where timestamp > todatetime('2022-10-27T13:19:00.00Z')
+| where timestamp > todatetime('2022-10-29T10:43:09.5562353Z')
 | summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
 | render columnchart
 
 requests
 | where cloud_RoleName startswith "func"
 | where name != "Health"
-| where timestamp > todatetime('2022-10-27T13:19:00.00Z')
+| where timestamp > todatetime('2022-10-29T10:43:09.5562353Z')
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+```
+
+```
+"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
+20000,"3689825.1065000026","10/29/2022, 10:45:41.187 AM","10/29/2022, 10:46:44.034 AM",62847
 ```
 
 ### errors

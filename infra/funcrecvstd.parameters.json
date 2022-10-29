@@ -8,7 +8,7 @@
     "appName": {
       "value": "funcrecvstd"
     },
-    "queueNameForScaling": {
+    "entityNameForScaling": {
       "value": "order-standard-func"
     },
     "location": {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Models
@@ -5,6 +6,7 @@ namespace Models
     public class Order
     {
         public int OrderId { get; set; }
+        public Guid OrderGuid { get; set; }
         public string? Description { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

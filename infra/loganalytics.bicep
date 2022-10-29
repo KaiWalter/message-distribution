@@ -10,9 +10,12 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
     retentionInDays: 30
     features: {
       searchVersion: 1
+      immediatePurgeDataOn30Days: true
     }
     sku: {
       name: 'PerGB2018'
     }
   })
 }
+
+output LOGANALYTICS_WORKSPACE_ID string = logAnalyticsWorkspace.id

@@ -40,19 +40,20 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
     }
   }
 
-  resource queueOrderStandardDapr 'queues' = {
+  resource topicOrderExpressDapr 'topics' = {
+    name: 'order-express-dapr'
+    properties: {
+      maxSizeInMegabytes: 4096
+    }
+  }
+
+  resource topicOrderStandardDapr 'topics' = {
     name: 'order-standard-dapr'
     properties: {
       maxSizeInMegabytes: 4096
     }
   }
 
-  resource queueOrderExpressDapr 'queues' = {
-    name: 'order-express-dapr'
-    properties: {
-      maxSizeInMegabytes: 4096
-    }
-  }
 }
 
 output SERVICEBUS_CONNECTION string = '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'

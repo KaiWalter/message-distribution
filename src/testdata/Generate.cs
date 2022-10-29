@@ -39,6 +39,7 @@ namespace testdata
 
             var fakeOrders = new Faker<Order>()
                     .RuleFor(o => o.OrderId, _ => orderIds++)
+                    .RuleFor(u => u.OrderGuid, f => Guid.NewGuid())
                     .RuleFor(o => o.Description, f => f.Random.AlphaNumeric(40))
                     .RuleFor(o => o.FirstName, f => f.Name.FirstName())
                     .RuleFor(o => o.LastName, f => f.Name.LastName())

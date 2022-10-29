@@ -21,3 +21,10 @@ JSON_STRING=$( jq -n \
 echo $JSON_STRING > src/daprdistributor/appsettings.Development.json
 echo $JSON_STRING > src/daprrecvexp/appsettings.Development.json
 echo $JSON_STRING > src/daprrecvstd/appsettings.Development.json
+
+JSON_STRING=$( jq -n \
+                  '{Logging: {LogLevel: {Default: "Information" }}}' )
+
+echo $JSON_STRING > src/daprdistributor/appsettings.json
+echo $JSON_STRING > src/daprrecvexp/appsettings.json
+echo $JSON_STRING > src/daprrecvstd/appsettings.json
