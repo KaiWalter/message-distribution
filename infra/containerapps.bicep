@@ -51,11 +51,11 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name: 'maxActiveMessages'
-          value: '1000'
+          value: '400'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '16'
+          value: '4'
         }
       ]
       scopes: [
@@ -82,11 +82,11 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name: 'maxActiveMessages'
-          value: '1000'
+          value: '400'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '16'
+          value: '4'
         }
       ]
       scopes: [
@@ -96,78 +96,6 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
       ]
     }
   }
-
-//   resource comOrderExpress 'daprComponents' = {
-//     name: 'order-express-dapr'
-//     properties: {
-//       componentType: 'bindings.azure.servicebusqueues'
-//       version: 'v1'
-//       secrets: [
-//         {
-//           name: 'sb-root-connectionstring'
-//           value: '${listKeys('${sb.id}/AuthorizationRules/RootManageSharedAccessKey', sb.apiVersion).primaryConnectionString};EntityPath=orders'
-//         }
-//       ]
-//       metadata: [
-//         {
-//           name: 'connectionString'
-//           secretRef: 'sb-root-connectionstring'
-//         }
-//         {
-//           name: 'queueName'
-//           value: 'order-express-dapr'
-//         }
-//         {
-//           name: 'maxActiveMessages'
-//           value: '1000'
-//         }
-//         {
-//           name:' maxConcurrentHandlers'
-//           value: '16'
-//         }
-//       ]
-//       scopes: [
-//         'daprdistributor'
-//         'daprrecvexp'
-//       ]
-//     }
-//   }
-
-//   resource comOrderStandard 'daprComponents' = {
-//     name: 'order-standard-dapr'
-//     properties: {
-//       componentType: 'bindings.azure.servicebusqueues'
-//       version: 'v1'
-//       secrets: [
-//         {
-//           name: 'sb-root-connectionstring'
-//           value: '${listKeys('${sb.id}/AuthorizationRules/RootManageSharedAccessKey', sb.apiVersion).primaryConnectionString};EntityPath=orders'
-//         }
-//       ]
-//       metadata: [
-//         {
-//           name: 'connectionString'
-//           secretRef: 'sb-root-connectionstring'
-//         }
-//         {
-//           name: 'queueName'
-//           value: 'order-standard-dapr'
-//         }
-//         {
-//           name: 'maxActiveMessages'
-//           value: '1000'
-//         }
-//         {
-//           name:' maxConcurrentHandlers'
-//           value: '16'
-//         }
-//       ]
-//       scopes: [
-//         'daprdistributor'
-//         'daprrecvstd'
-//       ]
-//     }
-//   }
 }
 
 

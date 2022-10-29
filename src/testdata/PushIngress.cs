@@ -56,7 +56,11 @@ namespace testdata
 
             return new CreatedResult(
                 source.ToLowerInvariant(), 
-                new {Count = orderList.Count.ToString(), StartTimestamp=startTimeStamp}
+                new {
+                    Count = orderList.Count.ToString(),
+                    StartTimestamp=startTimeStamp,
+                    ScheduledTimestamp=scheduleTime.ToString("o", CultureInfo.InvariantCulture),
+                }
             );
         }
 

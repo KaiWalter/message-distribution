@@ -42,6 +42,13 @@ requests
 ```
 "count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
 20000,"211611.27200000006","10/29/2022, 10:33:42.183 AM","10/29/2022, 10:35:59.885 AM",137702
+
+# 4/400  | where timestamp between( todatetime('2022-10-29T17:35:10.0176800Z') .. todatetime('2022-10-29T17:40:10.0176800Z') )
+# 8/800  | where timestamp between( todatetime('2022-10-29T11:25:17.0033012Z') .. todatetime('2022-10-29T11:29:48.0033012Z') )
+#16/1600 | where timestamp between( todatetime('2022-10-29T11:06:11.7950005Z') .. todatetime('2022-10-29T11:16:11.7950005Z') )
+#16/1000 | where timestamp between( todatetime('2022-10-29T10:31:11.0515593Z') .. todatetime('2022-10-29T10:36:11.0515593Z') )
+
+
 ```
 
 #### Functions

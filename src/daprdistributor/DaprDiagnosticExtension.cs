@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-public static class DaprDiagnoticExtension
+public static class DaprDiagnosticExtension
 {
     public static void AddTraceStateEntry(this Activity activity, string key, string value)
     {

@@ -19,15 +19,14 @@ app.MapPost("/order-ingress-dapr", async (
     ) =>
 {
     Activity.Current?.AddTraceStateEntry("OrderGuid", order.OrderGuid.ToString());
+    Activity.Current?.AddTraceStateEntry("Delivery", order.Delivery.ToString());
 
     switch (order.Delivery)
     {
         case Delivery.Express:
-            // await daprClient.InvokeBindingAsync("order-express-dapr", "create", order);
             await daprClient.PublishEventAsync("order-pubsub","order-express-dapr",order);
             break;
         case Delivery.Standard:
-            // telemetryClient.TrackTrace($"send {order.OrderId} to Standard", trace);
             await daprClient.PublishEventAsync("order-pubsub","order-standard-dapr",order);
             break;
     }
