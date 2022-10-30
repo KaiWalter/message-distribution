@@ -159,3 +159,7 @@ requests
 ## enhance telemetry
 
 - [mapping OpenTelemetry attribute to Application Insights attribute](https://github.com/frigus02/opentelemetry-application-insights/blob/2e5eda625779e7c04ab22126b628639d1873e656/src/lib.rs#L157)
+
+## to dos
+
+- [ ] [deploy AKS alternative](https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-bicep?tabs=azure-cli%2CCLI#review-the-bicep-file)

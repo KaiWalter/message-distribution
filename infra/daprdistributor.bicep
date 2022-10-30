@@ -138,6 +138,7 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
               type: 'azure-servicebus'
               metadata: {
                 queueName: entityNameForScaling
+                namespace: serviceBusNamespace.name
                 messageCount: '100'
               }
               auth: [

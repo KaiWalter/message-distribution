@@ -50,12 +50,16 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
           value: 'order-ingress-dapr'
         }
         {
-          name: 'maxActiveMessages'
-          value: '16'
+          name: 'maxBulkCount'
+          value: '100'
         }
         {
-          name:' maxConcurrentHandlers'
-          value: '16'
+          name: 'maxActiveMessages'
+          value: '100'
+        }
+        {
+          name: 'maxConcurrentHandlers'
+          value: '1'
         }
       ]
       scopes: [
@@ -81,12 +85,16 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
           secretRef: 'sb-root-connectionstring'
         }
         {
-          name: 'maxActiveMessages'
-          value: '16'
+          name: 'maxBulkCount'
+          value: '100'
         }
         {
-          name:' maxConcurrentHandlers'
-          value: '16'
+          name: 'maxActiveMessages'
+          value: '100'
+        }
+        {
+          name: 'maxConcurrentHandlers'
+          value: '1'
         }
       ]
       scopes: [
@@ -97,8 +105,6 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
     }
   }
 }
-
-
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = {
   name: 'contreg${resourceToken}'

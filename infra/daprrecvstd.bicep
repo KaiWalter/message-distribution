@@ -139,7 +139,8 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
               metadata: {
                 topicName: entityNameForScaling
                 subscriptionName: appName
-                messageCount: '5'
+                namespace: serviceBusNamespace.name
+                messageCount: '100'
               }
               auth: [
                 {
