@@ -1,10 +1,17 @@
 ﻿using Dapr.Client;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Diagnostics;
+using Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().Build());
+
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
+    o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer());
+});
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
@@ -18,16 +25,13 @@ app.MapPost("/order-ingress-dapr", async (
     [FromServices] DaprClient daprClient
     ) =>
 {
-    Activity.Current?.AddTraceStateEntry("OrderGuid", order.OrderGuid.ToString());
-    Activity.Current?.AddTraceStateEntry("Delivery", order.Delivery.ToString());
-
     switch (order.Delivery)
     {
         case Delivery.Express:
-            await daprClient.PublishEventAsync("order-pubsub","order-express-dapr",order);
+            await daprClient.PublishEventAsync("order-pubsub", "order-express-dapr", order);
             break;
         case Delivery.Standard:
-            await daprClient.PublishEventAsync("order-pubsub","order-standard-dapr",order);
+            await daprClient.PublishEventAsync("order-pubsub", "order-standard-dapr", order);
             break;
     }
 

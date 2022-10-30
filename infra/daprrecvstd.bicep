@@ -105,10 +105,6 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
               secretRef: 'appinsights-connection'
             }
-            {
-              name: 'WEBSITE_SITE_NAME'
-              value: appName
-            }
           ]
           probes: [
             {
@@ -143,7 +139,7 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
               metadata: {
                 topicName: entityNameForScaling
                 subscriptionName: appName
-                messageCount: '100'
+                messageCount: '5'
               }
               auth: [
                 {

@@ -53,13 +53,7 @@ namespace testdata
 
             var orders = fakeOrders.Generate(count);
 
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                Converters = {
-                    new JsonStringEnumConverter()
-                }
-            };
-            string jsonToUpload = JsonSerializer.Serialize(orders, options);
+            string jsonToUpload = JsonSerializer.Serialize(orders);
 
             using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonToUpload)))
             {

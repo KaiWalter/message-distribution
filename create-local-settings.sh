@@ -16,14 +16,14 @@ echo $JSON_STRING > src/funcrecvstd/local.settings.json
 
 JSON_STRING=$( jq -n \
                   --arg aic "$APPINSIGHTS_CONNECTION_STRING" \
-                  '{Logging: {LogLevel: {Default: "Information" }}, ApplicationInsights: {ConnectionString: $aic }}' )
+                  '{Logging: {LogLevel: {Default: "Information", "Microsoft.AspNetCore": "Information" }},ApplicationInsights:{ConnectionString: $aic, EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
 
 echo $JSON_STRING > src/daprdistributor/appsettings.Development.json
 echo $JSON_STRING > src/daprrecvexp/appsettings.Development.json
 echo $JSON_STRING > src/daprrecvstd/appsettings.Development.json
 
 JSON_STRING=$( jq -n \
-                  '{Logging: {LogLevel: {Default: "Information" }}}' )
+                  '{Logging: {LogLevel: {Default: "Warning", "Microsoft.AspNetCore": "Information" }},ApplicationInsights:{EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
 
 echo $JSON_STRING > src/daprdistributor/appsettings.json
 echo $JSON_STRING > src/daprrecvexp/appsettings.json

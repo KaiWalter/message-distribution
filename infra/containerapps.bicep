@@ -26,7 +26,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
       }
     }
-    daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
+    // daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
   }
 
   resource comOrderIngress 'daprComponents' = {
@@ -51,11 +51,11 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name: 'maxActiveMessages'
-          value: '400'
+          value: '16'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '4'
+          value: '16'
         }
       ]
       scopes: [
@@ -82,11 +82,11 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name: 'maxActiveMessages'
-          value: '400'
+          value: '16'
         }
         {
           name:' maxConcurrentHandlers'
-          value: '4'
+          value: '16'
         }
       ]
       scopes: [

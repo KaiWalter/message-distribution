@@ -1,7 +1,17 @@
 ﻿using Dapr;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Mvc;
 using Models;
+using Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.Configure<TelemetryConfiguration>((o) =>
+{
+    o.TelemetryInitializers.Add(new AppInsightsTelemetryInitializer());
+});
+
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
@@ -10,8 +20,12 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-standard-dapr", [Topic("order-pubsub", "order-standard-dapr")] (Order order) =>
+app.MapPost("/order-standard-dapr", [Topic("order-pubsub", "order-standard-dapr")] (
+    ILogger<Program> log,
+    Order order
+    ) =>
 {
+    log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
     return Results.Ok();
 });
 

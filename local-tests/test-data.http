@@ -21,7 +21,7 @@ Content-Type: application/json
     "Description": "ote16qzk4a7s8zcs708b6nmaokc8vijlduue2fde",
     "FirstName": "Newton",
     "LastName": "Treutel",
-    "Delivery": 0,
+    "Delivery": "Express",
     "Items": [
         {
             "OrderItemId": 1,
@@ -45,7 +45,7 @@ POST http://localhost:3500/v1.0/bindings/order-ingress-dapr
         "description": "ote16qzk4a7s8zcs708b6nmaokc8vijlduue2fde",
         "firstName": "Newton",
         "lastName": "Treutel",
-        "delivery": 1,
+        "delivery": "Standard",
         "items": [
             {
             "orderItemId": 1,

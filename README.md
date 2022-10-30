@@ -7,20 +7,42 @@ With this repository I want to evaluate and performance test various asynchronou
 **Azure Dev CLI** is used to create the environment:
 
 - initialize - select region and subscription
-- pull `azd` values into environment variables
 - deploy environment
+- create local (and application) settings files for local debugging
+- create local secrets files
+- generate a test data set to be used for performance tests into Azure Storage
 
 ```shell
-azd init
-source <(azd env get-values | sed 's/AZURE_/export AZURE_/g')
+azd new
 azd up
+./create-local-settings.sh
+./create-secrets.sh
+./generate-test-data.sh
 ```
 
-### fine tuning
+## test environment
+
+then either push test data into the Dapr or Functions application scenario:
+
+```shell
+push-ingress.sh dapr
+```
+
+or
+
+```shell
+push-ingress.sh func
+```
+
+---
+
+## unsorted
+
+### fine tuning Azure Service bus configuration
 
 compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-csharp> vs <https://docs.dapr.io/reference/components-reference/supported-bindings/servicebusqueues/>
 
-### telemetry results
+### get telemetry results
 
 #### Dapr
 
@@ -131,3 +153,9 @@ requests
     ]
 }
 ```
+
+---
+
+## enhance telemetry
+
+- [mapping OpenTelemetry attribute to Application Insights attribute](https://github.com/frigus02/opentelemetry-application-insights/blob/2e5eda625779e7c04ab22126b628639d1873e656/src/lib.rs#L157)
