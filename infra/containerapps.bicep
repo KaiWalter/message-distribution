@@ -49,17 +49,17 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
           name: 'queueName'
           value: 'order-ingress-dapr'
         }
-        {
-          name: 'maxBulkCount'
-          value: '100'
-        }
+        // { wait for Dapr 1.10
+        //   name: 'maxBulkSubCount'
+        //   value: '100'
+        // }
         {
           name: 'maxActiveMessages'
-          value: '100'
+          value: '1000'
         }
         {
           name: 'maxConcurrentHandlers'
-          value: '1'
+          value: '8'
         }
       ]
       scopes: [
@@ -84,17 +84,17 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
           name: 'connectionString'
           secretRef: 'sb-root-connectionstring'
         }
-        {
-          name: 'maxBulkCount'
-          value: '100'
-        }
+        // { wait for Dapr 1.10
+        //   name: 'maxBulkSubCount'
+        //   value: '100'
+        // }
         {
           name: 'maxActiveMessages'
-          value: '100'
+          value: '1000'
         }
         {
           name: 'maxConcurrentHandlers'
-          value: '1'
+          value: '8'
         }
       ]
       scopes: [

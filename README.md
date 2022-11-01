@@ -44,8 +44,7 @@ compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindi
 
 ### get telemetry results
 
-#### Dapr
-
+#### Dapr direct telemetry
 
 ```
 requests
@@ -69,9 +68,19 @@ requests
 # 8/800  | where timestamp between( todatetime('2022-10-29T11:25:17.0033012Z') .. todatetime('2022-10-29T11:29:48.0033012Z') )
 #16/1600 | where timestamp between( todatetime('2022-10-29T11:06:11.7950005Z') .. todatetime('2022-10-29T11:16:11.7950005Z') )
 #16/1000 | where timestamp between( todatetime('2022-10-29T10:31:11.0515593Z') .. todatetime('2022-10-29T10:36:11.0515593Z') )
+```
 
+#### Dapr with App Insights
 
 ```
+requests
+| where timestamp >= todatetime('2022-11-01T04:26:42.4586555Z')
+| where name startswith "POST"
+| where cloud_RoleInstance startswith "kws2daprdist"
+| summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
+| render columnchart
+```
+
 
 #### Functions
 
