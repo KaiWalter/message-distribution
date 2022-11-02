@@ -7,14 +7,15 @@
     "logging": {
         "fileLoggingMode": "debugOnly",
         "logLevel": {
-            "Host.Results": "Trace",
-            "Function": "Trace",
-            "default": "Error"
+            "Microsoft": "Error",
+            "Azure": "Error",
+            "default": "Information"
         },
         "applicationInsights": {
             "samplingSettings": {
                 "isEnabled": false
             }
         }
-    }
+    },
+    "extensions": {}
 }

@@ -44,66 +44,49 @@ compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindi
 
 ### get telemetry results
 
-#### Dapr direct telemetry
-
-```
-requests
-| where name startswith "pubsub/order" or name startswith "bindings/order"
-| where timestamp > todatetime('2022-10-29T10:31:11.0515593Z')
-| summarize count() by cloud_RoleName, bin(timestamp, 15s)
-| render columnchart
-
-requests
-| where name startswith "pubsub/order" or name startswith "bindings/order"
-| where timestamp > todatetime('2022-10-29T10:31:11.0515593Z')
-| summarize count(),sum(duration),min(timestamp),max(timestamp)
-| extend datetime_diff('millisecond', max_timestamp, min_timestamp)
-```
-
-```
-"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
-20000,"211611.27200000006","10/29/2022, 10:33:42.183 AM","10/29/2022, 10:35:59.885 AM",137702
-
-# 4/400  | where timestamp between( todatetime('2022-10-29T17:35:10.0176800Z') .. todatetime('2022-10-29T17:40:10.0176800Z') )
-# 8/800  | where timestamp between( todatetime('2022-10-29T11:25:17.0033012Z') .. todatetime('2022-10-29T11:29:48.0033012Z') )
-#16/1600 | where timestamp between( todatetime('2022-10-29T11:06:11.7950005Z') .. todatetime('2022-10-29T11:16:11.7950005Z') )
-#16/1000 | where timestamp between( todatetime('2022-10-29T10:31:11.0515593Z') .. todatetime('2022-10-29T10:36:11.0515593Z') )
-```
-
 #### Dapr with App Insights
 
 ```
 requests
-| where timestamp >= todatetime('2022-11-01T04:26:42.4586555Z')
-| where name startswith "POST"
-| where cloud_RoleInstance startswith "kws2daprdist"
-| summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
-| render columnchart
-```
-
-
-#### Functions
-
-
-```
-requests
-| where cloud_RoleName startswith "func"
-| where name != "Health"
-| where timestamp > todatetime('2022-10-29T10:43:09.5562353Z')
+| where timestamp >= todatetime('2022-11-02T06:45:45.8897869Z')
+| where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w]+dapr"
 | summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
 | render columnchart
 
 requests
-| where cloud_RoleName startswith "func"
-| where name != "Health"
-| where timestamp > todatetime('2022-10-29T10:43:09.5562353Z')
+| where timestamp >= todatetime('2022-11-02T06:45:45.8897869Z')
+| where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w]+dapr"
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
 ```
 
 ```
-"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
-20000,"3689825.1065000026","10/29/2022, 10:45:41.187 AM","10/29/2022, 10:46:44.034 AM",62847
+count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
+20000,"427845.1506999994","11/2/2022, 6:48:16.600 AM","11/2/2022, 6:49:11.000 AM",54400
+# 8 / 1000 | where timestamp >= todatetime('2022-11-02T06:45:45.8897869Z')
+```
+
+#### Functions
+
+```
+requests
+| where cloud_RoleName startswith "func"
+| where name != "Health"
+| where timestamp > todatetime('2022-11-02T06:55:55.0296786Z')
+| summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
+| render columnchart
+
+requests
+| where cloud_RoleName startswith "func"
+| where name != "Health"
+| where timestamp > todatetime('2022-11-02T06:55:55.0296786Z')
+| summarize count(),sum(duration),min(timestamp),max(timestamp)
+| extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+```
+
+```
+count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
+20000,"4636740.856899991","11/2/2022, 6:58:26.504 AM","11/2/2022, 6:59:34.671 AM",68167
 ```
 
 ### errors

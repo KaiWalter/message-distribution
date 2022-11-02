@@ -1,9 +1,8 @@
+using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Logging;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -23,17 +22,17 @@ namespace testdata
         public static IActionResult PushIngressFunc(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
-            [ServiceBus("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputMessages)
+            [ServiceBus("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
             => SplitAndScheduleOrders(nameof(PushIngressFunc),ordersTestData, outputMessages);
 
         [FunctionName(nameof(PushIngressDapr))]
         public static IActionResult PushIngressDapr(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
-            [ServiceBus("order-ingress-dapr", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputMessages)
+            [ServiceBus("order-ingress-dapr", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
             => SplitAndScheduleOrders(nameof(PushIngressDapr),ordersTestData, outputMessages);
 
-        private static IActionResult SplitAndScheduleOrders(string source, string ordersTestData, ICollector<Message> outputMessages)
+        private static IActionResult SplitAndScheduleOrders(string source, string ordersTestData, ICollector<ServiceBusMessage> outputMessages)
         {
             var startTimeStamp = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
 
@@ -64,15 +63,14 @@ namespace testdata
             );
         }
 
-        private static Message CreateOrderMessage(DateTime scheduleTime, Order order)
+        private static ServiceBusMessage CreateOrderMessage(DateTime scheduleTime, Order order)
         {
-            return new Message
+            return new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
             {
                 ContentType = "application/json",
-                Body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)),
                 MessageId = order.OrderGuid.ToString(),
                 CorrelationId = order.OrderGuid.ToString(),
-                ScheduledEnqueueTimeUtc = scheduleTime,
+                ScheduledEnqueueTime = scheduleTime,
             };
         }
 

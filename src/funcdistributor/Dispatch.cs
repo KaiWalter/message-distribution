@@ -1,10 +1,10 @@
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Models;
 using System;
 using System.Text;
 using System.Text.Json;
-using Models;
 
 namespace funcdistributor
 {
@@ -13,8 +13,8 @@ namespace funcdistributor
         [FunctionName("Dispatch")]
         public void Run(
             [ServiceBusTrigger("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            [ServiceBus("order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputExpressMessages,
-            [ServiceBus("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<Message> outputStandardMessages,
+            [ServiceBus("order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
+            [ServiceBus("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
             ILogger log)
         {
             ArgumentNullException.ThrowIfNull(ingressMessage,nameof(ingressMessage));
@@ -23,10 +23,9 @@ namespace funcdistributor
 
             ArgumentNullException.ThrowIfNull(order,nameof(ingressMessage));
 
-            var outputMessage = new Message
+            var outputMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
             {
                 ContentType = "application/json",
-                Body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)),
                 MessageId = order.OrderId.ToString(),
             };
 
