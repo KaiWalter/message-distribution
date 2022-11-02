@@ -236,3 +236,4 @@ compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindi
 ## to dos
 
 - [ ] [deploy AKS alternative](https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-bicep?tabs=azure-cli%2CCLI#review-the-bicep-file)
+- [ ] evaluate Dapr / WasmEdge - <https://youtu.be/uGo_1KY-QSM> <https://github.com/second-state/dapr-sdk-wasi> <https://github.com/second-state/dapr-wasm>
