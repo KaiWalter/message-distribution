@@ -20,10 +20,19 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-express-dapr", [Topic("order-pubsub", "order-express-dapr")] (
+app.MapPost("/t-order-express-dapr", [Topic("order-pubsub", "t-order-express-dapr")] (
     ILogger<Program> log, 
     Order order
     ) =>
+{
+    log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
+    return Results.Ok();
+});
+
+app.MapPost("/q-order-ingress-dapr", (
+    ILogger<Program> log, 
+    [FromBody] Order order
+    ) => 
 {
     log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
     return Results.Ok();

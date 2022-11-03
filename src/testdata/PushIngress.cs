@@ -18,19 +18,33 @@ namespace testdata
     {
         private const int SCHEDULE_PER_MINUTE = 4000;
 
-        [FunctionName(nameof(PushIngressFunc))]
-        public static IActionResult PushIngressFunc(
+        [FunctionName(nameof(PushIngressFuncQ))]
+        public static IActionResult PushIngressFuncQ(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
-            [ServiceBus("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
-            => SplitAndScheduleOrders(nameof(PushIngressFunc),ordersTestData, outputMessages);
+            [ServiceBus("q-order-ingress-func", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressFuncQ), ordersTestData, outputMessages);
 
-        [FunctionName(nameof(PushIngressDapr))]
-        public static IActionResult PushIngressDapr(
+        [FunctionName(nameof(PushIngressFuncT))]
+        public static IActionResult PushIngressFuncT(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
-            [ServiceBus("order-ingress-dapr", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
-            => SplitAndScheduleOrders(nameof(PushIngressDapr),ordersTestData, outputMessages);
+            [ServiceBus("t-order-ingress-func", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Topic, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressFuncT), ordersTestData, outputMessages);
+
+        [FunctionName(nameof(PushIngressDaprQ))]
+        public static IActionResult PushIngressDaprQ(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            [ServiceBus("q-order-ingress-dapr", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressDaprQ), ordersTestData, outputMessages);
+
+        [FunctionName(nameof(PushIngressDaprT))]
+        public static IActionResult PushIngressDaprT(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            [ServiceBus("t-order-ingress-dapr", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Topic, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressDaprT), ordersTestData, outputMessages);
 
         private static IActionResult SplitAndScheduleOrders(string source, string ordersTestData, ICollector<ServiceBusMessage> outputMessages)
         {
@@ -54,11 +68,12 @@ namespace testdata
             }
 
             return new CreatedResult(
-                source.ToLowerInvariant(), 
-                new {
+                source.ToLowerInvariant(),
+                new
+                {
                     Count = orderList.Count.ToString(),
-                    StartTimestamp=startTimeStamp,
-                    ScheduledTimestamp=scheduleTime.ToString("o", CultureInfo.InvariantCulture),
+                    StartTimestamp = startTimeStamp,
+                    ScheduledTimestamp = scheduleTime.ToString("o", CultureInfo.InvariantCulture),
                 }
             );
         }

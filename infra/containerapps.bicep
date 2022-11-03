@@ -10,9 +10,15 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   name: 'log-${resourceToken}'
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
-  name: 'appi-${resourceToken}'
-}
+// resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
+//   name: 'appi-${resourceToken}'
+// }
+
+var queueComponents = [
+  'q-order-ingress-dapr'
+  'q-order-express-dapr'
+  'q-order-standard-dapr'
+]
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: 'cae-${resourceToken}'
@@ -29,8 +35,8 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
     // daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
   }
 
-  resource comOrderIngress 'daprComponents' = {
-    name: 'order-ingress-dapr'
+  resource queueComponentResources 'daprComponents' = [for q in queueComponents: {
+    name: q
     properties: {
       componentType: 'bindings.azure.servicebusqueues'
       version: 'v1'
@@ -47,7 +53,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         }
         {
           name: 'queueName'
-          value: 'order-ingress-dapr'
+          value: q
         }
         // { wait for Dapr 1.10
         //   name: 'maxBulkSubCount'
@@ -64,9 +70,11 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
       ]
       scopes: [
         'daprdistributor'
+        'daprrecvexp'
+        'daprrecvstd'
       ]
     }
-  }
+  }]
 
   resource comOrderPubSub 'daprComponents' = {
     name: 'order-pubsub'

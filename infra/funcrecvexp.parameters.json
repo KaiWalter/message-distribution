@@ -9,7 +9,7 @@
       "value": "funcrecvexp"
     },
     "entityNameForScaling": {
-      "value": "order-express-func"
+      "value": "q-order-express-func"
     },
     "location": {
       "value": "${AZURE_LOCATION}"

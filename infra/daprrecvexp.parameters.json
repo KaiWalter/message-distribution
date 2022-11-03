@@ -9,7 +9,7 @@
         "value": "daprrecvexp"
       },
       "entityNameForScaling": {
-        "value": "order-express-dapr"
+        "value": "t-order-express-dapr"
       },
       "location": {
         "value": "${AZURE_LOCATION}"

@@ -3,6 +3,24 @@ param location string
 param skuName string = 'Standard'
 param tags object
 
+var queues = [
+  'q-order-ingress-func'
+  'q-order-standard-func'
+  'q-order-express-func'
+  'q-order-ingress-dapr'
+  'q-order-standard-dapr'
+  'q-order-express-dapr'
+]
+
+var topics = [
+  't-order-ingress-func'
+  't-order-express-func'
+  't-order-standard-func'
+  't-order-ingress-dapr'
+  't-order-express-dapr'
+  't-order-standard-dapr'
+]
+
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   name: 'sb-${resourceToken}'
   location: location
@@ -12,47 +30,19 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
     tier: skuName
   }
 
-  resource queueOrderIngressFunc 'queues' = {
-    name: 'order-ingress-func'
+  resource queueResources 'queues' = [for q in queues: {
+    name: q
     properties: {
       maxSizeInMegabytes: 4096
     }
-  }
+  }]
 
-  resource queueOrderStandardFunc 'queues' = {
-    name: 'order-standard-func'
+  resource topicResources 'topics' = [for t in topics: {
+    name: t
     properties: {
       maxSizeInMegabytes: 4096
     }
-  }
-
-  resource queueOrderExpressFunc 'queues' = {
-    name: 'order-express-func'
-    properties: {
-      maxSizeInMegabytes: 4096
-    }
-  }
-
-  resource queueOrderIngressDapr 'queues' = {
-    name: 'order-ingress-dapr'
-    properties: {
-      maxSizeInMegabytes: 4096
-    }
-  }
-
-  resource topicOrderExpressDapr 'topics' = {
-    name: 'order-express-dapr'
-    properties: {
-      maxSizeInMegabytes: 4096
-    }
-  }
-
-  resource topicOrderStandardDapr 'topics' = {
-    name: 'order-standard-dapr'
-    properties: {
-      maxSizeInMegabytes: 4096
-    }
-  }
+  }]
 
 }
 

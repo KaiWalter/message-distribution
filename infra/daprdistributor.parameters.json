@@ -9,7 +9,7 @@
         "value": "daprdistributor"
       },
       "entityNameForScaling": {
-        "value": "order-ingress-dapr"
+        "value": "q-order-ingress-dapr"
       },
       "location": {
         "value": "${AZURE_LOCATION}"

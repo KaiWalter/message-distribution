@@ -1,4 +1,5 @@
-﻿using Dapr.Client;
+﻿using Dapr;
+using Dapr.Client;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -17,10 +18,21 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 app.UseCloudEvents();
+app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/order-ingress-dapr", async (
+// app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+//     new {
+//         pubsubname = "order-pubsub",
+//         topic = "t-order-ingress-dapr",
+//         route = "/t-order-ingress-dapr",
+//         metadata = new {
+//             rawPayload= "true",
+//         }
+//     }}));
+
+app.MapPost("/t-order-ingress-dapr", [Topic("order-pubsub", "t-order-ingress-dapr", enableRawPayload: true)] async (
     [FromBody] Order order,
     [FromServices] DaprClient daprClient
     ) =>
@@ -28,10 +40,28 @@ app.MapPost("/order-ingress-dapr", async (
     switch (order.Delivery)
     {
         case Delivery.Express:
-            await daprClient.PublishEventAsync("order-pubsub", "order-express-dapr", order);
+            await daprClient.PublishEventAsync("order-pubsub", "t-order-express-dapr", order);
             break;
         case Delivery.Standard:
-            await daprClient.PublishEventAsync("order-pubsub", "order-standard-dapr", order);
+            await daprClient.PublishEventAsync("order-pubsub", "t-order-standard-dapr", order);
+            break;
+    }
+
+    return Results.Ok(order);
+});
+
+app.MapPost("/q-order-ingress-dapr", async (
+    [FromBody] Order order,
+    [FromServices] DaprClient daprClient
+    ) =>
+{
+    switch (order.Delivery)
+    {
+        case Delivery.Express:
+            await daprClient.InvokeBindingAsync("q-order-express-dapr", "create", order);
+            break;
+        case Delivery.Standard:
+            await daprClient.InvokeBindingAsync("q-order-standard-dapr", "create", order);
             break;
     }
 

@@ -10,7 +10,7 @@ namespace funcrecvexp
     {
         [FunctionName("Receiver")]
         public void Run(
-            [ServiceBusTrigger("order-express-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBusTrigger("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
             ILogger log
             )
         {

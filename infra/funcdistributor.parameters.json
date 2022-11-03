@@ -9,7 +9,7 @@
         "value": "funcdistributor"
       },
       "entityNameForScaling": {
-        "value": "order-ingress-func"
+        "value": "q-order-ingress-func"
       },
       "location": {
         "value": "${AZURE_LOCATION}"

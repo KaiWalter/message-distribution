@@ -9,7 +9,7 @@
       "value": "funcrecvstd"
     },
     "entityNameForScaling": {
-      "value": "order-standard-func"
+      "value": "q-order-standard-func"
     },
     "location": {
       "value": "${AZURE_LOCATION}"

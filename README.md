@@ -23,6 +23,7 @@ _as of 2022-11-02_
 
 **Azure Dev CLI** is used to create the environment:
 
+- install
 - initialize - select region and subscription
 - deploy environment
 - create local (and application) settings files for local debugging
@@ -30,6 +31,7 @@ _as of 2022-11-02_
 - generate a test data set to be used for performance tests into Azure Storage
 
 ```shell
+curl -fsSL https://aka.ms/install-azd.sh | bash
 azd new
 azd up
 ./create-local-settings.sh
@@ -85,9 +87,9 @@ _single message dispatching_
 ```csharp
         [FunctionName("Dispatch")]
         public void Run(
-            [ServiceBusTrigger("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            [ServiceBus("order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
-            [ServiceBus("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
+            [ServiceBusTrigger("q-order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBus("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
+            [ServiceBus("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
             ILogger log)
         {
             ArgumentNullException.ThrowIfNull(ingressMessage,nameof(ingressMessage));
@@ -102,9 +104,9 @@ _batched_
 ```csharp
         [FunctionName("Dispatch")]
         public void Run(
-            [ServiceBusTrigger("order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] ServiceBusReceivedMessage[] ingressMessages,
-            [ServiceBus("order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
-            [ServiceBus("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
+            [ServiceBusTrigger("q-order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] ServiceBusReceivedMessage[] ingressMessages,
+            [ServiceBus("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
+            [ServiceBus("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
             ILogger log)
         {
             foreach (var ingressMessage in ingressMessages)
@@ -119,14 +121,16 @@ _batched_
 
 ```
 requests
-| where timestamp >= todatetime('2022-11-02T06:45:45.8897869Z')
-| where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w]+dapr"
+| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w\\-]+dapr"
+| where success == true
 | summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
 | render columnchart
 
 requests
-| where timestamp >= todatetime('2022-11-02T06:45:45.8897869Z')
-| where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w]+dapr"
+| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w\\-]+dapr"
+| where success == true
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
 ```
@@ -143,14 +147,16 @@ count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
 requests
 | where cloud_RoleName startswith "func"
 | where name != "Health"
-| where timestamp > todatetime('2022-11-02T06:55:55.0296786Z')
+| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where success == true
 | summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
 | render columnchart
 
 requests
 | where cloud_RoleName startswith "func"
 | where name != "Health"
-| where timestamp > todatetime('2022-11-02T06:55:55.0296786Z')
+| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where success == true
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend datetime_diff('millisecond', max_timestamp, min_timestamp)
 ```
@@ -222,6 +228,26 @@ count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
 ---
 
 ## unsorted
+
+### rawPayload not working
+
+dapr publish --publish-app-id daprdistributor --pubsub order-pubsub --topic t-order-ingress-dapr --data '{"OrderId":10000,"Delivery":"Express","OrderGuid":"54f85e6d-53a7-4961-b589-087e476e31b5"}' --metadata '{"rawPayload":"true"}'
+
+curl -X "POST" http://localhost:3500/v1.0/publish/order-pubsub/t-order-ingress-dapr?metadata.rawPayload=true -H "Content-Type: application/json" -d '{"OrderId":10000,"Delivery":"Express","OrderGuid":"54f85e6d-53a7-4961-b589-087e476e31b5"}'
+
+<https://docs.dapr.io/developing-applications/building-blocks/pubsub/pubsub-raw/#declaratively-subscribe-to-raw-events>
+
+app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+    new {
+        pubsubname = "order-pubsub",
+        topic = "t-order-ingress-dapr",
+        route = "/t-order-ingress-dapr",
+        metadata = new {
+            rawPayload= "true",
+        }
+    }}));
+
+
 
 ### enhance telemetry in Dapr (no cloud_RoleInstance populated over OpenTelemetry -> Application Insights)
 

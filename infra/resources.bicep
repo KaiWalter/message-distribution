@@ -96,7 +96,7 @@ module funcDistResources './funcdistributor.bicep' = {
   params: {
     envName: name
     appName: 'funcdistributor'
-    entityNameForScaling: 'order-ingress-func'
+    entityNameForScaling: 'q-order-ingress-func'
     location: location
     imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
   }
@@ -113,7 +113,7 @@ module funcRecvExpResources './funcrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'funcrecvexp'
-    entityNameForScaling: 'order-express-func'
+    entityNameForScaling: 'q-order-express-func'
     location: location
     imageName: funcRecvExpImageName != '' ? funcRecvExpImageName : 'nginx:latest'
   }
@@ -130,7 +130,7 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'funcrecvstd'
-    entityNameForScaling: 'order-standard-func'
+    entityNameForScaling: 'q-order-standard-func'
     location: location
     imageName: funcRecvStdImageName != '' ? funcRecvStdImageName : 'nginx:latest'
   }
@@ -147,7 +147,7 @@ module daprDistResources './daprdistributor.bicep' = {
   params: {
     envName: name
     appName: 'daprdistributor'
-    entityNameForScaling: 'order-ingress-dapr'
+    entityNameForScaling: 'q-order-ingress-dapr'
     location: location
     imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
   }
@@ -164,7 +164,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvexp'
-    entityNameForScaling: 'order-express-dapr'
+    entityNameForScaling: 't-order-express-dapr'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
   }
@@ -181,7 +181,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvstd'
-    entityNameForScaling: 'order-standard-dapr'
+    entityNameForScaling: 't-order-standard-dapr'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
   }

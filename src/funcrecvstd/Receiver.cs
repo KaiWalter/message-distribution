@@ -10,7 +10,7 @@ namespace funcrecvstd
     {
         [FunctionName("Receiver")]
         public void Run(
-            [ServiceBusTrigger("order-standard-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBusTrigger("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
             ILogger log
             )
         {

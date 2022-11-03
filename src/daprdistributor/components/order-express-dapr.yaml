@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: q-order-ingress-dapr
+  name: q-order-express-dapr
 spec:
   type: bindings.azure.servicebusqueues
   version: v1
@@ -11,6 +11,6 @@ spec:
         name: SERVICEBUS_CONNECTION
         key:  SERVICEBUS_CONNECTION
     - name: queueName
-      value: q-order-ingress-dapr
+      value: q-order-express-dapr
 auth:
   secretStore: secretfile

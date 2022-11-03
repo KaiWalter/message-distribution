@@ -9,7 +9,7 @@
         "value": "daprrecvstd"
       },
       "entityNameForScaling": {
-        "value": "order-standard-dapr"
+        "value": "t-order-standard-dapr"
       },
       "location": {
         "value": "${AZURE_LOCATION}"
