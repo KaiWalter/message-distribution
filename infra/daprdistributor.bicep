@@ -15,6 +15,8 @@ param entityNameForScaling string
 param location string
 
 param imageName string
+param acrPullId string
+param kvGetId string
 
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
@@ -33,10 +35,6 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'appi-${resourceToken}'
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
-  name: 'keyvault${resourceToken}'
-}
-
 resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
   name: 'st${resourceToken}'
 }
@@ -52,7 +50,11 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
       'azd-service-name': appName
     })
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${acrPullId}': {}
+      '${kvGetId}': {}
+    }
   }
   properties: {
     managedEnvironmentId: containerAppsEnvironment.id
@@ -64,10 +66,6 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         transport: 'auto'
       }
       secrets: [
-        {
-          name: 'registry-password'
-          value: containerRegistry.listCredentials().passwords[0].value
-        }
         {
           name: 'storage-connection'
           value: 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${listKeys(stg.id, stg.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
@@ -83,9 +81,8 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
       ]
       registries: [
         {
-          server: '${containerRegistry.name}.azurecr.io'
-          username: containerRegistry.name
-          passwordSecretRef: 'registry-password'
+          server: containerRegistry.properties.loginServer
+          identity: acrPullId
         }
       ]
       dapr: {
@@ -153,23 +150,5 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         ]
       }
     }
-  }
-}
-
-resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-10-01' = {
-  name: '${keyVault.name}/add'
-  properties: {
-    accessPolicies: [
-      {
-        objectId: capp.identity.principalId
-        permissions: {
-          secrets: [
-            'get'
-            'list'
-          ]
-        }
-        tenantId: subscription().tenantId
-      }
-    ]
   }
 }

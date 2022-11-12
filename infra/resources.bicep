@@ -82,6 +82,8 @@ module testdataResources './testdata.bicep' = {
     appName: 'testdata'
     location: location
     imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -99,6 +101,8 @@ module funcDistResources './funcdistributor.bicep' = {
     entityNameForScaling: 'q-order-ingress-func'
     location: location
     imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -116,6 +120,8 @@ module funcRecvExpResources './funcrecvexp.bicep' = {
     entityNameForScaling: 'q-order-express-func'
     location: location
     imageName: funcRecvExpImageName != '' ? funcRecvExpImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -133,6 +139,8 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
     entityNameForScaling: 'q-order-standard-func'
     location: location
     imageName: funcRecvStdImageName != '' ? funcRecvStdImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -150,6 +158,8 @@ module daprDistResources './daprdistributor.bicep' = {
     entityNameForScaling: 'q-order-ingress-dapr'
     location: location
     imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -167,6 +177,8 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
     entityNameForScaling: 't-order-express-dapr'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -184,6 +196,8 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
     entityNameForScaling: 't-order-standard-dapr'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -199,3 +213,5 @@ output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsightsResources.outputs.APPI
 output APPINSIGHTS_CONNECTION_STRING string = appInsightsResources.outputs.APPINSIGHTS_CONNECTION_STRING
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output AZURE_CONTAINER_REGISTRY_NAME string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_NAME
+output AZURE_CONTAINER_REGISTRY_ACRPULL_ID string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+output AZURE_KEY_VAULT_SERVICE_GET_ID string = keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID

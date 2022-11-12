@@ -3,6 +3,36 @@ param principalId string = ''
 param resourceToken string
 param tags object
 
+resource miKeyVaultGet 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+  name: 'keyvault${resourceToken}-kv-get'
+  location: location
+}
+
+var policies = union([
+    {
+      objectId: miKeyVaultGet.properties.principalId
+      permissions: {
+        secrets: [
+          'get'
+          'list'
+        ]
+      }
+      tenantId: subscription().tenantId
+    }
+  ], (empty(principalId)) ? [] : [
+    {
+      objectId: principalId
+      permissions: {
+        secrets: [
+          'get'
+          'list'
+        ]
+      }
+      tenantId: subscription().tenantId
+    }
+  ]
+)
+
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   name: 'keyvault${resourceToken}'
   location: location
@@ -14,27 +44,10 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
       name: 'standard'
     }
     enablePurgeProtection: null
-    accessPolicies: []
+    accessPolicies: policies
   }
 
-}
-
-resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-10-01' = if (!empty(principalId)) {
-  name: '${keyVault.name}/add'
-  properties: {
-    accessPolicies: [
-      {
-        objectId: principalId
-        permissions: {
-          secrets: [
-            'get'
-            'list'
-          ]
-        }
-        tenantId: subscription().tenantId
-      }
-    ]
-  }
 }
 
 output AZURE_KEY_VAULT_ENDPOINT string = keyVault.properties.vaultUri
+output AZURE_KEY_VAULT_SERVICE_GET_ID string = miKeyVaultGet.id

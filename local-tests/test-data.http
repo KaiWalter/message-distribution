@@ -3,11 +3,11 @@
 POST http://localhost:7071/api/Generate
 
 {
-    "Count":10
+    "Count":1
 }
 
 ###
-POST http://localhost:7071/api/PushIngressDapr
+POST http://localhost:7071/api/PushIngressDaprT
 
 {}
 

@@ -15,6 +15,8 @@ param entityNameForScaling string
 param location string
 
 param imageName string
+param acrPullId string
+param kvGetId string
 
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
@@ -52,7 +54,11 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
       'azd-service-name': appName
     })
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${acrPullId}': {}
+      '${kvGetId}': {}
+    }
   }
   properties: {
     managedEnvironmentId: containerAppsEnvironment.id
@@ -83,9 +89,8 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
       ]
       registries: [
         {
-          server: '${containerRegistry.name}.azurecr.io'
-          username: containerRegistry.name
-          passwordSecretRef: 'registry-password'
+          server: containerRegistry.properties.loginServer
+          identity: acrPullId
         }
       ]
       dapr: {
@@ -154,23 +159,5 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         ]
       }
     }
-  }
-}
-
-resource keyVaultAccessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-10-01' = {
-  name: '${keyVault.name}/add'
-  properties: {
-    accessPolicies: [
-      {
-        objectId: capp.identity.principalId
-        permissions: {
-          secrets: [
-            'get'
-            'list'
-          ]
-        }
-        tenantId: subscription().tenantId
-      }
-    ]
   }
 }

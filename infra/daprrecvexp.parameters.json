@@ -16,6 +16,12 @@
       },
       "imageName": {
         "value": "${SERVICE_DAPRRECVEXP_IMAGE_NAME}"
+      },
+      "acrPullId": {
+        "value": "${AZURE_CONTAINER_REGISTRY_ACRPULL_ID}"
+      },
+      "kvGetId": {
+        "value": "${AZURE_KEY_VAULT_SERVICE_GET_ID}"
       }
     }
   }
