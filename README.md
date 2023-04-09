@@ -31,8 +31,8 @@ _as of 2022-11-02_
 - generate a test data set to be used for performance tests into Azure Storage
 
 ```shell
-curl -fsSL https://aka.ms/install-azd.sh | bash
-azd new
+azd login
+azd init
 azd up
 ./create-local-settings.sh
 ./create-secrets.sh
