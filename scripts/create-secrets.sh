@@ -9,6 +9,8 @@ JSON_STRING=$( jq -n \
                   --arg stc "$STORAGE_BLOB_CONNECTION" \
                   '{STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc}' )
 
-echo $JSON_STRING > src/daprdistributor/secrets.json
-echo $JSON_STRING > src/daprrecvexp/secrets.json
-echo $JSON_STRING > src/daprrecvstd/secrets.json
+SOURCE_FOLDER="$(git rev-parse --show-toplevel)/src"
+
+echo $JSON_STRING > $SOURCE_FOLDER/daprdistributor/secrets.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprrecvexp/secrets.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprrecvstd/secrets.json

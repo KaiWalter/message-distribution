@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# this script can be used to authorize an Azure VM's Managed Identity where this workspace is edited on to authorize for the Azure subscription used
+
 source <(azd env get-values)
 AZURE_VM_ID=`curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq -r '.compute.resourceId'`
 

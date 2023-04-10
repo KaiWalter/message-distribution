@@ -43,8 +43,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
       family: 'A'
       name: 'standard'
     }
-    enablePurgeProtection: null
     accessPolicies: policies
+    enableSoftDelete: false
+    enablePurgeProtection: null
   }
 
 }

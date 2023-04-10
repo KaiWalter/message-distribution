@@ -23,7 +23,7 @@ var tags = {
   'azd-env-name': envName
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' existing = {
   name: 'cae-${resourceToken}'
 }
 
@@ -35,10 +35,6 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'appi-${resourceToken}'
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
-  name: 'keyvault${resourceToken}'
-}
-
 resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
   name: 'st${resourceToken}'
 }
@@ -47,7 +43,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource capp 'Microsoft.App/containerApps@2022-03-01' = {
+resource capp 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}${appName}'
   location: location
   tags: union(tags, {
@@ -70,10 +66,6 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         transport: 'auto'
       }
       secrets: [
-        {
-          name: 'registry-password'
-          value: containerRegistry.listCredentials().passwords[0].value
-        }
         {
           name: 'storage-connection'
           value: 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${listKeys(stg.id, stg.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
@@ -98,6 +90,8 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         appId: appName
         appPort: 80
         appProtocol: 'http'
+        enableApiLogging: true
+        logLevel: 'info'
       }
     }
     template: {

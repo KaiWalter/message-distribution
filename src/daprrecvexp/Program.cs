@@ -29,7 +29,7 @@ app.MapPost("/t-order-express-dapr", [Topic("order-pubsub", "t-order-express-dap
     return Results.Ok();
 });
 
-app.MapPost("/q-order-ingress-dapr", (
+app.MapPost("/q-order-express-dapr", (
     ILogger<Program> log, 
     [FromBody] Order order
     ) => 

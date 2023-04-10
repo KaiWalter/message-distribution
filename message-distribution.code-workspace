@@ -1,0 +1,47 @@
+{
+	"folders": [
+		{
+			"name": "root",
+			"path": "."
+		},
+		{
+			"name": "Scripts",
+			"path": "scripts"
+		},
+		{
+			"name": "AzD Infrastructure",
+			"path": "infra"
+		},
+		{
+			"name": "Functions .NET Test Data Generator",
+			"path": "src/testdata"
+		},
+		{
+			"name": "Dapr .NET Distributor",
+			"path": "src/daprdistributor"
+		},
+		{
+			"name": "Dapr .NET Express Order Receiver",
+			"path": "src/daprrecvexp"
+		},
+		{
+			"name": "Dapr .NET Standard Order Receiver",
+			"path": "src/daprrecvstd"
+		},
+		{
+			"name": "Functions .NET Distributor",
+			"path": "src/funcdistributor"
+		},
+		{
+			"name": "Functions .NET Express Order Receiver",
+			"path": "src/funcrecvexp"
+		},
+		{
+			"name": "Functions .NET Standard Order Receiver",
+			"path": "src/funcrecvstd"
+		}
+	],
+	"settings": {
+		"debug.internalConsoleOptions": "neverOpen"
+	}
+}

@@ -9,22 +9,24 @@ JSON_STRING=$( jq -n \
                   --arg stc "$STORAGE_BLOB_CONNECTION" \
                   '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "DOTNET", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc }}' )
 
-echo $JSON_STRING > src/testdata/local.settings.json
-echo $JSON_STRING > src/funcdistributor/local.settings.json
-echo $JSON_STRING > src/funcrecvexp/local.settings.json
-echo $JSON_STRING > src/funcrecvstd/local.settings.json
+SOURCE_FOLDER="$(git rev-parse --show-toplevel)/src"
+
+echo $JSON_STRING > $SOURCE_FOLDER/testdata/local.settings.json
+echo $JSON_STRING > $SOURCE_FOLDER/funcdistributor/local.settings.json
+echo $JSON_STRING > $SOURCE_FOLDER/funcrecvexp/local.settings.json
+echo $JSON_STRING > $SOURCE_FOLDER/funcrecvstd/local.settings.json
 
 JSON_STRING=$( jq -n \
                   --arg aic "$APPINSIGHTS_CONNECTION_STRING" \
                   '{Logging: {LogLevel: {Default: "Information", "Microsoft.AspNetCore": "Information" }},ApplicationInsights:{ConnectionString: $aic, EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
 
-echo $JSON_STRING > src/daprdistributor/appsettings.Development.json
-echo $JSON_STRING > src/daprrecvexp/appsettings.Development.json
-echo $JSON_STRING > src/daprrecvstd/appsettings.Development.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprdistributor/appsettings.Development.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprrecvexp/appsettings.Development.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprrecvstd/appsettings.Development.json
 
 JSON_STRING=$( jq -n \
                   '{Logging: {LogLevel: {Default: "Warning", "Microsoft.AspNetCore": "Information" }},ApplicationInsights:{EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
 
-echo $JSON_STRING > src/daprdistributor/appsettings.json
-echo $JSON_STRING > src/daprrecvexp/appsettings.json
-echo $JSON_STRING > src/daprrecvstd/appsettings.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprdistributor/appsettings.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprrecvexp/appsettings.json
+echo $JSON_STRING > $SOURCE_FOLDER/daprrecvstd/appsettings.json

@@ -23,7 +23,7 @@ var tags = {
   'azd-env-name': envName
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' existing = {
   name: 'cae-${resourceToken}'
 }
 
@@ -43,7 +43,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource capp 'Microsoft.App/containerApps@2022-03-01' = {
+resource capp 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}${appName}'
   location: location
   tags: union(tags, {
@@ -90,6 +90,8 @@ resource capp 'Microsoft.App/containerApps@2022-03-01' = {
         appId: appName
         appPort: 80
         appProtocol: 'http'
+        enableApiLogging: true
+        logLevel: 'info'
       }
     }
     template: {

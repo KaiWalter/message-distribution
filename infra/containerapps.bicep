@@ -10,9 +10,9 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   name: 'log-${resourceToken}'
 }
 
-// resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
-//   name: 'appi-${resourceToken}'
-// }
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
+  name: 'appi-${resourceToken}'
+}
 
 var queueComponents = [
   'q-order-ingress-dapr'
@@ -20,7 +20,7 @@ var queueComponents = [
   'q-order-standard-dapr'
 ]
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' = {
   name: 'cae-${resourceToken}'
   location: location
   tags: tags
@@ -32,7 +32,8 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
         sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
       }
     }
-    // daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
+    daprAIConnectionString: appInsights.properties.ConnectionString
+    daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
   }
 
   resource queueComponentResources 'daprComponents' = [for q in queueComponents: {

@@ -132,13 +132,12 @@ requests
 | where name startswith "POST" and cloud_RoleName matches regex "^[\\d\\w\\-]+dapr"
 | where success == true
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
-| extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+| extend runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)
 ```
 
 ```
 count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
 20000,"427845.1506999994","11/2/2022, 6:48:16.600 AM","11/2/2022, 6:49:11.000 AM",54400
-# 8 / 1000 | where timestamp >= todatetime('2022-11-02T06:45:45.8897869Z')
 ```
 
 #### Functions
@@ -158,7 +157,7 @@ requests
 | where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
 | where success == true
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
-| extend datetime_diff('millisecond', max_timestamp, min_timestamp)
+| extend runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)
 ```
 
 ```
@@ -260,6 +259,16 @@ compare <https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindi
 ---
 
 ## to dos
+
+- [ ] daprdistributor is logged as `dependency` / `POST /dapr.proto.runtime.v1.Dapr/InvokeBinding` and the both receivers as `request` / `POST /q-order-standard-dapr` -- why?
+
+```
+requests | union dependencies
+| where timestamp >= todatetime('2023-04-10T15:25:05.8485174Z')
+| where operation_Name <> "GET /health"
+| where cloud_RoleName matches regex "^[\\d\\w\\-]+dapr"
+| order by timestamp desc
+```
 
 - [ ] [deploy AKS alternative](https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-bicep?tabs=azure-cli%2CCLI#review-the-bicep-file)
 - [ ] evaluate Dapr / WasmEdge - <https://youtu.be/uGo_1KY-QSM> <https://github.com/second-state/dapr-sdk-wasi> <https://github.com/second-state/dapr-wasm>
