@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>testdata</RootNamespace>
+    <UserSecretsId>4f2c2892-44f0-441c-972a-3f19092281eb</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />

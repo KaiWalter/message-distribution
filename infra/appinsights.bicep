@@ -1240,5 +1240,6 @@ resource appInsightsDashboard 'Microsoft.Portal/dashboards@2020-09-01-preview' =
   }
 }
 
+output APPINSIGHTS_NAME string = appInsights.name
 output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsights.properties.InstrumentationKey
 output APPINSIGHTS_CONNECTION_STRING string = appInsights.properties.ConnectionString

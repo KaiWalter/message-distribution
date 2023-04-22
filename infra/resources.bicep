@@ -207,8 +207,11 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   ]
 }
 
+output ENVIRONMENT_NAME string = containerAppsResources.outputs.ENVIRONMENT_NAME  
 output SERVICEBUS_CONNECTION string = serviceBusResources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = storageResources.outputs.STORAGE_BLOB_CONNECTION
+output STORAGE_NAME string = storageResources.outputs.STORAGE_NAME
+output APPINSIGHTS_NAME string = appInsightsResources.outputs.APPINSIGHTS_NAME
 output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsightsResources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY
 output APPINSIGHTS_CONNECTION_STRING string = appInsightsResources.outputs.APPINSIGHTS_CONNECTION_STRING
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
