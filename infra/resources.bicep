@@ -215,3 +215,4 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs
 output AZURE_CONTAINER_REGISTRY_NAME string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_NAME
 output AZURE_CONTAINER_REGISTRY_ACRPULL_ID string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
 output AZURE_KEY_VAULT_SERVICE_GET_ID string = keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+output TESTDATA_URI string = testdataResources.outputs.TESTDATA_URI

@@ -34,27 +34,27 @@ _as of 2022-11-02_
 azd login
 azd init
 azd up
-./create-local-settings.sh
-./create-secrets.sh
+./scripts/create-local-settings.sh
+./scripts/create-secrets.sh
 ```
 
 ## run test
 
-```
-./generate-test-data.sh
+```shell
+./scripts/generate-test-data.sh
 ```
 
 
-then either push test data into the Dapr or Functions application scenario:
+then either push test data into the Dapr or Functions application scenario (in this sample the q=queue scenarios):
 
 ```shell
-push-ingress.sh dapr
+./scripts/push-ingress.sh daprq
 ```
 
 or
 
 ```shell
-push-ingress.sh func
+./scripts/push-ingress.sh funcq
 ```
 
 ---

@@ -122,7 +122,7 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             }
           ]
           resources: {
-            cpu: '0.25'
+            cpu: json('0.25')
             memory: '0.5Gi'
           }
         }
