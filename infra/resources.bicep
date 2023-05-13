@@ -174,7 +174,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvexp'
-    entityNameForScaling: 't-order-express-dapr'
+    entityNameForScaling: 'q-order-express-dapr'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -193,7 +193,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvstd'
-    entityNameForScaling: 't-order-standard-dapr'
+    entityNameForScaling: 'q-order-standard-dapr'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID

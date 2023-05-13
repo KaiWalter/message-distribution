@@ -132,12 +132,11 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
         maxReplicas: 10
         rules: [
           {
-            name: 'topic-rule'
+            name: 'queue-rule'
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                topicName: entityNameForScaling
-                subscriptionName: appName
+                queueName: entityNameForScaling
                 namespace: serviceBusNamespace.name
                 messageCount: '100'
               }
