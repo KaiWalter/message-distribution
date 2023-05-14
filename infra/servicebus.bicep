@@ -4,21 +4,27 @@ param skuName string = 'Standard'
 param tags object
 
 var queues = [
+  // (regular) Functions Container on ACA
   'q-order-ingress-func'
   'q-order-standard-func'
   'q-order-express-func'
+  // Functions on ACA
+  'q-order-ingress-acaf'
+  'q-order-standard-acaf'
+  'q-order-express-acaf'
+  // ASP.NET Core with Dapr Container on ACA
   'q-order-ingress-dapr'
   'q-order-standard-dapr'
   'q-order-express-dapr'
 ]
 
 var topics = [
-  't-order-ingress-func'
-  't-order-express-func'
-  't-order-standard-func'
-  't-order-ingress-dapr'
-  't-order-express-dapr'
-  't-order-standard-dapr'
+  // 't-order-ingress-func'
+  // 't-order-express-func'
+  // 't-order-standard-func'
+  // 't-order-ingress-dapr'
+  // 't-order-express-dapr'
+  // 't-order-standard-dapr'
 ]
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {

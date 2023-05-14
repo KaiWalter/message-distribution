@@ -32,6 +32,13 @@ namespace testdata
             [ServiceBus("t-order-ingress-func", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Topic, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
             => SplitAndScheduleOrders(nameof(PushIngressFuncT), ordersTestData, outputMessages);
 
+        [FunctionName(nameof(PushIngressACAFQ))]
+        public static IActionResult PushIngressACAFQ(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            [ServiceBus("q-order-ingress-acaf", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressACAFQ), ordersTestData, outputMessages);
+
         [FunctionName(nameof(PushIngressDaprQ))]
         public static IActionResult PushIngressDaprQ(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
