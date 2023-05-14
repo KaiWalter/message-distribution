@@ -4,7 +4,7 @@
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <Nullable>enable</Nullable>
     <RootNamespace>testdata</RootNamespace>
-    <UserSecretsId>4f2c2892-44f0-441c-972a-3f19092281eb</UserSecretsId>
+    <UserSecretsId>137b1a91-2f25-44f5-9834-f13af75a0fc3</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />

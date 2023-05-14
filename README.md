@@ -10,7 +10,7 @@ _as of 2022-11-02_
 
 ... shows that :
 
-- processing time E2E : Dapr only needs 80% of time Functions need
+- processing time E2E : Dapr only needs 30-40% of time Functions need
 - total runtime durations aggregated : Dapr only needs 10% of Functions request processing time (duration of request within Dapr sidecar was not measured, but would not have a significant increase)
 
 ## Approach
@@ -34,27 +34,27 @@ _as of 2022-11-02_
 azd login
 azd init
 azd up
-./create-local-settings.sh
-./create-secrets.sh
+./scripts/create-local-settings.sh
+./scripts/create-secrets.sh
 ```
 
 ## run test
 
-```
-./generate-test-data.sh
+```shell
+./scripts/generate-test-data.sh
 ```
 
 
-then either push test data into the Dapr or Functions application scenario:
+then either push test data into the Dapr or Functions application scenario (in this sample the q=queue scenarios):
 
 ```shell
-push-ingress.sh dapr
+./scripts/push-ingress.sh daprq
 ```
 
 or
 
 ```shell
-push-ingress.sh func
+./scripts/push-ingress.sh funcq
 ```
 
 ---
@@ -136,8 +136,8 @@ requests
 ```
 
 ```
-count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
-20000,"427845.1506999994","11/2/2022, 6:48:16.600 AM","11/2/2022, 6:49:11.000 AM",54400
+"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",runtimeMs
+20000,"397686.0827000005","5/13/2023, 5:42:41.564 PM","5/13/2023, 5:43:10.280 PM",28716
 ```
 
 #### Functions
@@ -161,8 +161,8 @@ requests
 ```
 
 ```
-count_,"sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",Column1
-20000,"4636740.856899991","11/2/2022, 6:58:26.504 AM","11/2/2022, 6:59:34.671 AM",68167
+"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",runtimeMs
+20000,"3599606.129400003","5/13/2023, 5:47:45.643 PM","5/13/2023, 5:49:07.432 PM",81789
 ```
 
 ---

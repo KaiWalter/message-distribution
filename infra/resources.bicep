@@ -174,7 +174,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvexp'
-    entityNameForScaling: 't-order-express-dapr'
+    entityNameForScaling: 'q-order-express-dapr'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -193,7 +193,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvstd'
-    entityNameForScaling: 't-order-standard-dapr'
+    entityNameForScaling: 'q-order-standard-dapr'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -218,3 +218,4 @@ output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs
 output AZURE_CONTAINER_REGISTRY_NAME string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_NAME
 output AZURE_CONTAINER_REGISTRY_ACRPULL_ID string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
 output AZURE_KEY_VAULT_SERVICE_GET_ID string = keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+output TESTDATA_URI string = testdataResources.outputs.TESTDATA_URI

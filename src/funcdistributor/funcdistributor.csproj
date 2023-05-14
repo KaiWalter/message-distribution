@@ -4,7 +4,7 @@
     <Nullable>enable</Nullable>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <RootNamespace>funcdistributor</RootNamespace>
-    <UserSecretsId>f45701ee-8928-4024-b403-14099b9e3922</UserSecretsId>
+    <UserSecretsId>64e69c09-b59c-4110-93b5-0ddaf634615e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.8.0" />
