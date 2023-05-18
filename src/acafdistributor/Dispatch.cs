@@ -5,7 +5,7 @@ using Models;
 using System.Text;
 using System.Text.Json;
 
-namespace funcdistributor
+namespace acafdistributor
 {
     public class Dispatch
     {
