@@ -8,11 +8,14 @@ namespace acafdistributor
     public static class Health
     {
         [Function("Health")]
-        public static HttpResponseData Run(
+        public async static Task<HttpResponseData> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req,
             ILogger log)
         {
             var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(new {
+                message = "It's alive"
+            });
             return response;
         }
     }

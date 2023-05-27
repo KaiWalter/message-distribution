@@ -8,6 +8,11 @@ services:
     language: csharp
     host: containerapp
 
+  # acafdistributor:
+  #   project: src/acafdistributor
+  #   language: csharp
+  #   host: function
+
   funcdistributor:
     project: src/funcdistributor
     language: csharp

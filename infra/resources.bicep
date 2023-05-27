@@ -93,6 +93,25 @@ module testdataResources './testdata.bicep' = {
   ]
 }
 
+// module acafDistResources './acafdistributor.bicep' = {
+//   name: 'acafdist-resources'
+//   params: {
+//     envName: name
+//     appName: 'acafdistributor'
+//     entityNameForScaling: 'q-order-ingress-acaf'
+//     location: location
+//     imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
+//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+//   }
+//   dependsOn: [
+//     containerAppsResources
+//     appInsightsResources
+//     keyVaultResources
+//     serviceBusResources
+//   ]
+// }
+
 module funcDistResources './funcdistributor.bicep' = {
   name: 'funcdist-resources'
   params: {

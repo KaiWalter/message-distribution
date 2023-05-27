@@ -21,7 +21,7 @@ var queueComponents = [
 ]
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' = {
-  name: 'cae-${resourceToken}'
+  name: 'cae-${resourceToken}-v3'
   location: location
   tags: tags
   properties: {
@@ -135,7 +135,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-pr
   }
 }
 
-resource miAcrPull 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+resource miAcrPull 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: '${containerRegistry.name}-acrpull'
   location: location
 }
