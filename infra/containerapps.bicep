@@ -21,7 +21,7 @@ var queueComponents = [
 ]
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' = {
-  name: 'cae-${resourceToken}-v3'
+  name: 'cae-${resourceToken}'
   location: location
   tags: tags
   properties: {
@@ -145,6 +145,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
     principalId: miAcrPull.properties.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 

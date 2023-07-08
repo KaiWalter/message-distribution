@@ -31,24 +31,35 @@ do
     IMAGE=$app:$TAG
   fi
 
-  if [ ! `az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Web/sites --query "[?contains(name,'$app')].id" -o tsv` ];
-  then
-    az functionapp create -g $RESOURCE_GROUP_NAME --name $capp \
-      --environment $ENVIRONMENT_NAME \
-      --functions-version 4 \
-      --runtime dotnet-isolated \
-      --storage-account $STORAGE_NAME \
-      --app-insights $APPINSIGHTS_NAME \
-      --app-insights-key $APPINSIGHTS_INSTRUMENTATIONKEY \
-      --image $AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE
-  else
-    az functionapp config container set --image $AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE --name $capp --resource-group $RESOURCE_GROUP_NAME
-  fi
+  # if [ ! `az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Web/sites --query "[?contains(name,'$app')].id" -o tsv` ];
+  # then
+  #   az functionapp create -g $RESOURCE_GROUP_NAME --name $capp \
+  #     --environment $ENVIRONMENT_NAME \
+  #     --functions-version 4 \
+  #     --runtime dotnet-isolated \
+  #     --storage-account $STORAGE_NAME \
+  #     --app-insights $APPINSIGHTS_NAME \
+  #     --app-insights-key $APPINSIGHTS_INSTRUMENTATIONKEY \
+  #     --image $AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE
+  # else
+  #   az functionapp config container set --image $AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE --name $capp --resource-group $RESOURCE_GROUP_NAME
+  # fi
+  #
+  # az functionapp config appsettings set --name $capp --resource-group $RESOURCE_GROUP_NAME \
+  #         --settings "STORAGE_CONNECTION=$STORAGE_BLOB_CONNECTION"
+  #
+  # az functionapp config appsettings set --name $capp --resource-group $RESOURCE_GROUP_NAME \
+  #         --settings "SERVICEBUS_CONNECTION=$SERVICEBUS_CONNECTION"
+  #
 
-  az functionapp config appsettings set --name $capp --resource-group $RESOURCE_GROUP_NAME \
-          --settings "STORAGE_CONNECTION=$STORAGE_BLOB_CONNECTION"
-
-  az functionapp config appsettings set --name $capp --resource-group $RESOURCE_GROUP_NAME \
-          --settings "SERVICEBUS_CONNECTION=$SERVICEBUS_CONNECTION"
+  az deployment group create -f infra/acafdistributor.bicep \
+    -g $RESOURCE_GROUP_NAME \
+    -p envName=$AZURE_ENV_NAME \
+    appName=$app \
+    location=$AZURE_LOCATION \
+    imageName=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE \
+    entityNameForScaling=dummy \
+    acrPullId=$AZURE_CONTAINER_REGISTRY_ACRPULL_ID \
+    kvGetId=$AZURE_KEY_VAULT_SERVICE_GET_ID
 
 done

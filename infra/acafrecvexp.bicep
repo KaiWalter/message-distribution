@@ -19,7 +19,7 @@ param acrPullId string
 param kvGetId string
 
 module acafBase 'acafbase.bicep' = {
-  name: 'acafBase-Distributor'
+  name: 'acafBase-RecvExp'
   params: {
     appName: appName
     envName: envName

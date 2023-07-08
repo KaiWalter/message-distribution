@@ -7,10 +7,36 @@
     },
     "location": {
       "value": "${AZURE_LOCATION}"
-
     },
     "principalId": {
-        "value": "${AZURE_PRINCIPAL_ID}"
+      "value": "${AZURE_PRINCIPAL_ID}"
+    },
+    "acafDistImageName": {
+      "value": "${SERVICE_ACAFDISTRIBUTOR_IMAGE_NAME}"
+    },
+    "acafRecvExpImageName": {
+      "value": "${SERVICE_ACAFRECVEXP_IMAGE_NAME}"
+    },
+    "acafRecvStdImageName": {
+      "value": "${SERVICE_ACAFRECVSTD_IMAGE_NAME}"
+    },
+    "daprDistImageName": {
+      "value": "${SERVICE_DAPRDISTRIBUTOR_IMAGE_NAME}"
+    },
+    "daprRecvExpImageName": {
+      "value": "${SERVICE_DAPRRECVEXP_IMAGE_NAME}"
+    },
+    "daprRecvStdImageName": {
+      "value": "${SERVICE_DAPRRECVSTD_IMAGE_NAME}"
+    },
+    "funcDistImageName": {
+      "value": "${SERVICE_FUNCDISTRIBUTOR_IMAGE_NAME}"
+    },
+    "funcRecvExpImageName": {
+      "value": "${SERVICE_FUNCRECVEXP_IMAGE_NAME}"
+    },
+    "funcRecvStdImageName": {
+      "value": "${SERVICE_FUNCRECVSTD_IMAGE_NAME}"
     },
     "testdataImageName": {
       "value": "${SERVICE_TESTDATA_IMAGE_NAME}"
