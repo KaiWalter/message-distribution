@@ -17,11 +17,32 @@ _as of 2022-11-02_
 
 - a Function App generates a test data payload (e.g. with 10'000 orders) and puts those in a blob storage
 - this Function App is then be triggered to schedule all orders at one time on an ingress Service Bus queue - either for Functions or for Dapr
-- 
 
-## create environment
+## create environment with az/Azure CLI
 
-**Azure Dev CLI** is used to create the environment:
+> as of Aug'23 some of constellations of Functions on Azure Container Apps where not working, I created an alternate slate of **Azure CLI** based script to deploy the same set of **Bicep** templates, as used with **azd**
+
+script path: `{repo-root}/scripts/cli/`
+
+create an `.env` file in root of this repository to control environment name and location (subscription is determined by subscription set with **azd**):
+
+```
+AZURE_ENV_NAME="my-messdist"
+AZURE_LOCATION="westus"
+```
+
+and then
+
+```shell
+az login --use-device-code
+./scripts/cli/deploy-infra.sh
+./scripts/cli/deploy-apps.sh build
+```
+
+
+## create environment with azd/Azure Developer CLI
+
+**Azure Developer CLI** is used to create the environment:
 
 - install
 - initialize - select region and subscription
@@ -30,31 +51,41 @@ _as of 2022-11-02_
 - create local secrets files
 - generate a test data set to be used for performance tests into Azure Storage
 
+script path: `{repo-root}/scripts/azd/`
+
 ```shell
-azd login
+azd login --use-device-code
+az login --use-device-code
 azd init
 azd up
-./scripts/create-local-settings.sh
-./scripts/create-secrets.sh
+./scripts/azd/create-local-settings.sh
+./scripts/azd/create-secrets.sh
 ```
 
 ## run test
 
-```shell
-./scripts/generate-test-data.sh
-```
+> `{deployment}` refers to either `azd`=**azd** or `cli`=**az** deployment - see above
 
+```shell
+./scripts/{deployment}/generate-test-data.sh
+```
 
 then either push test data into the Dapr or Functions application scenario (in this sample the q=queue scenarios):
 
 ```shell
-./scripts/push-ingress.sh daprq
+./scripts/{deployment}/push-ingress.sh daprq
 ```
 
 or
 
 ```shell
-./scripts/push-ingress.sh funcq
+./scripts/{deployment}/push-ingress.sh funcq
+```
+
+or
+
+```shell
+./scripts/{deployment}/push-ingress.sh acafq
 ```
 
 ---
@@ -88,7 +119,11 @@ _single message dispatching_
         [FunctionName("Dispatch")]
         public void Run(
             [ServiceBusTrigger("q-order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            [ServiceBus("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
+            [ServiceBus("q-order-express  {
+    name: 'WEBSITE_SITE_NAME'
+    value: appName
+  }
+ollector<ServiceBusMessage> outputExpressMessages,
             [ServiceBus("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
             ILogger log)
         {
@@ -107,7 +142,7 @@ _batched_
             [ServiceBusTrigger("q-order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] ServiceBusReceivedMessage[] ingressMessages,
             [ServiceBus("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
             [ServiceBus("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
-            ILogger log)
+            ILogger log)-func", Connection = "SERVICEBUS_CONNECTION")] IC
         {
             foreach (var ingressMessage in ingressMessages)
             {
@@ -117,7 +152,7 @@ _batched_
 
 ### get telemetry results
 
-#### Dapr with App Insights
+#### DAPR=Dapr
 
 ```
 requests
@@ -140,7 +175,7 @@ requests
 20000,"397686.0827000005","5/13/2023, 5:42:41.564 PM","5/13/2023, 5:43:10.280 PM",28716
 ```
 
-#### (plain) Functions containers on Container Apps
+#### FUNC=(plain) Functions containers on Container Apps
 
 ```
 requests
@@ -165,24 +200,25 @@ requests
 20000,"3599606.129400003","5/13/2023, 5:47:45.643 PM","5/13/2023, 5:49:07.432 PM",81789
 ```
 
-#### Functions on Container Apps
+#### ACAF=Functions on Container Apps
 
 ```
 requests
-| where cloud_RoleName startswith "func"
+| where cloud_RoleName matches regex "acaf"
 | where name != "Health"
-| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where timestamp > todatetime('2023-08-06T13:18:27.0499471Z')
 | where success == true
 | summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
 | render columnchart
 
 requests
-| where cloud_RoleName startswith "func"
+| where cloud_RoleName matches regex "acaf"
 | where name != "Health"
-| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where timestamp > todatetime('2023-08-06T13:18:27.0499471Z')
 | where success == true
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)
+
 ```
 
 ```
@@ -191,6 +227,14 @@ requests
 ```
 
 > in that test run not all records processed are logged
+
+---
+
+## recorded results
+
+| step / improvement | ACAF<br/> ms | FUNC<br/>ms | DAPR<br/>ms |
+| ---- | ---- | ---- | ---- |
+| 2023-08-06T13:47 rework to CLI | 126.215 | 83.746 | 60.277 |
 
 ---
 

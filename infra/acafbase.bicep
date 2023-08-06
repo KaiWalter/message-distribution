@@ -97,13 +97,6 @@ resource acafunction 'Microsoft.Web/sites@2022-09-01' = {
       'azd-service-name': appName
     })
   kind: 'functionapp'
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${acrPullId}': {}
-      '${kvGetId}': {}
-    }
-  }
   properties: {
     name: '${envName}${appName}'
     managedEnvironmentId: containerAppsEnvironment.id

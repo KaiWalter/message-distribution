@@ -1,6 +1,5 @@
 #!/bin/bash
-AZURE_ENV_NAME="kw-messdist"
-AZURE_LOCATION="westeurope"
+source <(cat $(git rev-parse --show-toplevel)/.env)
 
 REVISION=`date +"%s"`
 
