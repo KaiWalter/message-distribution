@@ -11,7 +11,7 @@
     "principalId": {
       "value": "${AZURE_PRINCIPAL_ID}"
     },
-    "acafDistImageName": {
+    "acafDistributorImageName": {
       "value": "${SERVICE_ACAFDISTRIBUTOR_IMAGE_NAME}"
     },
     "acafRecvExpImageName": {
@@ -20,7 +20,7 @@
     "acafRecvStdImageName": {
       "value": "${SERVICE_ACAFRECVSTD_IMAGE_NAME}"
     },
-    "daprDistImageName": {
+    "daprDistributorImageName": {
       "value": "${SERVICE_DAPRDISTRIBUTOR_IMAGE_NAME}"
     },
     "daprRecvExpImageName": {
@@ -29,7 +29,7 @@
     "daprRecvStdImageName": {
       "value": "${SERVICE_DAPRRECVSTD_IMAGE_NAME}"
     },
-    "funcDistImageName": {
+    "funcDistributorImageName": {
       "value": "${SERVICE_FUNCDISTRIBUTOR_IMAGE_NAME}"
     },
     "funcRecvExpImageName": {

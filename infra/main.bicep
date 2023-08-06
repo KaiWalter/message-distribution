@@ -22,13 +22,13 @@ var tags = {
   'azd-env-name': name
 }
 
-param acafDistImageName string = ''
+param acafDistributorImageName string = ''
 param acafRecvExpImageName string = ''
 param acafRecvStdImageName string = ''
-param daprDistImageName string = ''
+param daprDistributorImageName string = ''
 param daprRecvExpImageName string = ''
 param daprRecvStdImageName string = ''
-param funcDistImageName string = ''
+param funcDistributorImageName string = ''
 param funcRecvExpImageName string = ''
 param funcRecvStdImageName string = ''
 param testdataImageName string = ''
@@ -41,13 +41,13 @@ module resources './resources.bicep' = {
     location: location
     principalId: principalId
     resourceToken: resourceToken
-    acafDistImageName: acafDistImageName
+    acafDistributorImageName: acafDistributorImageName
     acafRecvExpImageName: acafRecvExpImageName
     acafRecvStdImageName: acafRecvStdImageName
-    daprDistImageName: daprDistImageName
+    daprDistributorImageName: daprDistributorImageName
     daprRecvExpImageName: daprRecvExpImageName
     daprRecvStdImageName: daprRecvStdImageName
-    funcDistImageName: funcDistImageName
+    funcDistributorImageName: funcDistributorImageName
     funcRecvExpImageName: funcRecvExpImageName
     funcRecvStdImageName: funcRecvStdImageName
     testdataImageName: testdataImageName

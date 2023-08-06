@@ -4,13 +4,13 @@ param principalId string = ''
 param resourceToken string
 param tags object
 
-param acafDistImageName string = ''
+param acafDistributorImageName string = ''
 param acafRecvExpImageName string = ''
 param acafRecvStdImageName string = ''
-param daprDistImageName string = ''
+param daprDistributorImageName string = ''
 param daprRecvExpImageName string = ''
 param daprRecvStdImageName string = ''
-param funcDistImageName string = ''
+param funcDistributorImageName string = ''
 param funcRecvExpImageName string = ''
 param funcRecvStdImageName string = ''
 param testdataImageName string = ''
@@ -78,62 +78,62 @@ module logAnalyticsResources './loganalytics.bicep' = {
   }
 }
 
-// module acafDistResources './acafdistributor.bicep' = {
-//   name: 'acafdist-resources'
-//   params: {
-//     envName: name
-//     appName: 'acafdistributor'
-//     entityNameForScaling: 'q-order-ingress-acaf'
-//     location: location
-//     imageName: acafDistImageName
-//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
-//   }
-//   dependsOn: [
-//     containerAppsResources
-//     appInsightsResources
-//     keyVaultResources
-//     serviceBusResources
-//   ]
-// }
+module acafDistResources './acafdistributor.bicep' = {
+  name: 'acafdist-resources'
+  params: {
+    envName: name
+    appName: 'acafdistributor'
+    entityNameForScaling: 'q-order-ingress-acaf'
+    location: location
+    imageName: acafDistributorImageName
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
 
-// module acafRecvExpResources './acafrecvexp.bicep' = {
-//   name: 'acafrecvexp-resources'
-//   params: {
-//     envName: name
-//     appName: 'acafrecvexp'
-//     entityNameForScaling: 'q-order-ingress-acaf'
-//     location: location
-//     imageName: acafRecvExpImageName
-//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
-//   }
-//   dependsOn: [
-//     containerAppsResources
-//     appInsightsResources
-//     keyVaultResources
-//     serviceBusResources
-//   ]
-// }
+module acafRecvExpResources './acafrecvexp.bicep' = {
+  name: 'acafrecvexp-resources'
+  params: {
+    envName: name
+    appName: 'acafrecvexp'
+    entityNameForScaling: 'q-order-express-acaf'
+    location: location
+    imageName: acafRecvExpImageName
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
 
-// module acafRecvStdResources './acafrecvstd.bicep' = {
-//   name: 'acafrecvstd-resources'
-//   params: {
-//     envName: name
-//     appName: 'acafrecvstd'
-//     entityNameForScaling: 'q-order-ingress-acaf'
-//     location: location
-//     imageName: acafRecvStdImageName
-//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
-//   }
-//   dependsOn: [
-//     containerAppsResources
-//     appInsightsResources
-//     keyVaultResources
-//     serviceBusResources
-//   ]
-// }
+module acafRecvStdResources './acafrecvstd.bicep' = {
+  name: 'acafrecvstd-resources'
+  params: {
+    envName: name
+    appName: 'acafrecvstd'
+    entityNameForScaling: 'q-order-standard-acaf'
+    location: location
+    imageName: acafRecvStdImageName
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
 
 module funcDistResources './funcdistributor.bicep' = {
   name: 'funcdist-resources'
@@ -142,7 +142,7 @@ module funcDistResources './funcdistributor.bicep' = {
     appName: 'funcdistributor'
     entityNameForScaling: 'q-order-ingress-func'
     location: location
-    imageName: funcDistImageName != '' ? funcDistImageName : 'nginx:latest'
+    imageName: funcDistributorImageName != '' ? funcDistributorImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -199,7 +199,7 @@ module daprDistResources './daprdistributor.bicep' = {
     appName: 'daprdistributor'
     entityNameForScaling: 'q-order-ingress-dapr'
     location: location
-    imageName: daprDistImageName != '' ? daprDistImageName : 'nginx:latest'
+    imageName: daprDistributorImageName != '' ? daprDistributorImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
