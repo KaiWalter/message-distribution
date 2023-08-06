@@ -135,7 +135,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-pr
   }
 }
 
-resource miAcrPull 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+resource miAcrPull 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: '${containerRegistry.name}-acrpull'
   location: location
 }
@@ -145,9 +145,11 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
     principalId: miAcrPull.properties.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 
+output ENVIRONMENT_NAME string = containerAppsEnvironment.name
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
 output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.name
 output AZURE_CONTAINER_REGISTRY_ACRPULL_ID string = miAcrPull.id

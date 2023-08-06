@@ -3,11 +3,6 @@
 name: message-distribution
 
 services:
-  testdata:
-    project: src/testdata
-    language: csharp
-    host: containerapp
-
   funcdistributor:
     project: src/funcdistributor
     language: csharp
@@ -37,3 +32,23 @@ services:
     project: src/daprrecvstd
     language: csharp
     host: containerapp
+
+  testdata:
+    project: src/testdata
+    language: csharp
+    host: containerapp
+
+  # acafdistributor:
+  #   project: src/acafdistributor
+  #   language: csharp
+  #   host: containerapp
+
+  # acafrecvexp:
+  #   project: src/acafrecvexp
+  #   language: csharp
+  #   host: containerapp
+
+  # acafrecvstd:
+  #   project: src/acafrecvstd
+  #   language: csharp
+  #   host: containerapp

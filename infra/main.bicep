@@ -22,6 +22,15 @@ var tags = {
   'azd-env-name': name
 }
 
+param acafDistImageName string = ''
+param acafRecvExpImageName string = ''
+param acafRecvStdImageName string = ''
+param daprDistImageName string = ''
+param daprRecvExpImageName string = ''
+param daprRecvStdImageName string = ''
+param funcDistImageName string = ''
+param funcRecvExpImageName string = ''
+param funcRecvStdImageName string = ''
 param testdataImageName string = ''
 
 module resources './resources.bicep' = {
@@ -32,13 +41,27 @@ module resources './resources.bicep' = {
     location: location
     principalId: principalId
     resourceToken: resourceToken
+    acafDistImageName: acafDistImageName
+    acafRecvExpImageName: acafRecvExpImageName
+    acafRecvStdImageName: acafRecvStdImageName
+    daprDistImageName: daprDistImageName
+    daprRecvExpImageName: daprRecvExpImageName
+    daprRecvStdImageName: daprRecvStdImageName
+    funcDistImageName: funcDistImageName
+    funcRecvExpImageName: funcRecvExpImageName
+    funcRecvStdImageName: funcRecvStdImageName
     testdataImageName: testdataImageName
     tags: tags
   }
 }
 
+output ENVIRONMENT_NAME string = resources.outputs.ENVIRONMENT_NAME
+output RESOURCE_GROUP_NAME string = resourceGroup.name
 output SERVICEBUS_CONNECTION string = resources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = resources.outputs.STORAGE_BLOB_CONNECTION
+output STORAGE_NAME string = resources.outputs.STORAGE_NAME
+output APPINSIGHTS_NAME string = resources.outputs.APPINSIGHTS_NAME
+output APPINSIGHTS_INSTRUMENTATIONKEY string = resources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY
 output APPINSIGHTS_CONNECTION_STRING string = resources.outputs.APPINSIGHTS_CONNECTION_STRING
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_REGISTRY_NAME

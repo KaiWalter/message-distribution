@@ -1,6 +1,6 @@
 # Message Distribution
 
-With this repository I want to evaluate and performance test various asynchronous message distribution options with **Azure** resources and hosting platforms.
+With this repository I want to evaluate and performance test various asynchronous message distribution options with **Azure** resources and hosting platforms. Focus is on measuring the end-to-end **throughput** regardless whether or not certain platform constellations scale or not.
 
 ## TL;DR conclusion
 
@@ -140,7 +140,7 @@ requests
 20000,"397686.0827000005","5/13/2023, 5:42:41.564 PM","5/13/2023, 5:43:10.280 PM",28716
 ```
 
-#### Functions
+#### (plain) Functions containers on Container Apps
 
 ```
 requests
@@ -164,6 +164,33 @@ requests
 "count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",runtimeMs
 20000,"3599606.129400003","5/13/2023, 5:47:45.643 PM","5/13/2023, 5:49:07.432 PM",81789
 ```
+
+#### Functions on Container Apps
+
+```
+requests
+| where cloud_RoleName startswith "func"
+| where name != "Health"
+| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where success == true
+| summarize count() by cloud_RoleInstance, bin(timestamp, 15s)
+| render columnchart
+
+requests
+| where cloud_RoleName startswith "func"
+| where name != "Health"
+| where timestamp > todatetime('2022-11-03T07:09:26.9394443Z')
+| where success == true
+| summarize count(),sum(duration),min(timestamp),max(timestamp)
+| extend runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)
+```
+
+```
+"count_","sum_duration","min_timestamp [UTC]","max_timestamp [UTC]",runtimeMs
+19860,"2314818.319500003","27.5.2023, 14:34:38.222","27.5.2023, 14:36:05.652",87430
+```
+
+> in that test run not all records processed are logged
 
 ---
 

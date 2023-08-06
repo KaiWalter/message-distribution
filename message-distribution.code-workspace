@@ -39,6 +39,18 @@
 		{
 			"name": "Functions .NET Standard Order Receiver",
 			"path": "src/funcrecvstd"
+		},
+		{
+			"name": "Functions on ACA .NET Distributor",
+			"path": "src/acafdistributor"
+		},
+		{
+			"name": "Functions on ACA .NET Express Order Receiver",
+			"path": "src/acafrecvexp"
+		},
+		{
+			"name": "Functions on ACA .NET Standard Order Receiver",
+			"path": "src/acafrecvstd"
 		}
 	],
 	"settings": {

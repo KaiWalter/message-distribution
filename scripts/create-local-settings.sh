@@ -4,17 +4,26 @@
 
 source <(azd env get-values)
 
+SOURCE_FOLDER="$(git rev-parse --show-toplevel)/src"
+
 JSON_STRING=$( jq -n \
                   --arg sbc "$SERVICEBUS_CONNECTION" \
                   --arg stc "$STORAGE_BLOB_CONNECTION" \
                   '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "DOTNET", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc }}' )
 
-SOURCE_FOLDER="$(git rev-parse --show-toplevel)/src"
-
 echo $JSON_STRING > $SOURCE_FOLDER/testdata/local.settings.json
 echo $JSON_STRING > $SOURCE_FOLDER/funcdistributor/local.settings.json
 echo $JSON_STRING > $SOURCE_FOLDER/funcrecvexp/local.settings.json
 echo $JSON_STRING > $SOURCE_FOLDER/funcrecvstd/local.settings.json
+
+JSON_STRING=$( jq -n \
+                  --arg sbc "$SERVICEBUS_CONNECTION" \
+                  --arg stc "$STORAGE_BLOB_CONNECTION" \
+                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc }}' )
+
+echo $JSON_STRING > $SOURCE_FOLDER/acafdistributor/local.settings.json
+echo $JSON_STRING > $SOURCE_FOLDER/acafrecvexp/local.settings.json
+echo $JSON_STRING > $SOURCE_FOLDER/acafrecvstd/local.settings.json
 
 JSON_STRING=$( jq -n \
                   --arg aic "$APPINSIGHTS_CONNECTION_STRING" \

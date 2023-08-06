@@ -3,7 +3,7 @@ param principalId string = ''
 param resourceToken string
 param tags object
 
-resource miKeyVaultGet 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+resource miKeyVaultGet 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: 'keyvault${resourceToken}-kv-get'
   location: location
 }

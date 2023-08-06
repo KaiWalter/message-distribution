@@ -4,13 +4,16 @@ param principalId string = ''
 param resourceToken string
 param tags object
 
-param testdataImageName string = ''
-param funcDistImageName string = ''
-param funcRecvExpImageName string = ''
-param funcRecvStdImageName string = ''
+param acafDistImageName string = ''
+param acafRecvExpImageName string = ''
+param acafRecvStdImageName string = ''
 param daprDistImageName string = ''
 param daprRecvExpImageName string = ''
 param daprRecvStdImageName string = ''
+param funcDistImageName string = ''
+param funcRecvExpImageName string = ''
+param funcRecvStdImageName string = ''
+param testdataImageName string = ''
 
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
@@ -75,23 +78,62 @@ module logAnalyticsResources './loganalytics.bicep' = {
   }
 }
 
-module testdataResources './testdata.bicep' = {
-  name: 'testdata-resources'
-  params: {
-    envName: name
-    appName: 'testdata'
-    location: location
-    imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
-    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
-  }
-  dependsOn: [
-    containerAppsResources
-    appInsightsResources
-    keyVaultResources
-    serviceBusResources
-  ]
-}
+// module acafDistResources './acafdistributor.bicep' = {
+//   name: 'acafdist-resources'
+//   params: {
+//     envName: name
+//     appName: 'acafdistributor'
+//     entityNameForScaling: 'q-order-ingress-acaf'
+//     location: location
+//     imageName: acafDistImageName
+//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+//   }
+//   dependsOn: [
+//     containerAppsResources
+//     appInsightsResources
+//     keyVaultResources
+//     serviceBusResources
+//   ]
+// }
+
+// module acafRecvExpResources './acafrecvexp.bicep' = {
+//   name: 'acafrecvexp-resources'
+//   params: {
+//     envName: name
+//     appName: 'acafrecvexp'
+//     entityNameForScaling: 'q-order-ingress-acaf'
+//     location: location
+//     imageName: acafRecvExpImageName
+//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+//   }
+//   dependsOn: [
+//     containerAppsResources
+//     appInsightsResources
+//     keyVaultResources
+//     serviceBusResources
+//   ]
+// }
+
+// module acafRecvStdResources './acafrecvstd.bicep' = {
+//   name: 'acafrecvstd-resources'
+//   params: {
+//     envName: name
+//     appName: 'acafrecvstd'
+//     entityNameForScaling: 'q-order-ingress-acaf'
+//     location: location
+//     imageName: acafRecvStdImageName
+//     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+//     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+//   }
+//   dependsOn: [
+//     containerAppsResources
+//     appInsightsResources
+//     keyVaultResources
+//     serviceBusResources
+//   ]
+// }
 
 module funcDistResources './funcdistributor.bicep' = {
   name: 'funcdist-resources'
@@ -207,8 +249,29 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   ]
 }
 
+module testdataResources './testdata.bicep' = {
+  name: 'testdata-resources'
+  params: {
+    envName: name
+    appName: 'testdata'
+    location: location
+    imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+output ENVIRONMENT_NAME string = containerAppsResources.outputs.ENVIRONMENT_NAME
 output SERVICEBUS_CONNECTION string = serviceBusResources.outputs.SERVICEBUS_CONNECTION
 output STORAGE_BLOB_CONNECTION string = storageResources.outputs.STORAGE_BLOB_CONNECTION
+output STORAGE_NAME string = storageResources.outputs.STORAGE_NAME
+output APPINSIGHTS_NAME string = appInsightsResources.outputs.APPINSIGHTS_NAME
 output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsightsResources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY
 output APPINSIGHTS_CONNECTION_STRING string = appInsightsResources.outputs.APPINSIGHTS_CONNECTION_STRING
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
