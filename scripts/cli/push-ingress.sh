@@ -13,6 +13,7 @@ fi
 source <(cat $(git rev-parse --show-toplevel)/.env)
 
 TESTNAME=${1^^}
+TESTPREFIX=${1:0:4}
 
 RESOURCE_GROUP_NAME=`az group list  --query "[?starts_with(name,'$AZURE_ENV_NAME')].name" -o tsv`
 APPINSIGHTS_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Insights/components --query '[0].name' -o tsv`
@@ -26,16 +27,16 @@ echo $SCHEDULE $TESTNAME
 current_epoch=$(date +%s)
 target_epoch=$(date -d $SCHEDULE +%s)
 
-sleep_seconds=$(( $target_epoch - $current_epoch ))
+if [ $target_epoch -gt $current_epoch ]; then
 
-# echo $current_epoch $target_epoch $sleep_seconds
+  sleep_seconds=$(( $target_epoch - $current_epoch ))
 
-if [ $sleep_seconds -gt 0 ]; then
   sleep $sleep_seconds
 fi
-sleep 300
 
-query="requests | where cloud_RoleName matches regex '(acaf|dapr|func)(dist|recv)' | where name != 'Health' and name != 'GET /health' | where timestamp > todatetime('$SCHEDULE') | where success == true | summarize count(),sum(duration),min(timestamp),max(timestamp) | project count_, runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)"
+sleep 360
+
+query="requests | where cloud_RoleName matches regex '$TESTPREFIX(dist|recv)' | where name != 'Health' and name !startswith 'GET' | where timestamp > todatetime('$SCHEDULE') | where success == true | summarize count(),sum(duration),min(timestamp),max(timestamp) | project count_, runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)"
 # echo $query
 result=`az monitor app-insights query --app $APPINSIGHTS_NAME -g $RESOURCE_GROUP_NAME --analytics-query "$query"`
 

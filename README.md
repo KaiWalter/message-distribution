@@ -88,6 +88,8 @@ or
 ./scripts/{deployment}/push-ingress.sh acafq
 ```
 
+> persisted [test results](./LOG.md)
+
 ---
 
 ## Observations
