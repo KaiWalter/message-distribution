@@ -8,6 +8,8 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
+param entityNameForScaling string
+
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -69,16 +71,16 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
       }
       secrets: [
         {
-          name: 'registry-password'
-          value: containerRegistry.listCredentials().passwords[0].value
-        }
-        {
           name: 'storage-connection'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${stg.listkeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${stg.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         }
         {
           name: 'servicebus-connection'
           value: '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'
+        }
+        {
+          name: 'appinsights-connection'
+          value: appInsights.properties.ConnectionString
         }
       ]
       registries: [
@@ -87,40 +89,24 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
           identity: acrPullId
         }
       ]
+      dapr: {
+        enabled: true
+        appId: appName
+        appPort: 80
+        appProtocol: 'http'
+        enableApiLogging: true
+        logLevel: 'info'
+      }
     }
     template: {
       containers: [
         {
           image: imageName
-          name: 'testdatasvc'
+          name: appName
           env: [
             {
-              name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-              value: appInsights.properties.InstrumentationKey
-            }
-            {
-              name: 'AZURE_KEY_VAULT_ENDPOINT'
-              value: keyVault.properties.vaultUri
-            }
-            {
-              name: 'AzureWebJobsStorage'
-              secretRef: 'storage-connection'
-            }
-            {
-              name: 'STORAGE_CONNECTION'
-              secretRef: 'storage-connection'
-            }
-            {
-              name: 'SERVICEBUS_CONNECTION'
-              secretRef: 'servicebus-connection'
-            }
-            {
-              name: 'WEBSITE_SITE_NAME'
-              value: appName
-            }
-            {
-              name: 'AzureFunctionsWebHost__hostId'
-              value: guid(subscription().subscriptionId, resourceGroup().name)
+              name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+              secretRef: 'appinsights-connection'
             }
           ]
           probes: [
@@ -128,14 +114,14 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
               type: 'Liveness'
               httpGet: {
                 port: 80
-                path: 'api/health'
+                path: 'health'
               }
             }
             {
               type: 'Readiness'
               httpGet: {
                 port: 80
-                path: 'api/health'
+                path: 'health'
               }
             }
           ]
@@ -145,8 +131,30 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
           }
         }
       ]
+      scale: {
+        minReplicas: 1
+        maxReplicas: 10
+        rules: [
+          {
+            name: 'queue-rule'
+            custom: {
+              type: 'azure-servicebus'
+              metadata: {
+                queueName: entityNameForScaling
+                namespace: serviceBusNamespace.name
+                messageCount: '100'
+              }
+              auth: [
+                {
+                  secretRef: 'servicebus-connection'
+                  triggerParameter: 'connection'
+                }
+              ]
+            }
+
+          }
+        ]
+      }
     }
   }
 }
-
-output TESTDATA_URI string = 'https://${capp.properties.configuration.ingress.fqdn}'

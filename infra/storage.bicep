@@ -34,5 +34,5 @@ resource contTestData 'Microsoft.Storage/storageAccounts/blobServices/containers
   }
 }
 
-output STORAGE_BLOB_CONNECTION string = 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${listKeys(stg.id, stg.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
+output STORAGE_BLOB_CONNECTION string = 'DefaultEndpointsProtocol=https;AccountName=${stg.name};AccountKey=${stg.listkeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
 output STORAGE_NAME string = stg.name

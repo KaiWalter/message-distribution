@@ -8,6 +8,8 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
+param entityNameForScaling string
+
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -92,7 +94,7 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
       containers: [
         {
           image: imageName
-          name: 'testdatasvc'
+          name: 'funcdistributor'
           env: [
             {
               name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -145,8 +147,29 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
           }
         }
       ]
+      scale: {
+        minReplicas: 1
+        maxReplicas: 10
+        rules: [
+          {
+            name: 'queue-rule'
+            custom: {
+              type: 'azure-servicebus'
+              metadata: {
+                queueName: entityNameForScaling
+                messageCount: '100'
+              }
+              auth: [
+                {
+                  secretRef: 'servicebus-connection'
+                  triggerParameter: 'connection'
+                }
+              ]
+            }
+
+          }
+        ]
+      }
     }
   }
 }
-
-output TESTDATA_URI string = 'https://${capp.properties.configuration.ingress.fqdn}'
