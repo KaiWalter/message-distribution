@@ -1,0 +1,170 @@
+<mxfile host="65bd71144e">
+    <diagram id="rUCQEew4oUoK3X3u2F54" name="Page-1">
+        <mxGraphModel dx="1086" dy="640" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#666666" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="53" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="2" target="52" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Function App: testdata&#10;Function: Generate" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="171" y="250" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="3" target="9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="3" target="37" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="498" y="280" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="3" value="Function App: testdata&#10;Function: PushIngress{testname}" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="350" y="250" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="4" target="2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.archimate3.actor;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="60" width="50" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="6" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#ffff99;verticalLabelPosition=bottom;verticalAlign=top;align=center;shape=mxgraph.archimate3.actor;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="359" y="60" width="50" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="8" target="13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Function App: acafdistributor&#10;Function: Dispatch" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="660" y="120" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="9" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="q-order-ingress-acaf" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="120" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="8" target="15" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="718" y="283.20000000000005" as="sourcePoint"/>
+                        <mxPoint x="800" y="266.79999999999995" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="13" target="18" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="q-order-express-acaf" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="71" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="15" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="q-order-standard-acaf" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="170" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Function App: acafrecvexp&#10;Function: Receiver" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="71" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="Function App: acafrecvstd&#10;Function: Receiver" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="170" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="23" target="28" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="Function App: funcdistributor&#10;Function: Dispatch" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="660" y="549" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="25" target="23" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="q-order-ingress-func" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="549" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="23" target="30" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="718" y="712.2" as="sourcePoint"/>
+                        <mxPoint x="800" y="695.8" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="28" target="31" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="q-order-express-func" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="500" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="30" target="32" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="q-order-standard-func" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="599" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="Function App: funcrecvexp&#10;Function: Receiver" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="500" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Function App: funcrecvstd&#10;Function: Receiver" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/compute/Function_Apps.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="599" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="3" target="25" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="428" y="264" as="sourcePoint"/>
+                        <mxPoint x="530" y="186" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="49" target="40" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="724.1507537688442" y="349.1507537688442" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="37" target="49" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="660" y="359" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="37" value="q-order-ingress-dapr" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="329" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;exitX=1;exitY=0.75;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="49" target="42" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="724" y="369" as="sourcePoint"/>
+                        <mxPoint x="800" y="475.79999999999995" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="40" target="50" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="970" y="310" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="40" value="q-order-express-dapr" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="280" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;" parent="1" source="42" target="51" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="960" y="409" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="q-order-standard-dapr" style="aspect=fixed;points=[];align=center;image;fontSize=12;image=img/lib/azure2/integration/Service_Bus.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="810" y="379" width="68" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value=".NET&#10;&#10;/q-order-ingress-dapr" style="strokeColor=none;fillColor=#0079D6;labelPosition=center;verticalLabelPosition=middle;verticalAlign=top;align=center;fontSize=12;outlineConnect=0;spacingTop=-6;fontColor=#FFFFFF;sketch=0;shape=mxgraph.sitemap.services;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="324" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value=".NET&#10;&#10;/q-order-express-dapr" style="strokeColor=none;fillColor=#0079D6;labelPosition=center;verticalLabelPosition=middle;verticalAlign=top;align=center;fontSize=12;outlineConnect=0;spacingTop=-6;fontColor=#FFFFFF;sketch=0;shape=mxgraph.sitemap.services;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="275" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value=".NET&#10;&#10;/q-order-standard-dapr" style="strokeColor=none;fillColor=#0079D6;labelPosition=center;verticalLabelPosition=middle;verticalAlign=top;align=center;fontSize=12;outlineConnect=0;spacingTop=-6;fontColor=#FFFFFF;sketch=0;shape=mxgraph.sitemap.services;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="374" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="" style="aspect=fixed;html=1;points=[];align=center;image;fontSize=12;image=img/lib/azure2/storage/Storage_Accounts.svg;fontFamily=Helvetica;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="392" width="65" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="" style="edgeStyle=none;html=1;fontFamily=Helvetica;entryX=0.147;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="52" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="229.46428571428578" y="320" as="sourcePoint"/>
+                        <mxPoint x="269.9642857142858" y="404" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
