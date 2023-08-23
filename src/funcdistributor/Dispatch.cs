@@ -1,8 +1,7 @@
 using Azure.Messaging.ServiceBus;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Models;
-using System;
 using System.Text;
 using System.Text.Json;
 
@@ -10,37 +9,52 @@ namespace funcdistributor
 {
     public class Dispatch
     {
-        [FunctionName("Dispatch")]
-        public void Run(
+        [Function("Dispatch")]
+        public DispatchedOutput Run(
             [ServiceBusTrigger("q-order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            [ServiceBus("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputExpressMessages,
-            [ServiceBus("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputStandardMessages,
             ILogger log)
         {
-            ArgumentNullException.ThrowIfNull(ingressMessage,nameof(ingressMessage));
+            ArgumentNullException.ThrowIfNull(ingressMessage, nameof(ingressMessage));
 
             var order = JsonSerializer.Deserialize<Order>(ingressMessage);
 
-            ArgumentNullException.ThrowIfNull(order,nameof(ingressMessage));
+            ArgumentNullException.ThrowIfNull(order, nameof(ingressMessage));
 
-            var outputMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
-            {
-                ContentType = "application/json",
-                MessageId = order.OrderId.ToString(),
-            };
+            var outputMessage = new DispatchedOutput();
 
             switch (order.Delivery)
             {
                 case Delivery.Express:
-                    outputExpressMessages.Add(outputMessage);
+                    outputMessage.ExpressMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
+                    {
+                        ContentType = "application/json",
+                        MessageId = order.OrderId.ToString(),
+                    };
                     break;
                 case Delivery.Standard:
-                    outputStandardMessages.Add(outputMessage);
+                    outputMessage.StandardMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
+                    {
+                        ContentType = "application/json",
+                        MessageId = order.OrderId.ToString(),
+                    };
                     break;
                 default:
                     log.LogError($"invalid Delivery type: {order.Delivery}");
                     break;
             }
+
+            return outputMessage;
         }
     }
+
+    public class DispatchedOutput
+    {
+        [ServiceBusOutput("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")]
+        public ServiceBusMessage? ExpressMessage { get; set; }
+
+        [ServiceBusOutput("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")]
+        public ServiceBusMessage? StandardMessage { get; set; }
+    }
 }
+
+

@@ -1,26 +1,29 @@
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Models;
-using System;
 using System.Text.Json;
+using System;
 
 namespace funcrecvstd
 {
     public class Receiver
     {
-        [FunctionName("Receiver")]
+        [Function("Receiver")]
         public void Run(
             [ServiceBusTrigger("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            ILogger log
+            FunctionContext executionContext
             )
         {
+            var logger = executionContext.GetLogger("Receiver");
+
             ArgumentNullException.ThrowIfNull(ingressMessage, nameof(ingressMessage));
 
             var order = JsonSerializer.Deserialize<Order>(ingressMessage);
 
             ArgumentNullException.ThrowIfNull(order, nameof(order));
 
-            log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
+            logger.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
         }
     }
 }
