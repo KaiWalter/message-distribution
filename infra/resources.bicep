@@ -46,7 +46,7 @@ module serviceBusResources './servicebus.bicep' = {
     location: location
     tags: tags
     resourceToken: resourceToken
-    skuName: 'Standard'
+    skuName: 'Premium'
   }
 }
 

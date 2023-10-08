@@ -20,9 +20,11 @@ APPINSIGHTS_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Micro
 TESTDATA_NAME=`az resource list --tag azd-service-name=testdata --query "[?resourceGroup=='$RESOURCE_GROUP_NAME'].name" -o tsv`
 TESTDATA_URI=https://$(az containerapp show -g $RESOURCE_GROUP_NAME -n $TESTDATA_NAME --query properties.configuration.ingress.fqdn -o tsv)
 
-SCHEDULE=`curl -s -X POST -d '{}' "$TESTDATA_URI/api/PushIngress$TESTNAME" | jq -r '.scheduledTimestamp'`
+PUSHRESPONSE=`curl -s -X POST -d '{}' "$TESTDATA_URI/api/PushIngress$TESTNAME"`
+SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
+COUNT=`echo $PUSHRESPONSE | jq -r '.count'`
 
-echo $SCHEDULE $TESTNAME 
+echo $SCHEDULE $TESTNAME $COUNT
 
 current_epoch=$(date +%s)
 target_epoch=$(date -d $SCHEDULE +%s)

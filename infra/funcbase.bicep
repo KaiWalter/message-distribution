@@ -23,7 +23,7 @@ var tags = {
   'azd-env-name': envName
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' existing = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: 'cae-${resourceToken}'
 }
 

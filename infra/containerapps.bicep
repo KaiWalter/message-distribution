@@ -20,7 +20,7 @@ var queueComponents = [
   'q-order-standard-dapr'
 ]
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: 'cae-${resourceToken}'
   location: location
   tags: tags
