@@ -37,18 +37,18 @@ services:
     project: src/testdata
     language: csharp
     host: containerapp
-
-  # acafdistributor:
-  #   project: src/acafdistributor
-  #   language: csharp
-  #   host: containerapp
-
-  # acafrecvexp:
-  #   project: src/acafrecvexp
-  #   language: csharp
-  #   host: containerapp
-
-  # acafrecvstd:
-  #   project: src/acafrecvstd
-  #   language: csharp
-  #   host: containerapp
+ 
+  acafdistributor:
+    project: src/acafdistributor
+    language: csharp
+    host: containerapp
+ 
+  acafrecvexp:
+    project: src/acafrecvexp
+    language: csharp
+    host: containerapp
+ 
+  acafrecvstd:
+    project: src/acafrecvstd
+    language: csharp
+    host: containerapp

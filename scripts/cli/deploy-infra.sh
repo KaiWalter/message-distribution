@@ -5,5 +5,5 @@ REVISION=`date +"%s"`
 
 az deployment sub create -f infra/main.bicep -n main-infra-$REVISION \
   -l $AZURE_LOCATION \
-  -p name=$AZURE_ENV_NAME \
+  -p environmentName=$AZURE_ENV_NAME \
   location=$AZURE_LOCATION

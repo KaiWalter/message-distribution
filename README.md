@@ -4,11 +4,11 @@ With this repository I want to evaluate and performance test various asynchronou
 
 Currently hosted only Azure Container Apps (ACA) is implemented in this repo
 
-code used for solution elements | implementation and deployment approach
----- | ----
-**ACAF** | .NET [Azure Functions on ACA deployment](https://learn.microsoft.com/en-us/azure/azure-functions/functions-container-apps-hosting)
-**DAPR** | ASP.NET with Dapr in a plain container on ACA
-**FUNC** | .NET Azure Functions as plain container on ACA
+| code used for solution elements | implementation and deployment approach                                                                                             |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **ACAF**                        | .NET [Azure Functions on ACA deployment](https://learn.microsoft.com/en-us/azure/azure-functions/functions-container-apps-hosting) |
+| **DAPR**                        | ASP.NET with Dapr in a plain container on ACA                                                                                      |
+| **FUNC**                        | .NET Azure Functions as plain container on ACA                                                                                     |
 
 For pub/sub both variants - Azure Service Bus Queues and Topics are to be tested - designated by the suffix **Q** or **T**. Currently only the queues track is completely implemented and tested. Hence only tests with these codes can be started:
 
@@ -27,7 +27,7 @@ For pub/sub both variants - Azure Service Bus Queues and Topics are to be tested
 
 To run a sequence of tests I used `scripts/cli/loop.sh` renders troughput results into this [log file](./LOG.md).
 
-As of 2023-08-08 (and with only 10k orders, with no heavy logic) there is no significant 
+As of 2023-08-08 (and with only 10k orders, with no heavy logic) there is no significant
 
 ![comparing runtimes](./media/2023-08-08-results.png)
 
@@ -35,13 +35,13 @@ What is strange and can be observed consistantly is, that Functions in Container
 
 ![scaling behavior Functions in Container](./media/2023-08-08-scaling-func.png)
 
-and Functions on ACA show this gap in processing
+and [Functions on ACA show this gap](https://github.com/Azure/azure-functions-on-container-apps/issues/33) in processing
 
 ![scaling behavior Functions on ACA](./media/2023-08-08-scaling-acaf.png)
 
 It seems that the 2 receiver Functions pick up traffic from the queue with a delay - or are scaled up with a delay.
 
-----
+---
 
 ## environment creation
 
@@ -190,7 +190,6 @@ requests
 | where success == true
 | summarize count(),sum(duration),min(timestamp),max(timestamp)
 | extend runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)
-
 ```
 
 ```
@@ -254,4 +253,20 @@ _batched_
             {
                 var order = JsonSerializer.Deserialize<Order>(Encoding.UTF8.GetString(ingressMessage.Body));
                 ArgumentNullException.ThrowIfNull(order, nameof(ingressMessage));
+```
+
+## Error Siutations
+
+At a point I had a suspicous error which I could not make sense of:
+
+```
+ERROR: failed packaging service 'acafdistributor': failing invoking action 'package', tagging image: tagging image: exit code: 1, stdout: , stderr: Error parsing reference: "message-distribution/acafdistributor-:azd-deploy-1696684259" is not a valid repository/tag: invalid reference format
+```
+
+It turned out I accidentally removed `AZURE_ENV_NAME` from my environment configuration in `.azure/kw-messdist/.env`:
+
+```
+AZURE_ENV_NAME="kw-messdist"
+AZURE_LOCATION="westeurope"
+AZURE_SUBSCRIPTION_ID="00000000-0000-0000-0000-000000000000"
 ```

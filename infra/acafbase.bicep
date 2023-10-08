@@ -23,7 +23,7 @@ var tags = {
   'azd-env-name': envName
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-10-01' existing = {
+resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: 'cae-${resourceToken}'
 }
 
@@ -46,7 +46,6 @@ resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existing = {
   name: 'sb-${resourceToken}'
 }
-
 var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-functions/dotnet7-quickstart-demo:1.0'
 
 var appSetingsBasic = [
@@ -81,15 +80,26 @@ var appSetingsRegistry = [
     name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
     value: containerRegistry.listCredentials().passwords[0].value
   }
+  // https://github.com/Azure/Azure-Functions/wiki/When-and-Why-should-I-set-WEBSITE_ENABLE_APP_SERVICE_STORAGE
+  // case 3a
   {
     name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
     value: 'false'
   }
 ]
 
-var appSettings = concat(appSetingsBasic, imageName != '' ? appSetingsRegistry : []
-)
+var appSettings = concat(appSetingsBasic, imageName != '' ? appSetingsRegistry : [])
 
+// var identity = imageName != '' ? {
+//   type: 'UserAssigned'
+//   userAssignedIdentities: {
+//     '${acrPullId}': {}
+//     '${kvGetId}': {}
+//   }
+// } : {
+//   type: 'None'
+// }
+//
 resource acafunction 'Microsoft.Web/sites@2022-09-01' = {
   name: '${envName}${appName}'
   location: location
@@ -97,8 +107,8 @@ resource acafunction 'Microsoft.Web/sites@2022-09-01' = {
       'azd-service-name': appName
     })
   kind: 'functionapp'
+  // identity: identity
   properties: {
-    name: '${envName}${appName}'
     managedEnvironmentId: containerAppsEnvironment.id
 
     siteConfig: {

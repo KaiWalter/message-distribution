@@ -1,23 +1,22 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
+using System.Net;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace funcdistributor
 {
     public static class Health
     {
-        [FunctionName("Health")]
-        public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req,
+        [Function("Health")]
+        public async static Task<HttpResponseData> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req,
             ILogger log)
         {
-            return new OkResult();
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(new {
+                message = "It's alive"
+            });
+            return response;
         }
     }
 }
