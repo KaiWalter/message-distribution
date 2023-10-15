@@ -240,6 +240,24 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   ]
 }
 
+module dcraDistResources './dcradistributor.bicep' = {
+  name: 'dcradist-resources'
+  params: {
+    envName: name
+    appName: 'dcradistributor'
+    location: location
+    imageName: daprDistributorImageName != '' ? daprDistributorImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
 module testdataResources './testdata.bicep' = {
   name: 'testdata-resources'
   params: {

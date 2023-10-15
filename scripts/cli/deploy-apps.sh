@@ -15,8 +15,6 @@ for app in "${apps[@]}"
 do
   echo "$app"
 
-  capp=$app
-
   if [ "$1" == "build" ];
   then
     IMAGE=$app:$REVISION

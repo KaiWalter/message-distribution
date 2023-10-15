@@ -4,6 +4,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Utils;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().Build());
@@ -22,28 +23,29 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-// app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
-//     new {
-//         pubsubname = "order-pubsub",
-//         topic = "t-order-ingress-dapr",
-//         route = "/t-order-ingress-dapr",
-//         metadata = new {
-//             rawPayload= "true",
-//         }
-//     }}));
+app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+    new {
+        pubsubname = "order-pubsub",
+        topic = "t-order-ingress-dcra",
+        route = "/t-order-ingress-dcra",
+        metadata = new {
+            rawPayload= "true",
+        }
+    }}));
 
-app.MapPost("/t-order-ingress-dapr", [Topic("order-pubsub", "t-order-ingress-dapr", enableRawPayload: true)] async (
+app.MapPost("/t-order-ingress-dcra", [Topic("order-pubsub", "t-order-ingress-dcra", enableRawPayload: true)] async (
     [FromBody] Order order,
     [FromServices] DaprClient daprClient
     ) =>
 {
+    Console.WriteLine(JsonSerializer.Serialize(order));
     switch (order.Delivery)
     {
         case Delivery.Express:
-            await daprClient.PublishEventAsync("order-pubsub", "t-order-express-dapr", order);
+            await daprClient.PublishEventAsync("order-pubsub", "t-order-express-dcra", order);
             break;
         case Delivery.Standard:
-            await daprClient.PublishEventAsync("order-pubsub", "t-order-standard-dapr", order);
+            await daprClient.PublishEventAsync("order-pubsub", "t-order-standard-dcra", order);
             break;
     }
 
