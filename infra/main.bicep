@@ -57,8 +57,6 @@ module resources './resources.bicep' = {
 
 output ENVIRONMENT_NAME string = resources.outputs.ENVIRONMENT_NAME
 output RESOURCE_GROUP_NAME string = resourceGroup.name
-output SERVICEBUS_CONNECTION string = resources.outputs.SERVICEBUS_CONNECTION
-output STORAGE_BLOB_CONNECTION string = resources.outputs.STORAGE_BLOB_CONNECTION
 output STORAGE_NAME string = resources.outputs.STORAGE_NAME
 output APPINSIGHTS_NAME string = resources.outputs.APPINSIGHTS_NAME
 output APPINSIGHTS_INSTRUMENTATIONKEY string = resources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY

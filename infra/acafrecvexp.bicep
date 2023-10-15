@@ -8,15 +8,11 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
-param entityNameForScaling string
-
 @minLength(1)
 @description('Primary location for all resources')
 param location string
 
 param imageName string
-param acrPullId string
-param kvGetId string
 
 module acafBase 'acafbase.bicep' = {
   name: 'acafBase-RecvExp'
@@ -25,8 +21,5 @@ module acafBase 'acafbase.bicep' = {
     envName: envName
     location: location
     imageName: imageName
-    entityNameForScaling: entityNameForScaling
-    kvGetId: kvGetId
-    acrPullId: acrPullId
   }
 }

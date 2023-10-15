@@ -56,10 +56,10 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           name: 'queueName'
           value: q
         }
-        // { wait for Dapr 1.10
-        //   name: 'maxBulkSubCount'
-        //   value: '100'
-        // }
+        {
+          name: 'maxBulkSubCount'
+          value: '100'
+        }
         {
           name: 'maxActiveMessages'
           value: '1000'

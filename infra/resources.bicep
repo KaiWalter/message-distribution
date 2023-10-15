@@ -83,11 +83,8 @@ module acafDistResources './acafdistributor.bicep' = {
   params: {
     envName: name
     appName: 'acafdistributor'
-    entityNameForScaling: 'q-order-ingress-acaf'
     location: location
     imageName: acafDistributorImageName
-    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -102,11 +99,8 @@ module acafRecvExpResources './acafrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'acafrecvexp'
-    entityNameForScaling: 'q-order-express-acaf'
     location: location
     imageName: acafRecvExpImageName
-    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -121,11 +115,8 @@ module acafRecvStdResources './acafrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'acafrecvstd'
-    entityNameForScaling: 'q-order-standard-acaf'
     location: location
     imageName: acafRecvStdImageName
-    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
-    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -268,8 +259,6 @@ module testdataResources './testdata.bicep' = {
 }
 
 output ENVIRONMENT_NAME string = containerAppsResources.outputs.ENVIRONMENT_NAME
-output SERVICEBUS_CONNECTION string = serviceBusResources.outputs.SERVICEBUS_CONNECTION
-output STORAGE_BLOB_CONNECTION string = storageResources.outputs.STORAGE_BLOB_CONNECTION
 output STORAGE_NAME string = storageResources.outputs.STORAGE_NAME
 output APPINSIGHTS_NAME string = appInsightsResources.outputs.APPINSIGHTS_NAME
 output APPINSIGHTS_INSTRUMENTATIONKEY string = appInsightsResources.outputs.APPINSIGHTS_INSTRUMENTATIONKEY

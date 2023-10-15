@@ -8,15 +8,11 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
-param entityNameForScaling string
-
 @minLength(1)
 @description('Primary location for all resources')
 param location string
 
 param imageName string
-param acrPullId string
-param kvGetId string
 
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
@@ -33,10 +29,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-pr
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'appi-${resourceToken}'
-}
-
-resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
-  name: 'keyvault${resourceToken}'
 }
 
 resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {

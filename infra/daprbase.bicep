@@ -35,10 +35,6 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'appi-${resourceToken}'
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
-  name: 'keyvault${resourceToken}'
-}
-
 resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
   name: 'st${resourceToken}'
 }

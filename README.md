@@ -255,7 +255,7 @@ _batched_
                 ArgumentNullException.ThrowIfNull(order, nameof(ingressMessage));
 ```
 
-## Error Siutations
+## Error Situtations
 
 At a point I had a suspicous error which I could not make sense of:
 
