@@ -104,6 +104,10 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
               secretRef: 'appinsights-connection'
             }
+            {
+              name: 'TESTCASE'
+              value: 'dapr'
+            }
           ]
           probes: [
             {

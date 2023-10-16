@@ -21,7 +21,7 @@ param daprGrpcEndpoint string
 param daprPort string
 
 module daprBase 'dcrabase.bicep' = {
-  name: 'dcraBase-Distributor'
+  name: 'dcraBase-RecvExp'
   params: {
     appName: appName
     envName: envName

@@ -41,5 +41,7 @@ az deployment sub create -f infra/main.bicep -n main-apps-$REVISION \
   funcRecvExpImageName=$IMAGE_funcrecvexp \
   funcRecvStdImageName=$IMAGE_funcrecvstd \
   testdataImageName=$IMAGE_testdata \
-
+  daprApiToken=$DAPR_API_TOKEN \
+  daprGrpcEndpoint=$DAPR_GRPC_ENDPOINT \
+  daprPort=$DAPR_PORT
 

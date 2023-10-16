@@ -16,6 +16,10 @@ var queues = [
   'q-order-ingress-dapr'
   'q-order-standard-dapr'
   'q-order-express-dapr'
+  // ASP.NET Core with Dapr Container on ACA, CRA connected
+  'q-order-ingress-dcra'
+  'q-order-standard-dcra'
+  'q-order-express-dcra'
 ]
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {

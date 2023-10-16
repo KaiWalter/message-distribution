@@ -32,6 +32,9 @@ param funcDistributorImageName string = ''
 param funcRecvExpImageName string = ''
 param funcRecvStdImageName string = ''
 param testdataImageName string = ''
+param daprApiToken string = ''
+param daprGrpcEndpoint string = ''
+param daprPort string = ''
 
 module resources './resources.bicep' = {
   name: 'resources-${resourceToken}'
@@ -51,6 +54,9 @@ module resources './resources.bicep' = {
     funcRecvExpImageName: funcRecvExpImageName
     funcRecvStdImageName: funcRecvStdImageName
     testdataImageName: testdataImageName
+    daprApiToken: daprApiToken
+    daprGrpcEndpoint: daprGrpcEndpoint
+    daprPort: daprPort
     tags: tags
   }
 }

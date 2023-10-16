@@ -39,6 +39,13 @@ namespace testdata
             [ServiceBus("q-order-ingress-dapr", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
             => SplitAndScheduleOrders(nameof(PushIngressDaprQ), ordersTestData, outputMessages);
 
+        [FunctionName(nameof(PushIngressDCRAQ))]
+        public static IActionResult PushIngressDCRAQ(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            [ServiceBus("q-order-ingress-dcra", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressDCRAQ), ordersTestData, outputMessages);
+
         private static IActionResult SplitAndScheduleOrders(string source, string ordersTestData, ICollector<ServiceBusMessage> outputMessages)
         {
             var startTimeStamp = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);

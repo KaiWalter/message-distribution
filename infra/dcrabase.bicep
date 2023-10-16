@@ -16,6 +16,10 @@ param imageName string
 param acrPullId string
 param kvGetId string
 
+param daprApiToken string
+param daprGrpcEndpoint string
+param daprPort string
+
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
   'azd-env-name': envName
@@ -76,6 +80,10 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
           name: 'appinsights-connection'
           value: appInsights.properties.ConnectionString
         }
+        {
+          name: 'dapr-api-token'
+          value: daprApiToken != '' ? daprApiToken : 'not-used'
+        }
       ]
       registries: [
         {
@@ -93,6 +101,22 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
               secretRef: 'appinsights-connection'
+            }
+            {
+              name: 'TESTCASE'
+              value: 'dcra'
+            }
+            {
+              name: 'DAPR_API_TOKEN'
+              secretRef: 'dapr-api-token'
+            }
+            {
+              name: 'DAPR_GRPC_ENDPOINT'
+              value: daprGrpcEndpoint
+            }
+            {
+              name: 'DAPR_PORT'
+              value: daprPort
             }
           ]
           probes: [

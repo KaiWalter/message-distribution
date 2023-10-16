@@ -14,6 +14,9 @@ param funcDistributorImageName string = ''
 param funcRecvExpImageName string = ''
 param funcRecvStdImageName string = ''
 param testdataImageName string = ''
+param daprApiToken string = ''
+param daprGrpcEndpoint string = ''
+param daprPort string = ''
 
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
@@ -249,6 +252,51 @@ module dcraDistResources './dcradistributor.bicep' = {
     imageName: daprDistributorImageName != '' ? daprDistributorImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+    daprApiToken: daprApiToken
+    daprGrpcEndpoint: daprGrpcEndpoint
+    daprPort: daprPort
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module dcraRecvExpResources './dcrarecvexp.bicep' = {
+  name: 'dcrarecvexp-resources'
+  params: {
+    envName: name
+    appName: 'dcrarecvexp'
+    location: location
+    imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+    daprApiToken: ''
+    daprGrpcEndpoint: ''
+    daprPort: ''
+  }
+  dependsOn: [
+    containerAppsResources
+    appInsightsResources
+    keyVaultResources
+    serviceBusResources
+  ]
+}
+
+module dcraRecvStdResources './dcrarecvstd.bicep' = {
+  name: 'dcrarecvstd-resources'
+  params: {
+    envName: name
+    appName: 'dcrarecvstd'
+    location: location
+    imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+    daprApiToken: ''
+    daprGrpcEndpoint: ''
+    daprPort: ''
   }
   dependsOn: [
     containerAppsResources
