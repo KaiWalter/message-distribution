@@ -40,7 +40,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
 }
 
 resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
-  name: 'st${resourceToken}'
+  name: 'stg${resourceToken}'
 }
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existing = {
@@ -115,6 +115,18 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'SERVICEBUS_CONNECTION'
               secretRef: 'servicebus-connection'
+            }
+            {
+              name: 'QUEUE_NAME_INGRESS'
+              value: 'q-order-ingress-func'
+            }
+            {
+              name: 'QUEUE_NAME_EXPRESS'
+              value: 'q-order-express-func'
+            }
+            {
+              name: 'QUEUE_NAME_STANDARD'
+              value: 'q-order-standard-func'
             }
             {
               name: 'WEBSITE_SITE_NAME'

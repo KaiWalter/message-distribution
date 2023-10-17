@@ -31,9 +31,6 @@ az deployment sub create -f infra/main.bicep -n main-apps-$REVISION \
   -l $AZURE_LOCATION \
   -p environmentName=$AZURE_ENV_NAME \
   location=$AZURE_LOCATION \
-  acafDistributorImageName=$IMAGE_acafdistributor \
-  acafRecvExpImageName=$IMAGE_acafrecvexp \
-  acafRecvStdImageName=$IMAGE_acafrecvstd \
   daprDistributorImageName=$IMAGE_daprdistributor \
   daprRecvExpImageName=$IMAGE_daprrecvexp \
   daprRecvStdImageName=$IMAGE_daprrecvstd \

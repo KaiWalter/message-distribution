@@ -11,7 +11,7 @@ namespace funcrecvstd
     {
         [Function("Receiver")]
         public void Run(
-            [ServiceBusTrigger("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBusTrigger("%QUEUE_NAME_STANDARD%", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
             FunctionContext executionContext
             )
         {

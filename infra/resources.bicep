@@ -4,9 +4,6 @@ param principalId string = ''
 param resourceToken string
 param tags object
 
-param acafDistributorImageName string = ''
-param acafRecvExpImageName string = ''
-param acafRecvStdImageName string = ''
 param daprDistributorImageName string = ''
 param daprRecvExpImageName string = ''
 param daprRecvStdImageName string = ''
@@ -87,7 +84,7 @@ module acafDistResources './acafdistributor.bicep' = {
     envName: name
     appName: 'acafdistributor'
     location: location
-    imageName: acafDistributorImageName
+    imageName: funcDistributorImageName
   }
   dependsOn: [
     containerAppsResources
@@ -103,7 +100,7 @@ module acafRecvExpResources './acafrecvexp.bicep' = {
     envName: name
     appName: 'acafrecvexp'
     location: location
-    imageName: acafRecvExpImageName
+    imageName: funcRecvExpImageName
   }
   dependsOn: [
     containerAppsResources
@@ -119,7 +116,7 @@ module acafRecvStdResources './acafrecvstd.bicep' = {
     envName: name
     appName: 'acafrecvstd'
     location: location
-    imageName: acafRecvStdImageName
+    imageName: funcRecvStdImageName
   }
   dependsOn: [
     containerAppsResources
