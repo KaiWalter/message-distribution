@@ -245,6 +245,7 @@ module dcraDistResources './dcradistributor.bicep' = {
   params: {
     envName: name
     appName: 'dcradistributor'
+    entityNameForScaling: 'q-order-ingress-dcra'
     location: location
     imageName: daprDistributorImageName != '' ? daprDistributorImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -266,6 +267,7 @@ module dcraRecvExpResources './dcrarecvexp.bicep' = {
   params: {
     envName: name
     appName: 'dcrarecvexp'
+    entityNameForScaling: 'q-order-express-dcra'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -287,6 +289,7 @@ module dcraRecvStdResources './dcrarecvstd.bicep' = {
   params: {
     envName: name
     appName: 'dcrarecvstd'
+    entityNameForScaling: 'q-order-standard-dcra'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID

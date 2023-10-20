@@ -8,6 +8,8 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
+param entityNameForScaling string
+
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -144,6 +146,26 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
       scale: {
         minReplicas: 1
         maxReplicas: 10
+        rules: [
+          {
+            name: 'queue-rule'
+            custom: {
+              type: 'azure-servicebus'
+              metadata: {
+                queueName: entityNameForScaling
+                namespace: serviceBusNamespace.name
+                messageCount: '100'
+              }
+              auth: [
+                {
+                  secretRef: 'servicebus-connection'
+                  triggerParameter: 'connection'
+                }
+              ]
+            }
+
+          }
+        ]
       }
     }
   }

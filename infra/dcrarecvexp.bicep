@@ -8,6 +8,8 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
+param entityNameForScaling string
+
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -24,6 +26,7 @@ module daprBase 'dcrabase.bicep' = {
   name: 'dcraBase-RecvExp'
   params: {
     appName: appName
+    entityNameForScaling: entityNameForScaling
     envName: envName
     location: location
     imageName: imageName

@@ -15,9 +15,41 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
 }
 
 var queueComponents = [
-  'q-order-ingress-dapr'
-  'q-order-express-dapr'
-  'q-order-standard-dapr'
+  {
+    name: 'q-order-ingress-dapr-input'
+    queueName: 'q-order-ingress-dapr'
+    scopes: [
+      'daprdistributor'
+    ]
+  }
+  {
+    name: 'q-order-express-dapr-output'
+    queueName: 'q-order-express-dapr'
+    scopes: [
+      'daprdistributor'
+    ]
+  }
+  {
+    name: 'q-order-standard-dapr-output'
+    queueName: 'q-order-standard-dapr'
+    scopes: [
+      'daprdistributor'
+    ]
+  }
+  {
+    name: 'q-order-express-dapr-input'
+    queueName: 'q-order-express-dapr'
+    scopes: [
+      'daprrecvexp'
+    ]
+  }
+  {
+    name: 'q-order-standard-dapr-input'
+    queueName: 'q-order-standard-dapr'
+    scopes: [
+      'daprrecvstd'
+    ]
+  }
 ]
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
@@ -37,7 +69,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
   }
 
   resource queueComponentResources 'daprComponents' = [for q in queueComponents: {
-    name: q
+    name: q.name
     properties: {
       componentType: 'bindings.azure.servicebusqueues'
       version: 'v1'
@@ -54,7 +86,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
         }
         {
           name: 'queueName'
-          value: q
+          value: q.queueName
         }
         {
           name: 'maxBulkSubCount'
@@ -69,11 +101,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           value: '8'
         }
       ]
-      scopes: [
-        'daprdistributor'
-        'daprrecvexp'
-        'daprrecvstd'
-      ]
+      scopes: q.scopes
     }
   }]
 
