@@ -11,6 +11,9 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace testdata
 {
@@ -46,6 +49,13 @@ namespace testdata
             [ServiceBus("q-order-ingress-dcra", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
             => SplitAndScheduleOrders(nameof(PushIngressDCRAQ), ordersTestData, outputMessages);
 
+        [FunctionName(nameof(PushIngressDCRAT))]
+        public static async Task<IActionResult> PushIngressDCRAT(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            ILogger log)
+            => await SplitAndPostOrders(nameof(PushIngressDCRAQ), ordersTestData, log);
+
         private static IActionResult SplitAndScheduleOrders(string source, string ordersTestData, ICollector<ServiceBusMessage> outputMessages)
         {
             var startTimeStamp = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
@@ -74,6 +84,49 @@ namespace testdata
                     Count = orderList.Count.ToString(),
                     StartTimestamp = startTimeStamp,
                     ScheduledTimestamp = scheduleTime.ToString("o", CultureInfo.InvariantCulture),
+                }
+            );
+        }
+
+        private static async Task<IActionResult> SplitAndPostOrders(string source, string ordersTestData, ILogger log)
+        {
+            var startTimeStamp = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                Converters = {
+                    new JsonStringEnumConverter()
+                }
+            };
+            var orderList = JsonSerializer.Deserialize<List<Order>>(ordersTestData, options);
+
+            ArgumentNullException.ThrowIfNull(orderList, nameof(ordersTestData));
+
+            var url = System.Environment.GetEnvironmentVariable("DAPR_HTTP_ENDPOINT") ?? string.Empty;
+            var apiToken = System.Environment.GetEnvironmentVariable("DAPR_API_TOKEN") ?? string.Empty;
+
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("dapr-api-token", apiToken);
+            httpClient.BaseAddress = new Uri(url);
+
+            foreach (var order in orderList)
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/publish/order-pubsub/t-order-ingress-dcra");
+                request.Content = new StringContent(
+                  JsonSerializer.Serialize(order),
+                  Encoding.UTF8,
+                  "application/json");
+
+                var response = await httpClient.SendAsync(request);
+            }
+
+            return new CreatedResult(
+                source.ToLowerInvariant(),
+                new
+                {
+                    Count = orderList.Count.ToString(),
+                    StartTimestamp = startTimeStamp,
+                    ScheduledTimestamp = startTimeStamp,
                 }
             );
         }

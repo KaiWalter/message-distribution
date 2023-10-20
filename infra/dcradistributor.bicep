@@ -8,6 +8,8 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
+param entityNameForScaling string
+
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -18,12 +20,14 @@ param kvGetId string
 
 param daprApiToken string
 param daprGrpcEndpoint string
+param daprHttpEndpoint string
 param daprPort string
 
 module daprBase 'dcrabase.bicep' = {
   name: 'dcraBase-Distributor'
   params: {
     appName: appName
+    entityNameForScaling: entityNameForScaling
     envName: envName
     location: location
     imageName: imageName
@@ -31,6 +35,7 @@ module daprBase 'dcrabase.bicep' = {
     acrPullId: acrPullId
     daprApiToken: daprApiToken
     daprGrpcEndpoint: daprGrpcEndpoint
+    daprHttpEndpoint: daprHttpEndpoint
     daprPort: daprPort
   }
 }

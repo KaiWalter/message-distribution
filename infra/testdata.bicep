@@ -16,6 +16,9 @@ param imageName string
 param acrPullId string
 param kvGetId string
 
+param daprApiToken string
+param daprHttpEndpoint string
+
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
   'azd-env-name': envName
@@ -80,6 +83,10 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
           name: 'servicebus-connection'
           value: '${listKeys('${serviceBusNamespace.id}/AuthorizationRules/RootManageSharedAccessKey', serviceBusNamespace.apiVersion).primaryConnectionString}'
         }
+        {
+          name: 'dapr-api-token'
+          value: daprApiToken != '' ? daprApiToken : 'not-used'
+        }
       ]
       registries: [
         {
@@ -121,6 +128,14 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'AzureFunctionsWebHost__hostId'
               value: guid(subscription().subscriptionId, resourceGroup().name)
+            }
+            {
+              name: 'DAPR_API_TOKEN'
+              secretRef: 'dapr-api-token'
+            }
+            {
+              name: 'DAPR_HTTP_ENDPOINT'
+              value: daprHttpEndpoint
             }
           ]
           probes: [

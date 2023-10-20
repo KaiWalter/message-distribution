@@ -1,5 +1,7 @@
 # Message Distribution
 
+> !!! THIS IS A DISCONNECTED BRANCH THAT CANNOT BE MERGED !!!
+
 With this repository I want to evaluate and performance test various asynchronous message distribution options with **Azure** resources and hosting platforms. Focus is on measuring the end-to-end **throughput** regardless whether or not certain platform constellations scale or not.
 
 Currently hosted only Azure Container Apps (ACA) is implemented in this repo

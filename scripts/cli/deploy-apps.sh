@@ -40,5 +40,6 @@ az deployment sub create -f infra/main.bicep -n main-apps-$REVISION \
   testdataImageName=$IMAGE_testdata \
   daprApiToken=$DAPR_API_TOKEN \
   daprGrpcEndpoint=$DAPR_GRPC_ENDPOINT \
+  daprHttpEndpoint=$DAPR_HTTP_ENDPOINT \
   daprPort=$DAPR_PORT
 

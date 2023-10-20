@@ -64,7 +64,7 @@ app.MapPost($"/t-order-ingress-{testCase}", async (
     return Results.Ok(order);
 });
 
-app.MapPost($"/q-order-ingress-{testCase}", async (
+app.MapPost($"/q-order-ingress-{testCase}-input", async (
     [FromBody] Order order,
     [FromServices] DaprClient daprClient
     ) =>
@@ -72,10 +72,10 @@ app.MapPost($"/q-order-ingress-{testCase}", async (
     switch (order.Delivery)
     {
         case Delivery.Express:
-            await daprClient.InvokeBindingAsync($"q-order-express-{testCase}", "create", order);
+            await daprClient.InvokeBindingAsync($"q-order-express-{testCase}-output", "create", order);
             break;
         case Delivery.Standard:
-            await daprClient.InvokeBindingAsync($"q-order-standard-{testCase}", "create", order);
+            await daprClient.InvokeBindingAsync($"q-order-standard-{testCase}-output", "create", order);
             break;
     }
 

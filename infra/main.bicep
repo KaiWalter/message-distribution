@@ -31,6 +31,7 @@ param funcRecvStdImageName string = ''
 param testdataImageName string = ''
 param daprApiToken string = ''
 param daprGrpcEndpoint string = ''
+param daprHttpEndpoint string = ''
 param daprPort string = ''
 
 module resources './resources.bicep' = {
@@ -50,6 +51,7 @@ module resources './resources.bicep' = {
     testdataImageName: testdataImageName
     daprApiToken: daprApiToken
     daprGrpcEndpoint: daprGrpcEndpoint
+    daprHttpEndpoint: daprHttpEndpoint
     daprPort: daprPort
     tags: tags
   }

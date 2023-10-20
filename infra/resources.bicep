@@ -13,6 +13,7 @@ param funcRecvStdImageName string = ''
 param testdataImageName string = ''
 param daprApiToken string = ''
 param daprGrpcEndpoint string = ''
+param daprHttpEndpoint string = ''
 param daprPort string = ''
 
 module containerAppsResources './containerapps.bicep' = {
@@ -245,12 +246,14 @@ module dcraDistResources './dcradistributor.bicep' = {
   params: {
     envName: name
     appName: 'dcradistributor'
+    entityNameForScaling: 'q-order-ingress-dcra'
     location: location
     imageName: daprDistributorImageName != '' ? daprDistributorImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
     daprApiToken: daprApiToken
     daprGrpcEndpoint: daprGrpcEndpoint
+    daprHttpEndpoint: daprHttpEndpoint
     daprPort: daprPort
   }
   dependsOn: [
@@ -266,12 +269,14 @@ module dcraRecvExpResources './dcrarecvexp.bicep' = {
   params: {
     envName: name
     appName: 'dcrarecvexp'
+    entityNameForScaling: 'q-order-express-dcra'
     location: location
     imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
     daprApiToken: ''
     daprGrpcEndpoint: ''
+    daprHttpEndpoint: ''
     daprPort: ''
   }
   dependsOn: [
@@ -287,12 +292,14 @@ module dcraRecvStdResources './dcrarecvstd.bicep' = {
   params: {
     envName: name
     appName: 'dcrarecvstd'
+    entityNameForScaling: 'q-order-standard-dcra'
     location: location
     imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
     daprApiToken: ''
     daprGrpcEndpoint: ''
+    daprHttpEndpoint: ''
     daprPort: ''
   }
   dependsOn: [
@@ -312,6 +319,8 @@ module testdataResources './testdata.bicep' = {
     imageName: testdataImageName != '' ? testdataImageName : 'nginx:latest'
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
+    daprApiToken: daprApiToken
+    daprHttpEndpoint: daprHttpEndpoint
   }
   dependsOn: [
     containerAppsResources

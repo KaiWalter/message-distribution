@@ -38,7 +38,7 @@ app.MapPost($"/t-order-express-{testCase}", (
     return Results.Ok();
 });
 
-app.MapPost($"/q-order-express-{testCase}", (
+app.MapPost($"/q-order-express-{testCase}-input", (
     ILogger<Program> log,
     [FromBody] Order order
     ) =>
