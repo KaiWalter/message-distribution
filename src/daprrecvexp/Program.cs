@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using Utils;
 
+var testCase = Environment.GetEnvironmentVariable("TESTCASE");
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
@@ -20,8 +22,15 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapPost("/t-order-express-dapr", [Topic("order-pubsub", "t-order-express-dapr")] (
-    ILogger<Program> log, 
+app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+    new {
+        pubsubname = "order-pubsub",
+        topic = $"t-order-express-{testCase}",
+        route = $"/t-order-express-{testCase}",
+    }}));
+
+app.MapPost($"/t-order-express-{testCase}", (
+    ILogger<Program> log,
     Order order
     ) =>
 {
@@ -29,10 +38,10 @@ app.MapPost("/t-order-express-dapr", [Topic("order-pubsub", "t-order-express-dap
     return Results.Ok();
 });
 
-app.MapPost("/q-order-express-dapr", (
-    ILogger<Program> log, 
+app.MapPost($"/q-order-express-{testCase}-input", (
+    ILogger<Program> log,
     [FromBody] Order order
-    ) => 
+    ) =>
 {
     log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
     return Results.Ok();

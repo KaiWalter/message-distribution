@@ -4,9 +4,6 @@ param principalId string = ''
 param resourceToken string
 param tags object
 
-param acafDistributorImageName string = ''
-param acafRecvExpImageName string = ''
-param acafRecvStdImageName string = ''
 param daprDistributorImageName string = ''
 param daprRecvExpImageName string = ''
 param daprRecvStdImageName string = ''
@@ -84,7 +81,7 @@ module acafDistResources './acafdistributor.bicep' = {
     envName: name
     appName: 'acafdistributor'
     location: location
-    imageName: acafDistributorImageName
+    imageName: funcDistributorImageName
   }
   dependsOn: [
     containerAppsResources
@@ -100,7 +97,7 @@ module acafRecvExpResources './acafrecvexp.bicep' = {
     envName: name
     appName: 'acafrecvexp'
     location: location
-    imageName: acafRecvExpImageName
+    imageName: funcRecvExpImageName
   }
   dependsOn: [
     containerAppsResources
@@ -116,7 +113,7 @@ module acafRecvStdResources './acafrecvstd.bicep' = {
     envName: name
     appName: 'acafrecvstd'
     location: location
-    imageName: acafRecvStdImageName
+    imageName: funcRecvStdImageName
   }
   dependsOn: [
     containerAppsResources
@@ -133,7 +130,7 @@ module funcDistResources './funcdistributor.bicep' = {
     appName: 'funcdistributor'
     entityNameForScaling: 'q-order-ingress-func'
     location: location
-    imageName: funcDistributorImageName != '' ? funcDistributorImageName : 'nginx:latest'
+    imageName: funcDistributorImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -152,7 +149,7 @@ module funcRecvExpResources './funcrecvexp.bicep' = {
     appName: 'funcrecvexp'
     entityNameForScaling: 'q-order-express-func'
     location: location
-    imageName: funcRecvExpImageName != '' ? funcRecvExpImageName : 'nginx:latest'
+    imageName: funcRecvExpImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -171,7 +168,7 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
     appName: 'funcrecvstd'
     entityNameForScaling: 'q-order-standard-func'
     location: location
-    imageName: funcRecvStdImageName != '' ? funcRecvStdImageName : 'nginx:latest'
+    imageName: funcRecvStdImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }

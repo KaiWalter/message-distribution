@@ -32,13 +32,12 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
 }
 
 resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
-  name: 'st${resourceToken}'
+  name: 'stg${resourceToken}'
 }
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existing = {
   name: 'sb-${resourceToken}'
 }
-var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-functions/dotnet7-quickstart-demo:1.0'
 
 var appSetingsBasic = [
   {
@@ -56,6 +55,18 @@ var appSetingsBasic = [
   {
     name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
     value: appInsights.properties.ConnectionString
+  }
+  {
+    name: 'QUEUE_NAME_INGRESS'
+    value: 'q-order-ingress-acaf'
+  }
+  {
+    name: 'QUEUE_NAME_EXPRESS'
+    value: 'q-order-express-acaf'
+  }
+  {
+    name: 'QUEUE_NAME_STANDARD'
+    value: 'q-order-standard-acaf'
   }
 ]
 
@@ -81,6 +92,8 @@ var appSetingsRegistry = [
 ]
 
 var appSettings = concat(appSetingsBasic, imageName != '' ? appSetingsRegistry : [])
+
+var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-functions/dotnet7-quickstart-demo:1.0'
 
 // var identity = imageName != '' ? {
 //   type: 'UserAssigned'

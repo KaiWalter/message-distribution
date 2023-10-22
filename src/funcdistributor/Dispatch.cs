@@ -11,7 +11,7 @@ namespace funcdistributor
     {
         [Function("Dispatch")]
         public DispatchedOutput Run(
-            [ServiceBusTrigger("q-order-ingress-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBusTrigger("%QUEUE_NAME_INGRESS%", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
             ILogger log)
         {
             ArgumentNullException.ThrowIfNull(ingressMessage, nameof(ingressMessage));
@@ -49,10 +49,10 @@ namespace funcdistributor
 
     public class DispatchedOutput
     {
-        [ServiceBusOutput("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")]
+        [ServiceBusOutput("%QUEUE_NAME_EXPRESS%", Connection = "SERVICEBUS_CONNECTION")]
         public ServiceBusMessage? ExpressMessage { get; set; }
 
-        [ServiceBusOutput("q-order-standard-func", Connection = "SERVICEBUS_CONNECTION")]
+        [ServiceBusOutput("%QUEUE_NAME_STANDARD%", Connection = "SERVICEBUS_CONNECTION")]
         public ServiceBusMessage? StandardMessage { get; set; }
     }
 }

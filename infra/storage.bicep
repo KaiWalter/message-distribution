@@ -5,7 +5,7 @@ param kindName string = 'StorageV2'
 param tags object
 
 resource stg 'Microsoft.Storage/storageAccounts@2022-05-01' = {
-  name: 'st${resourceToken}'
+  name: 'stg${resourceToken}'
   location: location
   tags: tags
   sku: {

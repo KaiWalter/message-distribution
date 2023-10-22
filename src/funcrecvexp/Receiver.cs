@@ -11,7 +11,7 @@ namespace funcrecvexp
     {
         [Function("Receiver")]
         public void Run(
-            [ServiceBusTrigger("q-order-express-func", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBusTrigger("%QUEUE_NAME_EXPRESS%", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
             FunctionContext executionContext
             )
         {
