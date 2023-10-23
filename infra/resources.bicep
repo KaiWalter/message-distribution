@@ -187,7 +187,7 @@ module daprDistResources './daprdistributor.bicep' = {
     appName: 'daprdistributor'
     entityNameForScaling: 'q-order-ingress-dapr'
     location: location
-    imageName: daprDistributorImageName != '' ? daprDistributorImageName : 'nginx:latest'
+    imageName: daprDistributorImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -206,7 +206,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
     appName: 'daprrecvexp'
     entityNameForScaling: 'q-order-express-dapr'
     location: location
-    imageName: daprRecvExpImageName != '' ? daprRecvExpImageName : 'nginx:latest'
+    imageName: daprRecvExpImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -225,7 +225,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
     appName: 'daprrecvstd'
     entityNameForScaling: 'q-order-standard-dapr'
     location: location
-    imageName: daprRecvStdImageName != '' ? daprRecvStdImageName : 'nginx:latest'
+    imageName: daprRecvStdImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }

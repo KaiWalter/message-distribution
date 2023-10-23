@@ -43,6 +43,8 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
+var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/dotnet/aspnet:7.0'
+
 resource capp 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}${appName}'
   location: location
@@ -97,7 +99,7 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
     template: {
       containers: [
         {
-          image: imageName
+          image: effectiveImageName
           name: appName
           env: [
             {

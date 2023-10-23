@@ -3,6 +3,33 @@
 name: message-distribution
 
 services:
+  acafdistributor:
+    project: src/funcdistributor
+    language: csharp
+    host: containerapp
+    hooks:
+      predeploy:
+        shell: sh
+        run: ../../scripts/azd/set-acr-credentials.sh acafdistributor
+
+  acafrecvexp:
+    project: src/funcrecvexp
+    language: csharp
+    host: containerapp
+    hooks:
+      predeploy:
+        shell: sh
+        run: ../../scripts/azd/set-acr-credentials.sh acafrecvexp
+
+  acafrecvstd:
+    project: src/funcrecvstd
+    language: csharp
+    host: containerapp
+    hooks:
+      predeploy:
+        shell: sh
+        run: ../../scripts/azd/set-acr-credentials.sh acafrecvstd
+
   funcdistributor:
     project: src/funcdistributor
     language: csharp
@@ -35,20 +62,5 @@ services:
 
   testdata:
     project: src/testdata
-    language: csharp
-    host: containerapp
- 
-  acafdistributor:
-    project: src/acafdistributor
-    language: csharp
-    host: containerapp
- 
-  acafrecvexp:
-    project: src/acafrecvexp
-    language: csharp
-    host: containerapp
- 
-  acafrecvstd:
-    project: src/acafrecvstd
     language: csharp
     host: containerapp
