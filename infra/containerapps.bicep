@@ -121,10 +121,10 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           name: 'connectionString'
           secretRef: 'sb-root-connectionstring'
         }
-        // { wait for Dapr 1.10
-        //   name: 'maxBulkSubCount'
-        //   value: '100'
-        // }
+        {
+          name: 'maxBulkSubCount'
+          value: '100'
+        }
         {
           name: 'maxActiveMessages'
           value: '1000'
@@ -138,6 +138,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
         'daprdistributor'
         'daprrecvexp'
         'daprrecvstd'
+        'testdata'
       ]
     }
   }

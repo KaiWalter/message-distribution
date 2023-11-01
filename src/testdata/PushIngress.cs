@@ -14,12 +14,15 @@ using System.Text.Json.Serialization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Dapr.Client;
+using Dapr.AspNetCore;
 
 namespace testdata
 {
     public static class PushIngress
     {
         private const int SCHEDULE_PER_MINUTE = 4000;
+        private const int MAX_BULK_SIZE = 100;
 
         [FunctionName(nameof(PushIngressACAFQ))]
         public static IActionResult PushIngressACAFQ(
@@ -42,6 +45,13 @@ namespace testdata
             [ServiceBus("q-order-ingress-dapr", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
             => SplitAndScheduleOrders(nameof(PushIngressDaprQ), ordersTestData, outputMessages);
 
+        [FunctionName(nameof(PushIngressDaprT))]
+        public static async Task<IActionResult> PushIngressDaprT(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            ILogger log)
+            => await SplitAndPublishOrders(nameof(PushIngressDaprT), "dapr", ordersTestData, log);
+
         [FunctionName(nameof(PushIngressDCRAQ))]
         public static IActionResult PushIngressDCRAQ(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
@@ -54,7 +64,7 @@ namespace testdata
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
             ILogger log)
-            => await SplitAndPostOrders(nameof(PushIngressDCRAQ), ordersTestData, log);
+            => await SplitAndPublishOrders(nameof(PushIngressDCRAT), "dcra", ordersTestData, log);
 
         private static IActionResult SplitAndScheduleOrders(string source, string ordersTestData, ICollector<ServiceBusMessage> outputMessages)
         {
@@ -84,6 +94,73 @@ namespace testdata
                     Count = orderList.Count.ToString(),
                     StartTimestamp = startTimeStamp,
                     ScheduledTimestamp = scheduleTime.ToString("o", CultureInfo.InvariantCulture),
+                }
+            );
+        }
+
+        private static async Task<IActionResult> SplitAndPublishOrders(string source, string testCase, string ordersTestData, ILogger log)
+        {
+            var startTimeStamp = DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+
+            var orderList = JsonSerializer.Deserialize<List<Order>>(ordersTestData, new JsonSerializerOptions
+            {
+                Converters = {
+                    new JsonStringEnumConverter()
+                }
+            });
+
+            ArgumentNullException.ThrowIfNull(orderList, nameof(ordersTestData));
+
+            DaprClient client;
+            if (testCase.ToLowerInvariant().Equals("dapr"))
+            {
+                client = new DaprClientBuilder().Build();
+            }
+            else
+            {
+                var url = System.Environment.GetEnvironmentVariable("DAPR_GRPC_ENDPOINT") ?? string.Empty;
+                var apiToken = System.Environment.GetEnvironmentVariable("DAPR_API_TOKEN") ?? string.Empty;
+
+                client = new DaprClientBuilder()
+                  .UseGrpcEndpoint($"{url}:443")
+                  .UseDaprApiToken(apiToken)
+                  .Build();
+                log.LogInformation(url);
+            }
+
+            var remainingOrders = orderList.Count;
+            var index = 0;
+            while (remainingOrders > 0)
+            {
+                var bulkSize = 0;
+                var bulkOrders = new List<Order>();
+
+                while (remainingOrders > 0 && bulkSize < MAX_BULK_SIZE)
+                {
+                    bulkOrders.Add(orderList[index]);
+                    bulkSize++;
+                    remainingOrders--;
+                    index++;
+                }
+
+                var response = await client.BulkPublishEventAsync("order-pubsub",
+                    $"t-order-ingress-{testCase}-bulk",
+                    bulkOrders);
+
+                var failedCount = response.FailedEntries.Count;
+                if (failedCount > 0)
+                {
+                    log.LogWarning($"failed published entries {failedCount} up to index {index}");
+                }
+            }
+
+            return new CreatedResult(
+                source.ToLowerInvariant(),
+                new
+                {
+                    Count = orderList.Count.ToString(),
+                    StartTimestamp = startTimeStamp,
+                    ScheduledTimestamp = startTimeStamp,
                 }
             );
         }

@@ -3,9 +3,10 @@
 while true
 do
   # scripts/cli/push-ingress.sh acafq
-  scripts/cli/push-ingress.sh dcraq
+  # scripts/cli/push-ingress.sh dcraq
+  scripts/cli/push-ingress.sh daprt
   scripts/cli/push-ingress.sh dcrat
-  scripts/cli/push-ingress.sh daprq
+  # scripts/cli/push-ingress.sh daprq
   # scripts/cli/push-ingress.sh funcq
 done
 

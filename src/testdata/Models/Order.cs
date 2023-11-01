@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -20,5 +21,15 @@ namespace Models
         public int OrderItemId { get; set; }
         public string? SKU { get; set; }
         public int Quantity { get; set; }
+    }
+
+    public class DaprBulkOrder
+    {
+        [JsonPropertyName("entryId")]
+        public string? EntryId { get; set; }
+        [JsonPropertyName("event")]
+        public Order? Event { get; set; }
+        [JsonPropertyName("contentType")]
+        public string? ContentType { get; set; }
     }
 }

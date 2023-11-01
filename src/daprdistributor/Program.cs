@@ -1,5 +1,5 @@
-﻿using Dapr;
-using Dapr.Client;
+﻿using Dapr.Client;
+using Dapr.AspNetCore;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -8,18 +8,17 @@ using System.Text.Json;
 
 var testCase = Environment.GetEnvironmentVariable("TESTCASE");
 
-var daprGrpcEndpoint = Environment.GetEnvironmentVariable("DAPR_GRPC_ENDPOINT");
-var daprPort = Environment.GetEnvironmentVariable("DAPR_PORT");
-var daprApiToken = Environment.GetEnvironmentVariable("DAPR_API_TOKEN");
-
 var builder = WebApplication.CreateBuilder(args);
-if (!string.IsNullOrEmpty(daprGrpcEndpoint) && !string.IsNullOrEmpty(daprPort) && !string.IsNullOrEmpty(daprApiToken))
+
+if (testCase.ToLowerInvariant().Equals("dapr"))
 {
-    builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().UseGrpcEndpoint($"{daprGrpcEndpoint}:{daprPort}").UseDaprApiToken(daprApiToken).Build());
+    builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().Build());
 }
 else
 {
-    builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().Build());
+    var daprGrpcEndpoint = Environment.GetEnvironmentVariable("DAPR_GRPC_ENDPOINT");
+    var daprApiToken = Environment.GetEnvironmentVariable("DAPR_API_TOKEN");
+    builder.Services.AddSingleton<DaprClient>(new DaprClientBuilder().UseGrpcEndpoint($"{daprGrpcEndpoint}:443").UseDaprApiToken(daprApiToken).Build());
 }
 
 builder.Services.AddApplicationInsightsTelemetry();
@@ -32,19 +31,64 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 app.UseCloudEvents();
-app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+app.MapGet("/dapr/subscribe", () =>
+    Results.Ok(new[]{
     new {
         pubsubname = "order-pubsub",
-        topic = $"t-order-ingress-{testCase}",
-        route = $"/t-order-ingress-{testCase}",
-        metadata = new {
-            rawPayload= "true",
+        topic = $"t-order-ingress-{testCase}-bulk",
+        route = $"/t-order-ingress-{testCase}-bulk",
+        bulkSubscribe = new {
+            enabled = true,
+            maxMessagesCount = 10,
+            maxAwaitDurationMs = 100,
+        },
+    },
+}));
+
+app.MapPost($"/t-order-ingress-{testCase}-bulk", async (
+    [FromBody] BulkSubscribeMessage<BulkMessageModel<Order>> orders,
+    [FromServices] DaprClient daprClient,
+    ILogger<Program> log
+    ) =>
+{
+    log.LogWarning(JsonSerializer.Serialize(orders));
+
+    if (orders == null)
+    {
+        log.LogWarning($"{nameof(orders)} is null");
+    }
+
+    if (orders?.Entries == null)
+    {
+        log.LogWarning($"{nameof(orders.Entries)} is null");
+    }
+
+    var responseEntries = new List<BulkSubscribeAppResponseEntry>();
+
+    if (orders?.Entries != null)
+    {
+        foreach (var entry in orders?.Entries)
+        {
+            var order = entry.Event.Data;
+
+            switch (order.Delivery)
+            {
+                case Delivery.Express:
+                    await daprClient.PublishEventAsync("order-pubsub", $"t-order-express-{testCase}", order);
+                    break;
+                case Delivery.Standard:
+                    await daprClient.PublishEventAsync("order-pubsub", $"t-order-standard-{testCase}", order);
+                    break;
+            }
+            responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.SUCCESS));
         }
-    }}));
+    }
+
+    return new BulkSubscribeAppResponse(responseEntries);
+});
 
 app.MapPost($"/t-order-ingress-{testCase}", async (
     [FromBody] Order order,

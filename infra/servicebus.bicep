@@ -22,6 +22,14 @@ var queues = [
   'q-order-express-dcra'
 ]
 
+var topics = [
+  // ASP.NET Core with Dapr Container on ACA
+  't-order-ingress-dapr'
+  't-order-ingress-dapr-bulk'
+  't-order-standard-dapr'
+  't-order-express-dapr'
+]
+
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   name: 'sb-${resourceToken}'
   location: location
@@ -38,4 +46,10 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
     }
   }]
 
+  resource topicResources 'topics' = [for t in topics: {
+    name: t
+    properties: {
+      maxSizeInMegabytes: 4096
+    }
+  }]
 }

@@ -18,6 +18,7 @@ param kvGetId string
 
 param daprApiToken string
 param daprHttpEndpoint string
+param daprGrpcEndpoint string
 
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
@@ -88,6 +89,14 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
           value: daprApiToken != '' ? daprApiToken : 'not-used'
         }
       ]
+      dapr: {
+        enabled: true
+        appId: appName
+        appPort: 80
+        appProtocol: 'http'
+        enableApiLogging: true
+        logLevel: 'info'
+      }
       registries: [
         {
           server: containerRegistry.properties.loginServer
@@ -136,6 +145,10 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'DAPR_HTTP_ENDPOINT'
               value: daprHttpEndpoint
+            }
+            {
+              name: 'DAPR_GRPC_ENDPOINT'
+              value: daprGrpcEndpoint
             }
           ]
           probes: [

@@ -321,6 +321,7 @@ module testdataResources './testdata.bicep' = {
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
     daprApiToken: daprApiToken
     daprHttpEndpoint: daprHttpEndpoint
+    daprGrpcEndpoint: daprGrpcEndpoint
   }
   dependsOn: [
     containerAppsResources

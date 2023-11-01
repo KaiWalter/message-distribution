@@ -18,7 +18,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 app.UseCloudEvents();
-app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 

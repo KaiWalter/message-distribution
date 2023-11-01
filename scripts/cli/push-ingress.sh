@@ -22,10 +22,10 @@ TESTDATA_NAME=`az resource list --tag azd-service-name=testdata --query "[?resou
 TESTDATA_URI=https://$(az containerapp show -g $RESOURCE_GROUP_NAME -n $TESTDATA_NAME --query properties.configuration.ingress.fqdn -o tsv)
 
 PUSHRESPONSE=`curl -s -X POST -d '{}' "$TESTDATA_URI/api/PushIngress$TESTNAME"`
+echo response: $PUSHRESPONSE
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
 COUNT=`echo $PUSHRESPONSE | jq -r '.count'`
-
-echo $SCHEDULE $TESTNAME $COUNT
+echo sch/test/c: $SCHEDULE $TESTNAME $COUNT
 
 current_epoch=$(date +%s)
 target_epoch=$(date -d $SCHEDULE +%s)
@@ -40,9 +40,7 @@ fi
 sleep 180
 
 query="requests | where cloud_RoleName matches regex '($TESTPREFIX|$TESTPREFIXL)(dist|recv)' | where name != 'Health' and name !startswith 'GET' | where timestamp > todatetime('$SCHEDULE') | where success == true | summarize count(),sum(duration),min(timestamp),max(timestamp) | project count_, runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)"
-echo $query
 result=`az monitor app-insights query --app $APPINSIGHTS_NAME -g $RESOURCE_GROUP_NAME --analytics-query "$query"`
-echo $result
 first_column=`echo $result | jq -r '.tables[0].columns[0].name'`
 if [ $first_column == 'count_' ];
 then
