@@ -23,11 +23,9 @@ var tags = {
 }
 
 param daprDistributorImageName string = ''
-param daprRecvExpImageName string = ''
-param daprRecvStdImageName string = ''
+param daprReceiverImageName string = ''
 param funcDistributorImageName string = ''
-param funcRecvExpImageName string = ''
-param funcRecvStdImageName string = ''
+param funcReceiverImageName string = ''
 param testdataImageName string = ''
 
 module resources './resources.bicep' = {
@@ -39,11 +37,9 @@ module resources './resources.bicep' = {
     principalId: principalId
     resourceToken: resourceToken
     daprDistributorImageName: daprDistributorImageName
-    daprRecvExpImageName: daprRecvExpImageName
-    daprRecvStdImageName: daprRecvStdImageName
+    daprReceiverImageName: daprReceiverImageName
     funcDistributorImageName: funcDistributorImageName
-    funcRecvExpImageName: funcRecvExpImageName
-    funcRecvStdImageName: funcRecvStdImageName
+    funcReceiverImageName: funcReceiverImageName
     testdataImageName: testdataImageName
     tags: tags
   }

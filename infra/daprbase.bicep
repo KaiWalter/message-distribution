@@ -7,6 +7,7 @@ param envName string
 @maxLength(64)
 @description('Name of the container app.')
 param appName string
+param instance string = ''
 
 param entityNameForScaling string
 
@@ -109,6 +110,10 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'TESTCASE'
               value: 'dapr'
+            }
+            {
+              name: 'INSTANCE'
+              value: instance
             }
           ]
           probes: [

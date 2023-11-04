@@ -23,6 +23,7 @@ module daprBase 'daprbase.bicep' = {
   params: {
     appName: appName
     envName: envName
+    instance: 'standard'
     location: location
     imageName: imageName
     entityNameForScaling: entityNameForScaling

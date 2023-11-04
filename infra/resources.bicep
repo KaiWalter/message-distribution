@@ -5,11 +5,9 @@ param resourceToken string
 param tags object
 
 param daprDistributorImageName string = ''
-param daprRecvExpImageName string = ''
-param daprRecvStdImageName string = ''
+param daprReceiverImageName string = ''
 param funcDistributorImageName string = ''
-param funcRecvExpImageName string = ''
-param funcRecvStdImageName string = ''
+param funcReceiverImageName string = ''
 param testdataImageName string = ''
 
 module containerAppsResources './containerapps.bicep' = {
@@ -97,7 +95,7 @@ module acafRecvExpResources './acafrecvexp.bicep' = {
     envName: name
     appName: 'acafrecvexp'
     location: location
-    imageName: funcRecvExpImageName
+    imageName: funcReceiverImageName
   }
   dependsOn: [
     containerAppsResources
@@ -113,7 +111,7 @@ module acafRecvStdResources './acafrecvstd.bicep' = {
     envName: name
     appName: 'acafrecvstd'
     location: location
-    imageName: funcRecvStdImageName
+    imageName: funcReceiverImageName
   }
   dependsOn: [
     containerAppsResources
@@ -128,7 +126,6 @@ module funcDistResources './funcdistributor.bicep' = {
   params: {
     envName: name
     appName: 'funcdistributor'
-    entityNameForScaling: 'q-order-ingress-func'
     location: location
     imageName: funcDistributorImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -147,9 +144,8 @@ module funcRecvExpResources './funcrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'funcrecvexp'
-    entityNameForScaling: 'q-order-express-func'
     location: location
-    imageName: funcRecvExpImageName
+    imageName: funcReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -166,9 +162,8 @@ module funcRecvStdResources './funcrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'funcrecvstd'
-    entityNameForScaling: 'q-order-standard-func'
     location: location
-    imageName: funcRecvStdImageName
+    imageName: funcReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -206,7 +201,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
     appName: 'daprrecvexp'
     entityNameForScaling: 'q-order-express-dapr'
     location: location
-    imageName: daprRecvExpImageName
+    imageName: daprReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
@@ -225,7 +220,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
     appName: 'daprrecvstd'
     entityNameForScaling: 'q-order-standard-dapr'
     location: location
-    imageName: daprRecvStdImageName
+    imageName: daprReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
     kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }

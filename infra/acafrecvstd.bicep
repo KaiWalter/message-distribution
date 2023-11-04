@@ -19,6 +19,7 @@ module acafBase 'acafbase.bicep' = {
   params: {
     appName: appName
     envName: envName
+    instance: 'standard'
     location: location
     imageName: imageName
   }

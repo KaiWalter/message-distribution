@@ -13,7 +13,7 @@ services:
         run: ../../scripts/azd/set-acr-credentials.sh acafdistributor
 
   acafrecvexp:
-    project: src/funcrecvexp
+    project: src/funcreceiver
     language: csharp
     host: containerapp
     hooks:
@@ -22,7 +22,7 @@ services:
         run: ../../scripts/azd/set-acr-credentials.sh acafrecvexp
 
   acafrecvstd:
-    project: src/funcrecvstd
+    project: src/funcreceiver
     language: csharp
     host: containerapp
     hooks:
@@ -36,12 +36,12 @@ services:
     host: containerapp
 
   funcrecvexp:
-    project: src/funcrecvexp
+    project: src/funcreceiver
     language: csharp
     host: containerapp
 
   funcrecvstd:
-    project: src/funcrecvstd
+    project: src/funcreceiver
     language: csharp
     host: containerapp
 
@@ -51,12 +51,12 @@ services:
     host: containerapp
 
   daprrecvexp:
-    project: src/daprrecvexp
+    project: src/daprreceiver
     language: csharp
     host: containerapp
 
   daprrecvstd:
-    project: src/daprrecvstd
+    project: src/daprreceiver
     language: csharp
     host: containerapp
 

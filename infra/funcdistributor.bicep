@@ -8,8 +8,6 @@ param envName string
 @description('Name of the container app.')
 param appName string
 
-param entityNameForScaling string
-
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -23,9 +21,9 @@ module funcBase 'funcbase.bicep' = {
   params: {
     appName: appName
     envName: envName
+    instance: 'ingress'
     location: location
     imageName: imageName
-    entityNameForScaling: entityNameForScaling
     kvGetId: kvGetId
     acrPullId: acrPullId
   }

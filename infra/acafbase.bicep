@@ -7,6 +7,7 @@ param envName string
 @maxLength(64)
 @description('Name of the container app.')
 param appName string
+param instance string = ''
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -17,6 +18,18 @@ param imageName string
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
   'azd-env-name': envName
+}
+
+var queueName = {
+  ingress: {
+    name: 'q-order-ingress-acaf'
+  }
+  express: {
+    name: 'q-order-express-acaf'
+  }
+  standard: {
+    name: 'q-order-standard-acaf'
+  }
 }
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
@@ -58,15 +71,19 @@ var appSetingsBasic = [
   }
   {
     name: 'QUEUE_NAME_INGRESS'
-    value: 'q-order-ingress-acaf'
+    value: queueName.ingress.name
   }
   {
     name: 'QUEUE_NAME_EXPRESS'
-    value: 'q-order-express-acaf'
+    value: queueName.express.name
   }
   {
     name: 'QUEUE_NAME_STANDARD'
-    value: 'q-order-standard-acaf'
+    value: queueName.standard.name
+  }
+  {
+    name: 'QUEUE_NAME'
+    value: queueName[instance].name
   }
 ]
 
@@ -83,7 +100,7 @@ var appSetingsRegistry = [
     name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
     value: containerRegistry.listCredentials().passwords[0].value
   }
-  // https://github.com/Azure/Azure-Functions/wiki/When-and-Why-should-I-set-WEBSITE_ENABLE_APP_SERVICE_STORAGE
+  // https://github.com/Azure/Azure-acaftions/wiki/When-and-Why-should-I-set-WEBSITE_ENABLE_APP_SERVICE_STORAGE
   // case 3a
   {
     name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
@@ -93,7 +110,7 @@ var appSetingsRegistry = [
 
 var appSettings = concat(appSetingsBasic, imageName != '' ? appSetingsRegistry : [])
 
-var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-functions/dotnet7-quickstart-demo:1.0'
+var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-acaftions/dotnet7-quickstart-demo:1.0'
 
 // var identity = imageName != '' ? {
 //   type: 'UserAssigned'

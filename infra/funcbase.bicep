@@ -7,8 +7,7 @@ param envName string
 @maxLength(64)
 @description('Name of the container app.')
 param appName string
-
-param entityNameForScaling string
+param instance string = ''
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -48,6 +47,18 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
 }
 
 var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-functions/dotnet7-quickstart-demo:1.0'
+
+var queueName = {
+  ingress: {
+    name: 'q-order-ingress-func'
+  }
+  express: {
+    name: 'q-order-express-func'
+  }
+  standard: {
+    name: 'q-order-standard-func'
+  }
+}
 
 resource capp 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}${appName}'
@@ -120,15 +131,19 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             }
             {
               name: 'QUEUE_NAME_INGRESS'
-              value: 'q-order-ingress-func'
+              value: queueName.ingress.name
             }
             {
               name: 'QUEUE_NAME_EXPRESS'
-              value: 'q-order-express-func'
+              value: queueName.express.name
             }
             {
               name: 'QUEUE_NAME_STANDARD'
-              value: 'q-order-standard-func'
+              value: queueName.standard.name
+            }
+            {
+              name: 'QUEUE_NAME'
+              value: queueName[instance].name
             }
             {
               name: 'WEBSITE_SITE_NAME'
@@ -170,7 +185,7 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                queueName: entityNameForScaling
+                queueName: queueName[instance].name
                 messageCount: '100'
               }
               auth: [

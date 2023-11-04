@@ -5,6 +5,7 @@ using Models;
 using Utils;
 
 var testCase = Environment.GetEnvironmentVariable("TESTCASE");
+var instance = Environment.GetEnvironmentVariable("INSTANCE");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,23 +23,7 @@ app.MapSubscribeHandler();
 
 app.MapGet("/health", () => Results.Ok());
 
-app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
-    new {
-        pubsubname = "order-pubsub",
-        topic = $"t-order-express-{testCase}",
-        route = $"/t-order-express-{testCase}",
-    }}));
-
-app.MapPost($"/t-order-express-{testCase}", (
-    ILogger<Program> log,
-    Order order
-    ) =>
-{
-    log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
-    return Results.Ok();
-});
-
-app.MapPost($"/q-order-express-{testCase}-input", (
+app.MapPost($"/q-order-{instance}-{testCase}-input", (
     ILogger<Program> log,
     [FromBody] Order order
     ) =>

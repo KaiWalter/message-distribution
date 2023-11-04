@@ -11,7 +11,7 @@ namespace funcrecvexp
     {
         [Function("Receiver")]
         public void Run(
-            [ServiceBusTrigger("%QUEUE_NAME_EXPRESS%", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
+            [ServiceBusTrigger("%QUEUE_NAME%", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
             FunctionContext executionContext
             )
         {

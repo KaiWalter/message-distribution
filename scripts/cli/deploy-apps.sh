@@ -32,10 +32,8 @@ az deployment sub create -f infra/main.bicep -n main-apps-$REVISION \
   -p environmentName=$AZURE_ENV_NAME \
   location=$AZURE_LOCATION \
   daprDistributorImageName=$IMAGE_daprdistributor \
-  daprRecvExpImageName=$IMAGE_daprrecvexp \
-  daprRecvStdImageName=$IMAGE_daprrecvstd \
+  daprReceiverImageName=$IMAGE_daprreceiver \
   funcDistributorImageName=$IMAGE_funcdistributor \
-  funcRecvExpImageName=$IMAGE_funcrecvexp \
-  funcRecvStdImageName=$IMAGE_funcrecvstd \
+  funcReceiverImageName=$IMAGE_funcreceiver \
   testdataImageName=$IMAGE_testdata
 
