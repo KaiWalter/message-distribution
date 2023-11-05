@@ -6,6 +6,10 @@ resource sb 'Microsoft.ServiceBus/namespaces@2021-11-01' existing = {
   name: 'sb-${resourceToken}'
 }
 
+resource stg 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
+  name: 'stg${resourceToken}'
+}
+
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: 'log-${resourceToken}'
 }
@@ -46,6 +50,23 @@ var queueComponents = [
   {
     name: 'q-order-standard-dapr-input'
     queueName: 'q-order-standard-dapr'
+    scopes: [
+      'daprrecvstd'
+    ]
+  }
+]
+
+var blobComponents = [
+  {
+    name: 'express-output'
+    containerName: 'express-outbox'
+    scopes: [
+      'daprrecvexp'
+    ]
+  }
+  {
+    name: 'standard-output'
+    containerName: 'standard-outbox'
     scopes: [
       'daprrecvstd'
     ]
@@ -105,7 +126,36 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
     }
   }]
 
-  resource comOrderPubSub 'daprComponents' = {
+  resource blobComponentResources 'daprComponents' = [for b in blobComponents: {
+    name: b.name
+    properties: {
+      componentType: 'bindings.azure.blobstorage'
+      version: 'v1'
+      secrets: [
+        {
+          name: 'storage-key'
+          value: stg.listKeys().keys[0].value
+        }
+      ]
+      metadata: [
+        {
+          name: 'accountKey'
+          secretRef: 'storage-key'
+        }
+        {
+          name: 'accountName'
+          value: stg.name
+        }
+        {
+          name: 'containerName'
+          value: b.containerName
+        }
+      ]
+      scopes: b.scopes
+    }
+  }]
+
+  resource pubSubComponent 'daprComponents' = {
     name: 'order-pubsub'
     properties: {
       componentType: 'pubsub.azure.servicebus'
@@ -121,10 +171,10 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           name: 'connectionString'
           secretRef: 'sb-root-connectionstring'
         }
-        // { wait for Dapr 1.10
-        //   name: 'maxBulkSubCount'
-        //   value: '100'
-        // }
+        {
+          name: 'maxBulkSubCount'
+          value: '100'
+        }
         {
           name: 'maxActiveMessages'
           value: '1000'

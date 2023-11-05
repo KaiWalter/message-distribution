@@ -17,9 +17,16 @@ JSON_STRING=$( jq -n \
                   --arg sbc "$SERVICEBUS_CONNECTION" \
                   --arg stc "$STORAGE_BLOB_CONNECTION" \
                   --arg aik "$APPINSIGHTS_INSTRUMENTATION_KEY" \
-                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "DOTNET", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc, APPINSIGHTS_INSTRUMENTATIONKEY: $aik }}' )
+                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "dotnet", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc, APPINSIGHTS_INSTRUMENTATIONKEY: $aik }}' )
 
 echo $JSON_STRING > $SOURCE_FOLDER/testdata/local.settings.json
+
+JSON_STRING=$( jq -n \
+                  --arg sbc "$SERVICEBUS_CONNECTION" \
+                  --arg stc "$STORAGE_BLOB_CONNECTION" \
+                  --arg aik "$APPINSIGHTS_INSTRUMENTATION_KEY" \
+                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc, APPINSIGHTS_INSTRUMENTATIONKEY: $aik }}' )
+
 echo $JSON_STRING > $SOURCE_FOLDER/funcdistributor/local.settings.json
 echo $JSON_STRING > $SOURCE_FOLDER/funcreceiver/local.settings.json
 

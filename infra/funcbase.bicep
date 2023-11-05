@@ -107,7 +107,7 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
       containers: [
         {
           image: effectiveImageName
-          name: 'funcdistributor'
+          name: appName
           env: [
             {
               name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -144,6 +144,10 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             {
               name: 'QUEUE_NAME'
               value: queueName[instance].name
+            }
+            {
+              name: 'INSTANCE'
+              value: instance
             }
             {
               name: 'WEBSITE_SITE_NAME'

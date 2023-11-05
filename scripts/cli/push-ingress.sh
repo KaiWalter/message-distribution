@@ -18,12 +18,23 @@ TESTPREFIX=${TESTNAME:0:4}
 TESTPREFIXL=${TESTNAMEL:0:4}
 RESOURCE_GROUP_NAME=`az group list  --query "[?starts_with(name,'$AZURE_ENV_NAME')].name" -o tsv`
 APPINSIGHTS_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Insights/components --query '[0].name' -o tsv`
+STORAGE_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Storage/storageAccounts --query '[0].name' -o tsv`
+STORAGE_BLOB_CONNECTION=`az storage account show-connection-string -g $RESOURCE_GROUP_NAME -n $STORAGE_NAME  --query connectionString -o tsv`
 TESTDATA_NAME=`az resource list --tag azd-service-name=testdata --query "[?resourceGroup=='$RESOURCE_GROUP_NAME'].name" -o tsv`
 TESTDATA_URI=https://$(az containerapp show -g $RESOURCE_GROUP_NAME -n $TESTDATA_NAME --query properties.configuration.ingress.fqdn -o tsv)
 
+containers=(express-outbox standard-outbox)
+for c in "${containers[@]}"
+do
+  az storage blob delete-batch --source $c \
+    --account-name $STORAGE_NAME \
+    --connection-string $STORAGE_BLOB_CONNECTION
+done
+
+# ---- initiate test and extract schedule timestamp and amount of messages from response
 PUSHRESPONSE=`curl -s -X POST -d '{}' "$TESTDATA_URI/api/PushIngress$TESTNAME"`
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
-COUNT=`echo $PUSHRESPONSE | jq -r '.count'`
+TARGET_COUNT=`echo $PUSHRESPONSE | jq -r '.count'`
 
 echo $SCHEDULE $TESTNAME $COUNT
 
@@ -37,18 +48,43 @@ if [ $target_epoch -gt $current_epoch ]; then
   sleep $sleep_seconds
 fi
 
-sleep 300
+# ---- wait until all scheduled messages have been written to blob
+ACTUAL_COUNT=0
 
-query="requests | where cloud_RoleName matches regex '($TESTPREFIX|$TESTPREFIXL)(dist|recv)' | where name != 'Health' and name !startswith 'GET' | where timestamp > todatetime('$SCHEDULE') | where success == true | summarize count(),sum(duration),min(timestamp),max(timestamp) | project count_, runtimeMs=datetime_diff('millisecond', max_timestamp, min_timestamp)"
-result=`az monitor app-insights query --app $APPINSIGHTS_NAME -g $RESOURCE_GROUP_NAME --analytics-query "$query"`
-first_column=`echo $result | jq -r '.tables[0].columns[0].name'`
-if [ $first_column == 'count_' ];
-then
-  count=`echo $result | jq -r '.tables[0].rows[0][0]'`
-  runtime=`echo $result | jq -r '.tables[0].rows[0][1]'`
-else
-  count=`echo $result | jq -r '.tables[0].rows[0][1]'`
-  runtime=`echo $result | jq -r '.tables[0].rows[0][0]'`
-fi
+until [ $ACTUAL_COUNT -eq $TARGET_COUNT ]
+do
+  ACTUAL_COUNT=0
 
-echo "$SCHEDULE | $TESTNAME | $count | $runtime" >> LOG.md
+  for c in "${containers[@]}"
+  do
+    blob_count=`az storage blob list -c $c \
+      --account-name $STORAGE_NAME --connection-string $STORAGE_BLOB_CONNECTION --query "length(@)" -o tsv`
+
+    ACTUAL_COUNT=$(($ACTUAL_COUNT+$blob_count))
+  done
+
+  echo $ACTUAL_COUNT of $TARGET_COUNT
+
+  if [ $ACTUAL_COUNT -lt $TARGET_COUNT ]; then sleep 10; fi
+done
+
+# ---- detect when last blob has been written
+LAST_WRITE=${SCHEDULE:0:19}
+
+for c in "${containers[@]}"
+do
+  last=`az storage blob list -c $c \
+    --account-name $STORAGE_NAME --connection-string $STORAGE_BLOB_CONNECTION --query "[].properties.lastModified | reverse(sort(@))[0]" -o tsv`
+  last=${last:0:19}
+
+  if [ "$last" \> "$LAST_WRITE" ]; then
+    LAST_WRITE=$last
+  fi
+done
+
+# ---- calculate timespan from schedule to blob last written
+schedule_epoch=$(date -d $SCHEDULE +%s)
+last_write_epoch=$(date -d $LAST_WRITE +%s)
+runtime_seconds=$(( $last_write_epoch - $schedule_epoch ))
+
+echo "$SCHEDULE | $TESTNAME | $TARGET_COUNT | $runtime_seconds" >> LOG.md

@@ -26,12 +26,18 @@ resource blobServices 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01
   parent: stg
 }
 
-resource contTestData 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-05-01' = {
-  name: 'test-data'
+var containers = [
+  'test-data'
+  'express-outbox'
+  'standard-outbox'
+]
+
+resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-05-01' = [for c in containers: {
+  name: c
   parent: blobServices
   properties: {
     publicAccess: 'None'
   }
-}
+}]
 
 output STORAGE_NAME string = stg.name

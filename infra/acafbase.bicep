@@ -85,6 +85,10 @@ var appSetingsBasic = [
     name: 'QUEUE_NAME'
     value: queueName[instance].name
   }
+  {
+    name: 'INSTANCE'
+    value: instance
+  }
 ]
 
 var appSetingsRegistry = [
