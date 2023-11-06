@@ -57,7 +57,7 @@ do
 
   for c in "${containers[@]}"
   do
-    blob_count=`az storage blob list -c $c \
+    blob_count=`az storage blob list -c $c --num-results $TARGET_COUNT \
       --account-name $STORAGE_NAME --connection-string $STORAGE_BLOB_CONNECTION --query "length(@)" -o tsv`
 
     ACTUAL_COUNT=$(($ACTUAL_COUNT+$blob_count))
@@ -73,7 +73,7 @@ LAST_WRITE=${SCHEDULE:0:19}
 
 for c in "${containers[@]}"
 do
-  last=`az storage blob list -c $c \
+  last=`az storage blob list -c $c --num-results $TARGET_COUNT \
     --account-name $STORAGE_NAME --connection-string $STORAGE_BLOB_CONNECTION --query "[].properties.lastModified | reverse(sort(@))[0]" -o tsv`
   last=${last:0:19}
 
