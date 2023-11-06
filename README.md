@@ -20,6 +20,8 @@ For pub/sub both variants - Azure Service Bus Queues and Topics are to be tested
 
 - a Function App generates a test data payload (e.g. with 10k orders) and puts those in a blob storage
 - this Function App is then be triggered to schedule all orders at one time on an ingress Service Bus queue - either for Functions or for Dapr
+- at the end of message processing, the messages are put in a blob storage
+- to measure throughput, time between original schedule and the time of the last blob written is observed
 
 ![setup of environment](./media/test-setup.png)
 
