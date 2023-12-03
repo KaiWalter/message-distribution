@@ -18,6 +18,13 @@ namespace testdata
     {
         private const int SCHEDULE_PER_MINUTE = 4000;
 
+        [FunctionName(nameof(PushIngressSpinQ))]
+        public static IActionResult PushIngressSpinQ(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("test-data/orders.json", FileAccess.Read, Connection = "STORAGE_CONNECTION")] string ordersTestData,
+            [ServiceBus("q-order-ingress-spin", Microsoft.Azure.WebJobs.ServiceBus.ServiceBusEntityType.Queue, Connection = "SERVICEBUS_CONNECTION")] ICollector<ServiceBusMessage> outputMessages)
+            => SplitAndScheduleOrders(nameof(PushIngressSpinQ), ordersTestData, outputMessages);
+
         [FunctionName(nameof(PushIngressACAFQ))]
         public static IActionResult PushIngressACAFQ(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,

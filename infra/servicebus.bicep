@@ -16,6 +16,10 @@ var queues = [
   'q-order-ingress-dapr'
   'q-order-standard-dapr'
   'q-order-express-dapr'
+  // Spin
+  'q-order-ingress-spin'
+  'q-order-standard-spin'
+  'q-order-express-spin'
 ]
 
 resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
