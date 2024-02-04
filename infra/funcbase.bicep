@@ -46,7 +46,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-functions/dotnet7-quickstart-demo:1.0'
+var effectiveImageName = imageName != '' ? imageName : 'azurefunctionstest.azurecr.io/azure-functions/dotnet7-quickstart-demo:1.0'
 
 var queueName = {
   ingress: {

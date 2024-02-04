@@ -114,7 +114,7 @@ var appSetingsRegistry = [
 
 var appSettings = concat(appSetingsBasic, imageName != '' ? appSetingsRegistry : [])
 
-var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/azure-acaftions/dotnet7-quickstart-demo:1.0'
+var effectiveImageName = imageName != '' ? imageName : 'azurefunctionstest.azurecr.io/azure-functions/dotnet7-quickstart-demo:1.0'
 
 // var identity = imageName != '' ? {
 //   type: 'UserAssigned'
