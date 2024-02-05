@@ -11,12 +11,38 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Azure.Storage.Blobs;
+using System.Threading.Tasks;
+using Azure.Storage.Blobs.Models;
+using System.Threading;
 
 namespace testdata
 {
     public static class PushIngress
     {
         private const int SCHEDULE_PER_MINUTE = 4000;
+
+        [FunctionName(nameof(ClearTargets))]
+        public async static Task<IActionResult> ClearTargets(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
+            [Blob("express-outbox/*", FileAccess.ReadWrite, Connection = "STORAGE_CONNECTION")] BlobContainerClient expressContainer,
+            [Blob("standard-outbox/*", FileAccess.ReadWrite, Connection = "STORAGE_CONNECTION")] BlobContainerClient standardContainer
+            )
+        {
+            var responses = new
+            {
+                deletions = new List<Azure.Response<bool>>(),
+                creations = new List<Azure.Response<BlobContainerInfo>>(),
+            }; ;
+
+            responses.deletions.Add(await expressContainer.DeleteIfExistsAsync());
+            responses.deletions.Add(await standardContainer.DeleteIfExistsAsync());
+            Thread.Sleep(5000);
+            responses.creations.Add(await expressContainer.CreateIfNotExistsAsync(PublicAccessType.None));
+            responses.creations.Add(await standardContainer.CreateIfNotExistsAsync(PublicAccessType.None));
+
+            return new OkObjectResult(responses);
+        }
 
         [FunctionName(nameof(PushIngressACAFQ))]
         public static IActionResult PushIngressACAFQ(

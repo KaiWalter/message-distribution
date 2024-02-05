@@ -7,6 +7,7 @@
     <UserSecretsId>137b1a91-2f25-44f5-9834-f13af75a0fc3</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.8.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage.Blobs" Version="5.0.1" />

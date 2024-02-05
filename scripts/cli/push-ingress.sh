@@ -23,6 +23,7 @@ STORAGE_BLOB_CONNECTION=`az storage account show-connection-string -g $RESOURCE_
 TESTDATA_NAME=`az resource list --tag azd-service-name=testdata --query "[?resourceGroup=='$RESOURCE_GROUP_NAME'].name" -o tsv`
 TESTDATA_URI=https://$(az containerapp show -g $RESOURCE_GROUP_NAME -n $TESTDATA_NAME --query properties.configuration.ingress.fqdn -o tsv)
 
+echo "clearing outbox"
 containers=(express-outbox standard-outbox)
 for c in "${containers[@]}"
 do
@@ -30,6 +31,7 @@ do
     --account-name $STORAGE_NAME \
     --connection-string $STORAGE_BLOB_CONNECTION
 done
+# CLEARRESPONSE=`curl -s -X POST -d '{}' "$TESTDATA_URI/api/ClearTargets"`
 
 # ---- initiate test and extract schedule timestamp and amount of messages from response
 PUSHRESPONSE=`curl -s -X POST -d '{}' "$TESTDATA_URI/api/PushIngress$TESTNAME"`
