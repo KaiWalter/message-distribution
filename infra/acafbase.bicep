@@ -126,19 +126,26 @@ var effectiveImageName = imageName != '' ? imageName : 'azurefunctionstest.azure
 //   type: 'None'
 // }
 //
-resource acafunction 'Microsoft.Web/sites@2022-09-01' = {
+resource acafunction 'Microsoft.Web/sites@2023-01-01' = {
   name: '${envName}${appName}'
   location: location
   tags: union(tags, {
       'azd-service-name': appName
     })
-  kind: 'functionapp'
+  kind: 'functionapp,linux,container,azurecontainerapps'
   // identity: identity
   properties: {
     managedEnvironmentId: containerAppsEnvironment.id
+    workloadProfileName: 'Consumption'
+    resourceConfig: {
+        cpu: json('0.5')
+        memory: '1Gi'
+    }
 
     siteConfig: {
       linuxFxVersion: 'DOCKER|${effectiveImageName}'
+      functionAppScaleLimit: 30
+      minimumElasticInstanceCount: 0
       appSettings: appSettings
     }
   }

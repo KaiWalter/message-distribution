@@ -45,7 +45,7 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
   name: 'sb-${resourceToken}'
 }
 
-resource capp 'Microsoft.App/containerApps@2022-10-01' = {
+resource capp 'Microsoft.App/containerApps@2023-05-01' = {
   name: '${envName}${appName}'
   location: location
   tags: union(tags, {

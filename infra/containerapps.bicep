@@ -87,6 +87,14 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
     }
     daprAIConnectionString: appInsights.properties.ConnectionString
     daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
+     workloadProfiles: [
+      {
+        maximumCount: 10
+        minimumCount: 3
+        name: 'default'
+        workloadProfileType: 'E4'
+      }
+    ]
   }
 
   resource queueComponentResources 'daprComponents' = [for q in queueComponents: {

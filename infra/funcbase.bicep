@@ -60,7 +60,7 @@ var queueName = {
   }
 }
 
-resource capp 'Microsoft.App/containerApps@2022-10-01' = {
+resource capp 'Microsoft.App/containerApps@2023-05-01' = {
   name: '${envName}${appName}'
   location: location
   tags: union(tags, {
@@ -75,6 +75,7 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
   }
   properties: {
     managedEnvironmentId: containerAppsEnvironment.id
+    workloadProfileName: 'Consumption'
     configuration: {
       activeRevisionsMode: 'single'
       ingress: {
@@ -175,8 +176,8 @@ resource capp 'Microsoft.App/containerApps@2022-10-01' = {
             }
           ]
           resources: {
-            cpu: json('0.25')
-            memory: '0.5Gi'
+            cpu: json('0.5')
+            memory: '1Gi'
           }
         }
       ]
