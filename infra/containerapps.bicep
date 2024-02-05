@@ -87,12 +87,12 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
     }
     daprAIConnectionString: appInsights.properties.ConnectionString
     daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
-     workloadProfiles: [
+    workloadProfiles: [
       {
         maximumCount: 10
         minimumCount: 3
         name: 'default'
-        workloadProfileType: 'E4'
+        workloadProfileType: 'D4'
       }
     ]
   }

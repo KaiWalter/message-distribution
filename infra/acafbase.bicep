@@ -144,8 +144,8 @@ resource acafunction 'Microsoft.Web/sites@2023-01-01' = {
 
     siteConfig: {
       linuxFxVersion: 'DOCKER|${effectiveImageName}'
-      functionAppScaleLimit: 30
-      minimumElasticInstanceCount: 0
+      functionAppScaleLimit: 10
+      minimumElasticInstanceCount: 1
       appSettings: appSettings
     }
   }
