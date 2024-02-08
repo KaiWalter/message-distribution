@@ -89,10 +89,10 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
     daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
     workloadProfiles: [
       {
-        maximumCount: 10
-        minimumCount: 3
-        name: 'default'
-        workloadProfileType: 'D4'
+        // maximumCount: 10
+        // minimumCount: 3
+        name: 'Consumption'
+        workloadProfileType: 'Consumption'
       }
     ]
   }

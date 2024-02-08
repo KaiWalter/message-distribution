@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 source <(cat $(git rev-parse --show-toplevel)/.env)
 
 RESOURCE_GROUP_NAME=`az group list  --query "[?starts_with(name,'$AZURE_ENV_NAME')].name" -o tsv`
