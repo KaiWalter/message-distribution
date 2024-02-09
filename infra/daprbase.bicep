@@ -9,8 +9,6 @@ param envName string
 param appName string
 param instance string = ''
 
-param entityNameForScaling string
-
 @minLength(1)
 @description('Primary location for all resources')
 param location string
@@ -45,6 +43,18 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' existi
 }
 
 var effectiveImageName = imageName != '' ? imageName : 'mcr.microsoft.com/dotnet/aspnet:7.0'
+
+var queueName = {
+  ingress: {
+    name: 'q-order-ingress-dapr'
+  }
+  express: {
+    name: 'q-order-express-dapr'
+  }
+  standard: {
+    name: 'q-order-standard-dapr'
+  }
+}
 
 resource capp 'Microsoft.App/containerApps@2023-05-01' = {
   name: '${envName}${appName}'
@@ -134,8 +144,8 @@ resource capp 'Microsoft.App/containerApps@2023-05-01' = {
             }
           ]
           resources: {
-            cpu: json('0.5')
-            memory: '1.0Gi'
+            cpu: json('0.25')
+            memory: '0.5Gi'
           }
         }
       ]
@@ -148,8 +158,7 @@ resource capp 'Microsoft.App/containerApps@2023-05-01' = {
             custom: {
               type: 'azure-servicebus'
               metadata: {
-                queueName: entityNameForScaling
-                namespace: serviceBusNamespace.name
+                queueName: queueName[instance].name
                 messageCount: '100'
               }
               auth: [

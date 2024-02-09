@@ -13,6 +13,8 @@ param appName string
 param location string
 
 param imageName string
+param acrPullId string
+param kvGetId string
 
 module acafBase 'acafbase.bicep' = {
   name: 'acafBase-Distributor'
@@ -22,5 +24,7 @@ module acafBase 'acafbase.bicep' = {
     instance: 'ingress'
     location: location
     imageName: imageName
+    acrPullId: acrPullId
+    kvGetId: kvGetId
   }
 }

@@ -118,16 +118,12 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           value: q.queueName
         }
         {
-          name: 'maxBulkSubCount'
-          value: '100'
-        }
-        {
           name: 'maxActiveMessages'
           value: '1000'
         }
         {
           name: 'maxConcurrentHandlers'
-          value: '8'
+          value: '10'
         }
       ]
       scopes: q.scopes

@@ -80,6 +80,8 @@ module acafDistResources './acafdistributor.bicep' = {
     appName: 'acafdistributor'
     location: location
     imageName: funcDistributorImageName
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -96,6 +98,8 @@ module acafRecvExpResources './acafrecvexp.bicep' = {
     appName: 'acafrecvexp'
     location: location
     imageName: funcReceiverImageName
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -112,6 +116,8 @@ module acafRecvStdResources './acafrecvstd.bicep' = {
     appName: 'acafrecvstd'
     location: location
     imageName: funcReceiverImageName
+    acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
+    kvGetId: keyVaultResources.outputs.AZURE_KEY_VAULT_SERVICE_GET_ID
   }
   dependsOn: [
     containerAppsResources
@@ -180,7 +186,6 @@ module daprDistResources './daprdistributor.bicep' = {
   params: {
     envName: name
     appName: 'daprdistributor'
-    entityNameForScaling: 'q-order-ingress-dapr'
     location: location
     imageName: daprDistributorImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -199,7 +204,6 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvexp'
-    entityNameForScaling: 'q-order-express-dapr'
     location: location
     imageName: daprReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -218,7 +222,6 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvstd'
-    entityNameForScaling: 'q-order-standard-dapr'
     location: location
     imageName: daprReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID

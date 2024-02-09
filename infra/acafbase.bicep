@@ -14,6 +14,8 @@ param instance string = ''
 param location string
 
 param imageName string
+param acrPullId string
+param kvGetId string
 
 var resourceToken = toLower(uniqueString(subscription().id, envName, location))
 var tags = {
@@ -125,7 +127,7 @@ var effectiveImageName = imageName != '' ? imageName : 'azurefunctionstest.azure
 // } : {
 //   type: 'None'
 // }
-//
+
 resource acafunction 'Microsoft.Web/sites@2023-01-01' = {
   name: '${envName}${appName}'
   location: location
