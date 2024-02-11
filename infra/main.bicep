@@ -22,6 +22,13 @@ var tags = {
   'azd-env-name': environmentName
 }
 
+@description('determines whether bindings or pubsub is deployed for the experiment')
+@allowed([
+  'bindings'
+  'pubsub'
+])
+param daprComponentsModel string
+
 param daprDistributorImageName string = ''
 param daprReceiverImageName string = ''
 param funcDistributorImageName string = ''
@@ -41,6 +48,7 @@ module resources './resources.bicep' = {
     funcDistributorImageName: funcDistributorImageName
     funcReceiverImageName: funcReceiverImageName
     testdataImageName: testdataImageName
+    daprComponentsModel: daprComponentsModel
     tags: tags
   }
 }

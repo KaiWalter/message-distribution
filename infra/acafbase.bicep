@@ -140,8 +140,8 @@ resource acafunction 'Microsoft.Web/sites@2023-01-01' = {
     managedEnvironmentId: containerAppsEnvironment.id
     workloadProfileName: 'Consumption'
     resourceConfig: {
-        cpu: json('0.5')
-        memory: '1Gi'
+      cpu: json('0.5')
+      memory: '1Gi'
     }
 
     siteConfig: {

@@ -2,6 +2,13 @@ param location string
 param resourceToken string
 param tags object
 
+@description('determines whether bindings or pubsub is deployed for the experiment')
+@allowed([
+  'bindings'
+  'pubsub'
+])
+param daprComponentsModel string
+
 resource sb 'Microsoft.ServiceBus/namespaces@2021-11-01' existing = {
   name: 'sb-${resourceToken}'
 }
@@ -18,42 +25,61 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'appi-${resourceToken}'
 }
 
+// flip valid application ids for the respective deployment model
+var scopesBindings = daprComponentsModel == 'bindings' ? {
+  distributor: 'daprdistributor'
+  recvexp: 'daprrecvexp'
+  recvstd: 'daprrecvstd'
+} : {
+  distributor: 'skip'
+  recvexp: 'skip'
+  recvstd: 'skip'
+}
+
+var scopesPubSub = daprComponentsModel == 'pubsub' ? [
+  'daprdistributor'
+  'daprrecvexp'
+  'daprrecvstd'
+] : [
+  'skip'
+]
+
 var queueComponents = [
-  // {
-  //   name: 'q-order-ingress-dapr-input'
-  //   queueName: 'q-order-ingress-dapr'
-  //   scopes: [
-  //     'daprdistributor'
-  //   ]
-  // }
-  // {
-  //   name: 'q-order-express-dapr-output'
-  //   queueName: 'q-order-express-dapr'
-  //   scopes: [
-  //     'daprdistributor'
-  //   ]
-  // }
-  // {
-  //   name: 'q-order-standard-dapr-output'
-  //   queueName: 'q-order-standard-dapr'
-  //   scopes: [
-  //     'daprdistributor'
-  //   ]
-  // }
-  // {
-  //   name: 'q-order-express-dapr-input'
-  //   queueName: 'q-order-express-dapr'
-  //   scopes: [
-  //     'daprrecvexp'
-  //   ]
-  // }
-  // {
-  //   name: 'q-order-standard-dapr-input'
-  //   queueName: 'q-order-standard-dapr'
-  //   scopes: [
-  //     'daprrecvstd'
-  //   ]
-  // }
+  {
+    name: 'q-order-ingress-dapr-input'
+    queueName: 'q-order-ingress-dapr'
+    scopes: [
+      scopesBindings.distributor
+    ]
+  }
+  {
+    name: 'q-order-express-dapr-output'
+    queueName: 'q-order-express-dapr'
+    scopes: [
+      scopesBindings.distributor
+    ]
+  }
+  {
+    name: 'q-order-standard-dapr-output'
+    queueName: 'q-order-standard-dapr'
+    scopes: [
+      scopesBindings.distributor
+    ]
+  }
+  {
+    name: 'q-order-express-dapr-input'
+    queueName: 'q-order-express-dapr'
+    scopes: [
+      scopesBindings.recvexp
+    ]
+  }
+  {
+    name: 'q-order-standard-dapr-input'
+    queueName: 'q-order-standard-dapr'
+    scopes: [
+      scopesBindings.recvstd
+    ]
+  }
 ]
 
 var blobComponents = [
@@ -176,10 +202,6 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           secretRef: 'sb-root-connectionstring'
         }
         {
-          name: 'maxBulkSubCount'
-          value: '100'
-        }
-        {
           name: 'maxActiveMessages'
           value: '1000'
         }
@@ -188,11 +210,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
           value: '8'
         }
       ]
-      scopes: [
-        'daprdistributor'
-        'daprrecvexp'
-        'daprrecvstd'
-      ]
+      scopes: scopesPubSub
     }
   }
 }

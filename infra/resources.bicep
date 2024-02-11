@@ -10,12 +10,20 @@ param funcDistributorImageName string = ''
 param funcReceiverImageName string = ''
 param testdataImageName string = ''
 
+@description('determines whether bindings or pubsub is deployed for the experiment')
+@allowed([
+  'bindings'
+  'pubsub'
+])
+param daprComponentsModel string
+
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
   params: {
     location: location
     tags: tags
     resourceToken: resourceToken
+    daprComponentsModel: daprComponentsModel
   }
 
   dependsOn: [

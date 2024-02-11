@@ -40,7 +40,7 @@ if (testCase.Equals("dapr"))
         bulkSubscribe = new {
           enabled = true,
           maxMessagesCount = 100,
-          maxAwaitDurationMs = 40,
+          maxAwaitDurationMs = 10,
         }
     }}));
 }
@@ -64,7 +64,7 @@ app.MapPost($"/q-order-ingress-{testCase}-pubsub", async (
     ) =>
 {
     log.LogInformation("{Count} Orders to distribute", bulkOrders.Entries.Count);
-    List<BulkSubscribeAppResponseEntry> responseEntries = new List<BulkSubscribeAppResponseEntry>();
+    List<BulkSubscribeAppResponseEntry> responseEntries = new List<BulkSubscribeAppResponseEntry>(bulkOrders.Entries.Count);
     var expressEntries = new List<BulkSubscribeMessageEntry<Order>>(bulkOrders.Entries.Count);
     var standardEntries = new List<BulkSubscribeMessageEntry<Order>>(bulkOrders.Entries.Count);
 
