@@ -1,5 +1,6 @@
 obj/
 bin/
+.dapr/
 
 secrets.json
 appsettings.Development.json

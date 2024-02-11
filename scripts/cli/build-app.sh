@@ -9,15 +9,19 @@ AZURE_KEY_VAULT_SERVICE_GET_ID=`az identity list -g $RESOURCE_GROUP_NAME --query
 
 REVISION=`date +"%s"`
 
+az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
+
 apps=($1)
 
 for app in "${apps[@]}"
 do
   echo "$app"
 
-  IMAGE=$app:$REVISION
-  az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME --image $IMAGE src/$app/
-
-  declare IMAGE_$app=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE
+  # IMAGE=$app:$REVISION
+  # az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME --image $IMAGE src/$app/
+  # declare IMAGE_$app=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE
+  IMAGE=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$app:$REVISION
+  docker build --push -t $IMAGE src/$app/ 
+  declare IMAGE_$app=$IMAGE
 done
 

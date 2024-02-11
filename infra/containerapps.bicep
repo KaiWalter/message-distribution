@@ -19,41 +19,41 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
 }
 
 var queueComponents = [
-  {
-    name: 'q-order-ingress-dapr-input'
-    queueName: 'q-order-ingress-dapr'
-    scopes: [
-      'daprdistributor'
-    ]
-  }
-  {
-    name: 'q-order-express-dapr-output'
-    queueName: 'q-order-express-dapr'
-    scopes: [
-      'daprdistributor'
-    ]
-  }
-  {
-    name: 'q-order-standard-dapr-output'
-    queueName: 'q-order-standard-dapr'
-    scopes: [
-      'daprdistributor'
-    ]
-  }
-  {
-    name: 'q-order-express-dapr-input'
-    queueName: 'q-order-express-dapr'
-    scopes: [
-      'daprrecvexp'
-    ]
-  }
-  {
-    name: 'q-order-standard-dapr-input'
-    queueName: 'q-order-standard-dapr'
-    scopes: [
-      'daprrecvstd'
-    ]
-  }
+  // {
+  //   name: 'q-order-ingress-dapr-input'
+  //   queueName: 'q-order-ingress-dapr'
+  //   scopes: [
+  //     'daprdistributor'
+  //   ]
+  // }
+  // {
+  //   name: 'q-order-express-dapr-output'
+  //   queueName: 'q-order-express-dapr'
+  //   scopes: [
+  //     'daprdistributor'
+  //   ]
+  // }
+  // {
+  //   name: 'q-order-standard-dapr-output'
+  //   queueName: 'q-order-standard-dapr'
+  //   scopes: [
+  //     'daprdistributor'
+  //   ]
+  // }
+  // {
+  //   name: 'q-order-express-dapr-input'
+  //   queueName: 'q-order-express-dapr'
+  //   scopes: [
+  //     'daprrecvexp'
+  //   ]
+  // }
+  // {
+  //   name: 'q-order-standard-dapr-input'
+  //   queueName: 'q-order-standard-dapr'
+  //   scopes: [
+  //     'daprrecvstd'
+  //   ]
+  // }
 ]
 
 var blobComponents = [
@@ -162,7 +162,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
   resource pubSubComponent 'daprComponents' = {
     name: 'order-pubsub'
     properties: {
-      componentType: 'pubsub.azure.servicebus'
+      componentType: 'pubsub.azure.servicebus.queues'
       version: 'v1'
       secrets: [
         {

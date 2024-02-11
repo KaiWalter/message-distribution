@@ -32,13 +32,13 @@ echo $JSON_STRING > $SOURCE_FOLDER/funcreceiver/local.settings.json
 
 JSON_STRING=$( jq -n \
                   --arg aic "$APPINSIGHTS_CONNECTION_STRING" \
-                  '{Logging: {LogLevel: {Default: "Information", "Microsoft.AspNetCore": "Information" }},ApplicationInsights:{ConnectionString: $aic, EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
+                  '{Logging: {LogLevel: {Default: "Information", "Microsoft.AspNetCore": "Warning" }, ApplicationInsights: {LogLevel: {Default: "Information"}}},ApplicationInsights:{ConnectionString: $aic, EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
 
 echo $JSON_STRING > $SOURCE_FOLDER/daprdistributor/appsettings.Development.json
 echo $JSON_STRING > $SOURCE_FOLDER/daprreceiver/appsettings.Development.json
 
 JSON_STRING=$( jq -n \
-                  '{Logging: {LogLevel: {Default: "Warning", "Microsoft.AspNetCore": "Information" }},ApplicationInsights:{EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
+                  '{Logging: {LogLevel: {Default: "Warning", "Microsoft.AspNetCore": "Warning" }, ApplicationInsights: {LogLevel: {Default: "Information"}}},ApplicationInsights:{EnableAdaptiveSampling:false,EnablePerformanceCounterCollectionModule:false}}' )
 
 echo $JSON_STRING > $SOURCE_FOLDER/daprdistributor/appsettings.json
 echo $JSON_STRING > $SOURCE_FOLDER/daprreceiver/appsettings.json

@@ -20,6 +20,8 @@ AZURE_KEY_VAULT_SERVICE_GET_ID=`az identity list -g $RESOURCE_GROUP_NAME --query
 
 REVISION=`date +"%s"`
 
+az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
+
 apps=($(for d in src/* ; do echo ${d##*/}; done))
 
 for app in "${apps[@]}"
@@ -29,7 +31,8 @@ do
   if [ "$1" == "build" ];
   then
     IMAGE=$app:$REVISION
-    az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME --image $IMAGE src/$app/
+    # az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME --image $IMAGE src/$app/
+    docker build --push -t $AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE src/$app/ 
   else
     TAG=`az acr repository show-tags -n $AZURE_CONTAINER_REGISTRY_NAME --repository $app --top 1 --orderby time_desc -o tsv`
     IMAGE=$app:$TAG
