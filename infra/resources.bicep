@@ -16,6 +16,12 @@ param testdataImageName string = ''
   'pubsub'
 ])
 param daprComponentsModel string
+@description('determines whether single or bulk pubsub is used')
+@allowed([
+  'bulk'
+  'single'
+])
+param daprPubSubModel string
 
 module containerAppsResources './containerapps.bicep' = {
   name: 'containerapps-resources'
@@ -194,6 +200,7 @@ module daprDistResources './daprdistributor.bicep' = {
   params: {
     envName: name
     appName: 'daprdistributor'
+    daprPubSubModel: daprPubSubModel
     location: location
     imageName: daprDistributorImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -212,6 +219,7 @@ module daprRecvExpResources './daprrecvexp.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvexp'
+    daprPubSubModel: daprPubSubModel
     location: location
     imageName: daprReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID
@@ -230,6 +238,7 @@ module daprRecvStdResources './daprrecvstd.bicep' = {
   params: {
     envName: name
     appName: 'daprrecvstd'
+    daprPubSubModel: daprPubSubModel
     location: location
     imageName: daprReceiverImageName
     acrPullId: containerAppsResources.outputs.AZURE_CONTAINER_REGISTRY_ACRPULL_ID

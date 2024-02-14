@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 set -e
 
 ORDERID=0
@@ -32,4 +32,3 @@ dapr publish --publish-app-id distributor \
   --pubsub order-pubsub \
   --data "$(generate_message)" \
   --metadata '{"rawPayload":"true"}'
-#

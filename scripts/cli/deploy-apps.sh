@@ -4,6 +4,9 @@ set -e
 
 source <(cat $(git rev-parse --show-toplevel)/.env)
 
+DAPR_COMPONENTS_MODEL=${DAPR_COMPONENTS_MODEL:="pubsub"}
+DAPR_PUBSUB_MODEL=${DAPR_PUBSUB_MODEL:="bulk"}
+
 RESOURCE_GROUP_NAME=`az group list  --query "[?starts_with(name,'$AZURE_ENV_NAME')].name" -o tsv`
 AZURE_CONTAINER_REGISTRY_NAME=`az resource list --tag azd-env-name=$AZURE_ENV_NAME --query "[?type=='Microsoft.ContainerRegistry/registries'].name" -o tsv`
 
@@ -43,6 +46,8 @@ do
   declare IMAGE_$app=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$IMAGE
 done
 
+echo "deploying to $RESOURCE_GROUP_NAME with Dapr components model $DAPR_COMPONENTS_MODEL and pubsub $DAPR_PUBSUB_MODEL"
+
 az deployment sub create -f infra/main.bicep -n main-apps-$REVISION \
   -l $AZURE_LOCATION \
   -p environmentName=$AZURE_ENV_NAME \
@@ -53,7 +58,7 @@ az deployment sub create -f infra/main.bicep -n main-apps-$REVISION \
   funcReceiverImageName=$IMAGE_funcreceiver \
   testdataImageName=$IMAGE_testdata \
   daprComponentsModel=$DAPR_COMPONENTS_MODEL \
-
+  daprPubSubModel=$DAPR_PUBSUB_MODEL
 
 # remove Dapr components marked with scope  "skip"
 ACAENV_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.App/managedEnvironments --query "[0].name" -o tsv`

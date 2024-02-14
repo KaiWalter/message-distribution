@@ -8,6 +8,7 @@ param envName string
 @description('Name of the container app.')
 param appName string
 param instance string = ''
+param daprPubSubModel string
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -125,6 +126,10 @@ resource capp 'Microsoft.App/containerApps@2023-05-01' = {
             {
               name: 'INSTANCE'
               value: instance
+            }
+            {
+              name: 'PUBSUB'
+              value: daprPubSubModel
             }
           ]
           probes: [

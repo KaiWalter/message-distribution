@@ -7,6 +7,7 @@ using Utils;
 
 var testCase = Environment.GetEnvironmentVariable("TESTCASE") ?? "dapr";
 var instance = Environment.GetEnvironmentVariable("INSTANCE") ?? "NOT_SET";
+var pubsubMode = Environment.GetEnvironmentVariable("PUBSUB") ?? "bulk";
 
 var daprGrpcEndpoint = Environment.GetEnvironmentVariable("DAPR_GRPC_ENDPOINT");
 var daprPort = Environment.GetEnvironmentVariable("DAPR_PORT");
@@ -33,16 +34,22 @@ if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 if (testCase.Equals("dapr"))
 {
-    app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+    app.MapGet("/dapr/subscribe", () => Results.Ok(
+          pubsubMode.Equals("bulk") ? new[]{
     new {
         pubsubname = "order-pubsub",
         topic = $"q-order-{instance}-{testCase}",
         route = $"/q-order-{instance}-{testCase}-pubsub",
         bulkSubscribe = new {
           enabled = true,
-          maxMessagesCount = 100,
-          maxAwaitDurationMs = 10,
+          maxMessagesCount = 250,
+          maxAwaitDurationMs = 40,
         }
+    }} : new[]{
+    new {
+        pubsubname = "order-pubsub",
+        topic = $"q-order-{instance}-{testCase}",
+        route = $"/q-order-{instance}-{testCase}-pubsub-single"
     }}));
 }
 else
@@ -84,6 +91,23 @@ app.MapPost($"/q-order-{instance}-{testCase}-pubsub", async (
     }
 
     return new BulkSubscribeAppResponse(responseEntries);
+});
+
+app.MapPost($"/q-order-{instance}-{testCase}-pubsub-single", async (
+    [FromBody] Order order,
+    [FromServices] DaprClient daprClient,
+    ILogger<Program> log
+    ) =>
+{
+    log.LogInformation("{Delivery} Order received {OrderId}", order.Delivery, order.OrderId);
+
+    var metadata = new Dictionary<string, string>
+    {
+      { "blobName", order.OrderId.ToString() }
+    };
+    await daprClient.InvokeBindingAsync<Order>($"{instance}-output", "create", order);
+
+    return Results.Ok();
 });
 
 app.MapPost($"/q-order-{instance}-{testCase}-input", async (

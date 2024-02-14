@@ -6,6 +6,7 @@ using Models;
 using Utils;
 
 var testCase = Environment.GetEnvironmentVariable("TESTCASE") ?? "dapr";
+var pubsubMode = Environment.GetEnvironmentVariable("PUBSUB") ?? "bulk";
 
 var daprGrpcEndpoint = Environment.GetEnvironmentVariable("DAPR_GRPC_ENDPOINT");
 var daprPort = Environment.GetEnvironmentVariable("DAPR_PORT");
@@ -32,16 +33,22 @@ if (app.Environment.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
 
 if (testCase.Equals("dapr"))
 {
-    app.MapGet("/dapr/subscribe", () => Results.Ok(new[]{
+    app.MapGet("/dapr/subscribe", () => Results.Ok(
+       pubsubMode.Equals("bulk") ? new[]{
     new {
         pubsubname = "order-pubsub",
         topic = $"q-order-ingress-{testCase}",
         route = $"/q-order-ingress-{testCase}-pubsub",
         bulkSubscribe = new {
           enabled = true,
-          maxMessagesCount = 100,
-          maxAwaitDurationMs = 10,
+          maxMessagesCount = 250,
+          maxAwaitDurationMs = 40,
         }
+    }} : new[]{
+    new {
+        pubsubname = "order-pubsub",
+        topic = $"q-order-ingress-{testCase}",
+        route = $"/q-order-ingress-{testCase}-pubsub-single"
     }}));
 }
 else
@@ -56,6 +63,29 @@ else
 }
 
 app.MapGet("/health", () => Results.Ok());
+
+app.MapPost($"/q-order-ingress-{testCase}-pubsub-single", async (
+    [FromBody] Order order,
+    [FromServices] DaprClient daprClient
+    ) =>
+{
+    var metadata = new Dictionary<string, string>
+        {
+          { "rawPayload", "true"}
+        };
+
+    switch (order.Delivery)
+    {
+        case Delivery.Express:
+            await daprClient.PublishEventAsync("order-pubsub", $"q-order-express-{testCase}", order, metadata);
+            break;
+        case Delivery.Standard:
+            await daprClient.PublishEventAsync("order-pubsub", $"q-order-standard-{testCase}", order, metadata);
+            break;
+    }
+
+    return Results.Ok(order);
+});
 
 app.MapPost($"/q-order-ingress-{testCase}-pubsub", async (
     [FromBody] BulkSubscribeMessage<Order> bulkOrders,
@@ -94,18 +124,20 @@ app.MapPost($"/q-order-ingress-{testCase}-pubsub", async (
         {
             var orders = from e in expressEntries select e.Event;
             await daprClient.BulkPublishEventAsync("order-pubsub", $"q-order-express-{testCase}", orders.ToArray(), metadata);
-            foreach (var entry in expressEntries)
-            {
-                responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.SUCCESS));
-            }
+            responseEntries.AddRange(expressEntries.Select(e => new BulkSubscribeAppResponseEntry(e.EntryId, BulkSubscribeAppResponseStatus.SUCCESS)));
+            // foreach (var entry in expressEntries)
+            // {
+            //     responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.SUCCESS));
+            // }
         }
         catch (Exception e)
         {
             log.LogError(e.Message);
-            foreach (var entry in expressEntries)
-            {
-                responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.RETRY));
-            }
+            responseEntries.AddRange(expressEntries.Select(e => new BulkSubscribeAppResponseEntry(e.EntryId, BulkSubscribeAppResponseStatus.RETRY)));
+            // foreach (var entry in expressEntries)
+            // {
+            //     responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.RETRY));
+            // }
         }
     }
 
@@ -115,18 +147,20 @@ app.MapPost($"/q-order-ingress-{testCase}-pubsub", async (
         {
             var orders = from e in standardEntries select e.Event;
             await daprClient.BulkPublishEventAsync("order-pubsub", $"q-order-standard-{testCase}", orders.ToArray(), metadata);
-            foreach (var entry in standardEntries)
-            {
-                responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.SUCCESS));
-            }
+            responseEntries.AddRange(standardEntries.Select(e => new BulkSubscribeAppResponseEntry(e.EntryId, BulkSubscribeAppResponseStatus.SUCCESS)));
+            // foreach (var entry in standardEntries)
+            // {
+            //     responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.SUCCESS));
+            // }
         }
         catch (Exception e)
         {
             log.LogError(e.Message);
-            foreach (var entry in standardEntries)
-            {
-                responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.RETRY));
-            }
+            responseEntries.AddRange(standardEntries.Select(e => new BulkSubscribeAppResponseEntry(e.EntryId, BulkSubscribeAppResponseStatus.RETRY)));
+            // foreach (var entry in standardEntries)
+            // {
+            //     responseEntries.Add(new BulkSubscribeAppResponseEntry(entry.EntryId, BulkSubscribeAppResponseStatus.RETRY));
+            // }
         }
     }
 

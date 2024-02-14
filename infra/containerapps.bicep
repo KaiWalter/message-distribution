@@ -25,7 +25,7 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: 'appi-${resourceToken}'
 }
 
-// flip valid application ids for the respective deployment model
+// switch valid application ids for the respective deployment model
 var scopesBindings = daprComponentsModel == 'bindings' ? {
   distributor: 'daprdistributor'
   recvexp: 'daprrecvexp'
@@ -115,11 +115,15 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
     daprAIInstrumentationKey: appInsights.properties.InstrumentationKey
     workloadProfiles: [
       {
-        // maximumCount: 10
-        // minimumCount: 3
         name: 'Consumption'
         workloadProfileType: 'Consumption'
       }
+      // {
+      //   name: 'Dedicated'
+      //   workloadProfileType: 'E8'
+      //   minimumCount: 3
+      //   maximumCount: 5
+      // }
     ]
   }
 
@@ -203,11 +207,11 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-05-01'
         }
         {
           name: 'maxActiveMessages'
-          value: '1000'
+          value: '250'
         }
         {
           name: 'maxConcurrentHandlers'
-          value: '8'
+          value: '1'
         }
       ]
       scopes: scopesPubSub

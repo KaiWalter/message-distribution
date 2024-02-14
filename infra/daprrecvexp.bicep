@@ -7,6 +7,7 @@ param envName string
 @maxLength(64)
 @description('Name of the container app.')
 param appName string
+param daprPubSubModel string
 
 @minLength(1)
 @description('Primary location for all resources')
@@ -22,6 +23,7 @@ module daprBase 'daprbase.bicep' = {
     appName: appName
     envName: envName
     instance: 'express'
+    daprPubSubModel: daprPubSubModel
     location: location
     imageName: imageName
     kvGetId: kvGetId

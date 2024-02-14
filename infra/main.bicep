@@ -28,6 +28,12 @@ var tags = {
   'pubsub'
 ])
 param daprComponentsModel string
+@description('determines whether single or bulk pubsub is used')
+@allowed([
+  'bulk'
+  'single'
+])
+param daprPubSubModel string = 'bulk'
 
 param daprDistributorImageName string = ''
 param daprReceiverImageName string = ''
@@ -49,6 +55,7 @@ module resources './resources.bicep' = {
     funcReceiverImageName: funcReceiverImageName
     testdataImageName: testdataImageName
     daprComponentsModel: daprComponentsModel
+    daprPubSubModel: daprPubSubModel
     tags: tags
   }
 }
