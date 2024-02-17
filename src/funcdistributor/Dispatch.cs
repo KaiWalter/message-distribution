@@ -1,46 +1,43 @@
-using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Models;
-using System.Text;
 using System.Text.Json;
 
 namespace funcdistributor
 {
     public class Dispatch
     {
-        [Function("Dispatch")]
-        public DispatchedOutput Run(
-            [ServiceBusTrigger("%QUEUE_NAME_INGRESS%", Connection = "SERVICEBUS_CONNECTION")] string ingressMessage,
-            ILogger log)
+        [Function("DispatchBatch")]
+        public DispatchedOutput DispatchBatch(
+            [ServiceBusTrigger("%QUEUE_NAME_INGRESS%", Connection = "SERVICEBUS_CONNECTION", IsBatched = true)] string[] ingressMessages,
+            FunctionContext context)
         {
-            ArgumentNullException.ThrowIfNull(ingressMessage, nameof(ingressMessage));
+            ArgumentNullException.ThrowIfNull(ingressMessages, nameof(ingressMessages));
 
-            var order = JsonSerializer.Deserialize<Order>(ingressMessage);
-
-            ArgumentNullException.ThrowIfNull(order, nameof(ingressMessage));
+            var logger = context.GetLogger(nameof(Dispatch));
 
             var outputMessage = new DispatchedOutput();
 
-            switch (order.Delivery)
+            foreach (var ingressMessage in ingressMessages)
             {
-                case Delivery.Express:
-                    outputMessage.ExpressMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
-                    {
-                        ContentType = "application/json",
-                        MessageId = order.OrderId.ToString(),
-                    };
-                    break;
-                case Delivery.Standard:
-                    outputMessage.StandardMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order)))
-                    {
-                        ContentType = "application/json",
-                        MessageId = order.OrderId.ToString(),
-                    };
-                    break;
-                default:
-                    log.LogError($"invalid Delivery type: {order.Delivery}");
-                    break;
+                var order = JsonSerializer.Deserialize<Order>(ingressMessage);
+
+                ArgumentNullException.ThrowIfNull(order, nameof(ingressMessage));
+
+                logger.LogInformation("dispatching {OrderId} with {Delivery}", order.OrderId, order.Delivery);
+
+                switch (order.Delivery)
+                {
+                    case Delivery.Express:
+                        outputMessage.ExpressMessage.Add(ingressMessage);
+                        break;
+                    case Delivery.Standard:
+                        outputMessage.StandardMessage.Add(ingressMessage);
+                        break;
+                    default:
+                        logger.LogError($"invalid Delivery type: {order.Delivery}");
+                        break;
+                }
             }
 
             return outputMessage;
@@ -50,10 +47,10 @@ namespace funcdistributor
     public class DispatchedOutput
     {
         [ServiceBusOutput("%QUEUE_NAME_EXPRESS%", Connection = "SERVICEBUS_CONNECTION")]
-        public ServiceBusMessage? ExpressMessage { get; set; }
+        public List<string> ExpressMessage { get; } = new List<string>();
 
         [ServiceBusOutput("%QUEUE_NAME_STANDARD%", Connection = "SERVICEBUS_CONNECTION")]
-        public ServiceBusMessage? StandardMessage { get; set; }
+        public List<string> StandardMessage { get; } = new List<string>();
     }
 }
 

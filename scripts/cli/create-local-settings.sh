@@ -25,9 +25,13 @@ JSON_STRING=$( jq -n \
                   --arg sbc "$SERVICEBUS_CONNECTION" \
                   --arg stc "$STORAGE_BLOB_CONNECTION" \
                   --arg aik "$APPINSIGHTS_INSTRUMENTATION_KEY" \
-                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc, APPINSIGHTS_INSTRUMENTATIONKEY: $aik }}' )
-
+                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc, APPINSIGHTS_INSTRUMENTATIONKEY: $aik, QUEUE_NAME_INGRESS: "q-order-ingress-func", QUEUE_NAME_EXPRESS: "q-order-express-func", QUEUE_NAME_STANDARD: "q-order-standard-func" }}' ) 
 echo $JSON_STRING > $SOURCE_FOLDER/funcdistributor/local.settings.json
+JSON_STRING=$( jq -n \
+                  --arg sbc "$SERVICEBUS_CONNECTION" \
+                  --arg stc "$STORAGE_BLOB_CONNECTION" \
+                  --arg aik "$APPINSIGHTS_INSTRUMENTATION_KEY" \
+                  '{IsEncrypted: false, Values:{FUNCTIONS_WORKER_RUNTIME: "dotnet-isolated", AzureWebJobsStorage: "UseDevelopmentStorage=true", STORAGE_CONNECTION: $stc,SERVICEBUS_CONNECTION: $sbc, APPINSIGHTS_INSTRUMENTATIONKEY: $aik, QUEUE_NAME_INGRESS: "q-order-ingress-func", QUEUE_NAME_EXPRESS: "q-order-express-func", QUEUE_NAME_STANDARD: "q-order-standard-func", INSTANCE: "express" }}' ) 
 echo $JSON_STRING > $SOURCE_FOLDER/funcreceiver/local.settings.json
 
 JSON_STRING=$( jq -n \
